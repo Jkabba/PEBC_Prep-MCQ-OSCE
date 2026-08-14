@@ -4,7 +4,7 @@
     {
       "name": "pebc-prep",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8000", "--directory", "pebc_prep"],
+      "runtimeArgs": ["-m", "http.server", "8000", "--directory", "docs"],
       "port": 8000
     }
   ]
