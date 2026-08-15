@@ -418,6 +418,7 @@
 
 <script src="data/mcq-data.js"></script>
 <script src="data/drug-data.js"></script>
+<script src="data/study-data.js"></script>
 <script>
 (function(){
   "use strict";
@@ -781,11 +782,14 @@
   var drugFilter = "all";
   var drugSearch = "";
   var drugOpenId = null;
+  var STUDY = window.STUDY_DATA || [];
+  var studyCurrent = null;
 
   var VIEWS = [
     {key:"dashboard", label:"Dashboard"},
     {key:"mcq", label:"MCQ Practice"},
     {key:"osce", label:"OSCE Stations"},
+    {key:"study", label:"Study Guides"},
     {key:"drugs", label:"Drug Reference"},
     {key:"history", label:"History"}
   ];
@@ -1155,6 +1159,50 @@
     }
   }
 
+  /* ---------------- Render: Study Guides ---------------- */
+  function openStudyGuide(topic){ studyCurrent = topic; render(); window.scrollTo(0,0); }
+  function closeStudyGuide(){ studyCurrent = null; render(); }
+  function renderStudyGuides(){
+    if (!studyCurrent){
+      var byTopic = {};
+      STUDY.forEach(function(s){ byTopic[s.topic] = s; });
+      var cards = TOPICS.filter(function(tp){ return byTopic[tp.key]; }).map(function(tp){
+        var s = byTopic[tp.key];
+        return '<button class="station-card" data-topic="'+tp.key+'">'+
+          '<div class="st-title">'+esc(tp.label)+'</div>'+
+          '<div class="st-blurb">'+s.sections.length+' high-yield sections</div>'+
+        '</button>';
+      }).join("");
+      document.getElementById("main").innerHTML =
+        '<div class="pagehead"><h1>Study guides</h1><p>Fast, bite-sized review per competency topic — key facts, thresholds, and exam-trap pearls. Pick a topic.</p></div>'+
+        (cards ? '<div class="station-grid">'+cards+'</div>' : '<div class="panel"><p class="empty">Study guides are still being generated for this topic set — check back soon.</p></div>');
+      Array.prototype.forEach.call(document.querySelectorAll(".station-card"), function(btn){
+        btn.addEventListener("click", function(){ openStudyGuide(btn.getAttribute("data-topic")); });
+      });
+      return;
+    }
+
+    var guide = STUDY.filter(function(s){ return s.topic===studyCurrent; })[0];
+    if (!guide){ studyCurrent = null; renderStudyGuides(); return; }
+
+    var sectionsHtml = guide.sections.map(function(sec){
+      return '<div class="panel"><h2>'+esc(sec.heading)+'</h2>'+
+        '<ul class="drug-section-list" style="margin:10px 0 0; padding-left:18px; font-size:0.92rem; line-height:1.7;">'+
+        sec.bullets.map(function(b){ return '<li>'+esc(b)+'</li>'; }).join("")+
+        '</ul></div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead">'+
+        '<button class="btn btn-ghost btn-sm" id="backStudy" style="margin-bottom:10px;">&larr; All topics</button>'+
+        '<h1>'+esc(guide.title)+'</h1>'+
+      '</div>'+
+      sectionsHtml+
+      '<p class="footnote">High-yield review content — pairs well with MCQ Practice on the same topic to test recall right after reading.</p>';
+
+    document.getElementById("backStudy").addEventListener("click", closeStudyGuide);
+  }
+
   /* ---------------- Render: Drug Reference ---------------- */
   function renderDrugs(){
     var availableTopics = [];
@@ -1266,6 +1314,7 @@
     if (view==="dashboard") renderDashboard();
     else if (view==="mcq") renderMcq();
     else if (view==="osce") renderOsce();
+    else if (view==="study") renderStudyGuides();
     else if (view==="drugs") renderDrugs();
     else if (view==="history") renderHistory();
   }
