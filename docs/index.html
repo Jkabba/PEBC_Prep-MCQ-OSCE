@@ -773,6 +773,7 @@
   /* ---------------- Router / view state ---------------- */
   var view = "dashboard";
   var mcqFilter = "all";
+  var mcqDifficulty = "all";
   var mcqQueue = [];
   var mcqCurrent = null;
   var mcqAnswered = false;
@@ -808,6 +809,7 @@
   function buildQueue(){
     var pool = MCQ.map(function(q,idx){ return Object.assign({idx:idx}, q); });
     if (mcqFilter !== "all") pool = pool.filter(function(q){ return q.t===mcqFilter; });
+    if (mcqDifficulty !== "all") pool = pool.filter(function(q){ return (q.d||"standard")===mcqDifficulty; });
     mcqQueue = shuffle(pool);
   }
   function nextQuestion(){
@@ -1044,6 +1046,7 @@
 
       body = '<div class="panel">'+
         '<div class="q-meta"><span class="badge badge-accent">'+esc(topicLabel(mcqCurrent.t))+'</span>'+
+        (mcqCurrent.d==="hard" ? '<span class="badge badge-gold">Hard</span>' : '')+
         '<span class="qcount">'+(mcqQueue.length)+' left in this set</span></div>'+
         '<div class="q-stem">'+esc(mcqCurrent.q)+'</div>'+
         '<div class="options">'+optsHtml+'</div>'+
@@ -1051,16 +1054,28 @@
         '</div>';
     }
 
+    var diffOptions = ['all','standard','hard'].map(function(d){
+      var lbl = d==="all"?"All difficulties":(d==="hard"?"Hard (longer vignettes)":"Standard");
+      return '<option value="'+d+'"'+(mcqDifficulty===d?' selected':'')+'>'+lbl+'</option>';
+    }).join("");
+
     document.getElementById("main").innerHTML =
       '<div class="pagehead"><h1>MCQ practice</h1><p>Clinical vignette-style questions modeled on PEBC MCQ patterns — pick a topic, answer, and read the rationale.</p></div>'+
       '<div class="panel" style="margin-bottom:16px;">'+
         '<div class="field-row"><label for="topicSelect" style="font-size:0.85rem; color:var(--text-muted);">Topic</label>'+
-        '<select class="select" id="topicSelect">'+options+'</select></div>'+
+        '<select class="select" id="topicSelect">'+options+'</select>'+
+        '<label for="diffSelect" style="font-size:0.85rem; color:var(--text-muted);">Difficulty</label>'+
+        '<select class="select" id="diffSelect">'+diffOptions+'</select></div>'+
       '</div>'+
       body;
 
     document.getElementById("topicSelect").addEventListener("change", function(e){
       mcqFilter = e.target.value;
+      mcqQueue = []; mcqCurrent = null; mcqAnswered = false;
+      render();
+    });
+    document.getElementById("diffSelect").addEventListener("change", function(e){
+      mcqDifficulty = e.target.value;
       mcqQueue = []; mcqCurrent = null; mcqAnswered = false;
       render();
     });
