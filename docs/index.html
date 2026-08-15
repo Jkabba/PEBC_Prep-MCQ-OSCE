@@ -369,6 +369,29 @@
     #pebc-app *{ transition:none !important; }
   }
 
+  /* ---- Drug reference ---- */
+  input.textinput{
+    font-family:inherit; font-size:0.86rem; padding:9px 12px;
+    border-radius:8px; border:1px solid var(--border);
+    background:var(--bg-elevated); color:var(--text); flex:1; min-width:180px;
+  }
+  .drug-list{ display:flex; flex-direction:column; gap:10px; }
+  .drug-card{
+    border:1px solid var(--border); border-radius:12px; background:var(--bg-elevated);
+    overflow:hidden;
+  }
+  .drug-card-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 16px; cursor:pointer; text-align:left; width:100%; background:none; border:none; font-family:inherit;
+  }
+  .drug-card-head:hover{ background:var(--surface-2); }
+  .drug-name{ font-weight:700; font-size:0.98rem; color:var(--text); }
+  .drug-brand{ font-size:0.8rem; color:var(--text-muted); margin-top:2px; }
+  .drug-card-body{ padding:0 16px 18px; border-top:1px solid var(--border); }
+  .drug-section{ margin-top:14px; }
+  .drug-section h4{ font-size:0.76rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); margin:0 0 6px; }
+  .drug-section p{ margin:0; font-size:0.9rem; }
+  .drug-section ul{ margin:0; padding-left:18px; font-size:0.88rem; line-height:1.6; }
   .footnote{ font-size:0.76rem; color:var(--text-muted); margin-top:26px; line-height:1.6; }
   .footnote a{ color:var(--accent); }
   .divider{ height:1px; background:var(--border); border:none; margin:18px 0; }
@@ -393,6 +416,8 @@
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="data/mcq-data.js"></script>
+<script src="data/drug-data.js"></script>
 <script>
 (function(){
   "use strict";
@@ -417,7 +442,7 @@
   }
 
   /* ---------------- Question bank ---------------- */
-  var MCQ = [
+  var MCQ_SEED = [
     {t:"cardio", q:"A 64-year-old man with newly diagnosed HFrEF (EF 30%) is being started on a beta-blocker in addition to an ACE inhibitor. Which agent is appropriate?",
      o:["Metoprolol tartrate (immediate-release)","Atenolol","Carvedilol","Propranolol"], a:2,
      r:"Only carvedilol, metoprolol succinate (extended-release), and bisoprolol have proven mortality benefit in HFrEF. Metoprolol tartrate (immediate-release) is not the studied formulation, and atenolol/propranolol lack HF outcome data.",
@@ -618,6 +643,9 @@
      o:["No interaction exists","St. John's Wort is a potent CYP3A4 inducer that can significantly reduce contraceptive hormone levels, raising the risk of contraceptive failure","St. John's Wort will make the contraceptive more effective","St. John's Wort only interacts with prescription antidepressants"], a:1,
      r:"St. John's Wort strongly induces CYP3A4 (and P-glycoprotein), lowering plasma levels of many drugs including combined hormonal contraceptives, cyclosporine, and warfarin.", m:null}
   ];
+  // Additional generated questions (docs/data/mcq-data.js), deduped and merged with the hand-written seed set above.
+  var MCQ = MCQ_SEED.concat(window.MCQ_GENERATED || []);
+  var DRUGS = window.DRUG_DATA || [];
 
   /* ---------------- OSCE stations ---------------- */
   var OSCE = [
@@ -742,11 +770,15 @@
   var osceCurrent = null;
   var osceRevealed = false;
   var timerSecs = 300, timerRunning = false, timerHandle = null;
+  var drugFilter = "all";
+  var drugSearch = "";
+  var drugOpenId = null;
 
   var VIEWS = [
     {key:"dashboard", label:"Dashboard"},
     {key:"mcq", label:"MCQ Practice"},
     {key:"osce", label:"OSCE Stations"},
+    {key:"drugs", label:"Drug Reference"},
     {key:"history", label:"History"}
   ];
 
@@ -1115,6 +1147,80 @@
     }
   }
 
+  /* ---------------- Render: Drug Reference ---------------- */
+  function renderDrugs(){
+    var availableTopics = [];
+    var seenTopics = {};
+    DRUGS.forEach(function(d){
+      if (!seenTopics[d.topic]){ seenTopics[d.topic] = true; availableTopics.push(d.topic); }
+    });
+    availableTopics.sort(function(a,b){ return topicLabel(a).localeCompare(topicLabel(b)); });
+
+    var filterOptions = '<option value="all">All topics</option>' + availableTopics.map(function(t){
+      return '<option value="'+t+'"'+(drugFilter===t?' selected':'')+'>'+esc(topicLabel(t))+'</option>';
+    }).join("");
+
+    var q = drugSearch.trim().toLowerCase();
+    var list = DRUGS.filter(function(d){
+      if (drugFilter!=="all" && d.topic!==drugFilter) return false;
+      if (!q) return true;
+      var hay = (d.generic+" "+(d.brand||[]).join(" ")+" "+d.class).toLowerCase();
+      return hay.indexOf(q) !== -1;
+    }).sort(function(a,b){ return a.generic.localeCompare(b.generic); });
+
+    var cardsHtml = list.map(function(d, i){
+      var id = "drug_"+d.topic+"_"+i;
+      var open = drugOpenId === id;
+      var brandStr = (d.brand||[]).length ? (d.brand||[]).join(", ") : "Generic only";
+      var body = open ? (
+        '<div class="drug-card-body">'+
+          '<div class="drug-section"><h4>Pharmacology</h4><p>'+esc(d.moa)+'</p></div>'+
+          '<div class="drug-section"><h4>Main indication</h4><p>'+esc(d.indication)+'</p></div>'+
+          '<div class="drug-section"><h4>Exam must-knows</h4><ul>'+(d.examPoints||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
+          '<div class="drug-section"><h4>Counselling the patient</h4><ul>'+(d.counselling||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
+          '<div class="drug-section"><h4>Main side effects</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
+        '</div>'
+      ) : '';
+      return '<div class="drug-card">'+
+        '<button class="drug-card-head" data-id="'+id+'">'+
+          '<span><span class="drug-name">'+esc(d.generic)+'</span><div class="drug-brand">'+esc(brandStr)+' · '+esc(d.class)+'</div></span>'+
+          '<span class="badge badge-accent">'+esc(topicLabel(d.topic))+'</span>'+
+        '</button>'+body+
+      '</div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead"><h1>Drug reference</h1><p>Generic &amp; brand names, pharmacology, main indication, exam must-knows, patient counselling, and main side effects. Tap a drug to expand it.</p></div>'+
+      '<div class="panel" style="margin-bottom:16px;">'+
+        '<div class="field-row">'+
+          '<input type="text" class="textinput" id="drugSearch" placeholder="Search by generic or brand name…" value="'+esc(drugSearch)+'">'+
+          '<select class="select" id="drugTopicSelect">'+filterOptions+'</select>'+
+        '</div>'+
+      '</div>'+
+      (list.length ?
+        '<div class="drug-list">'+cardsHtml+'</div>'
+        : '<div class="panel"><p class="empty">No drugs match — try a different search or topic.</p></div>')+
+      '<p class="footnote">Coverage is still growing topic by topic — this list will keep expanding. Educational reference content, not a substitute for the full product monograph.</p>';
+
+    document.getElementById("drugSearch").addEventListener("input", function(e){
+      drugSearch = e.target.value;
+      var caret = e.target.selectionStart;
+      render();
+      var el = document.getElementById("drugSearch");
+      if (el){ el.focus(); el.setSelectionRange(caret, caret); }
+    });
+    document.getElementById("drugTopicSelect").addEventListener("change", function(e){
+      drugFilter = e.target.value; render();
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".drug-card-head"), function(btn){
+      btn.addEventListener("click", function(){
+        var id = btn.getAttribute("data-id");
+        drugOpenId = (drugOpenId===id) ? null : id;
+        render();
+      });
+    });
+  }
+
   /* ---------------- Render: History ---------------- */
   function renderHistory(){
     var rows = [];
@@ -1152,6 +1258,7 @@
     if (view==="dashboard") renderDashboard();
     else if (view==="mcq") renderMcq();
     else if (view==="osce") renderOsce();
+    else if (view==="drugs") renderDrugs();
     else if (view==="history") renderHistory();
   }
 
