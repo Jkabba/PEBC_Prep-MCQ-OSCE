@@ -386,7 +386,14 @@
   }
   .drug-card-head:hover{ background:var(--surface-2); }
   .drug-name{ font-weight:700; font-size:0.98rem; color:var(--text); }
-  .drug-pronunciation{ font-size:0.8rem; color:var(--text-muted); font-style:italic; margin-left:6px; }
+  .drug-pronunciation{
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:0.8rem; color:var(--text-muted); font-style:italic; margin-left:6px;
+    background:none; border:none; padding:0; font-family:inherit; cursor:pointer;
+  }
+  .drug-pronunciation:hover, .drug-pronunciation:focus-visible{ color:var(--accent); }
+  .drug-pronunciation svg{ width:12px; height:12px; flex:none; }
+  .drug-pronunciation[data-playing="true"]{ color:var(--accent); }
   .drug-brand{ font-size:0.8rem; color:var(--text-muted); margin-top:2px; }
   .drug-card-body{ padding:0 16px 18px; border-top:1px solid var(--border); }
   .drug-section{ margin-top:14px; }
@@ -769,6 +776,28 @@
     var d = new Date(ts);
     return d.toLocaleDateString(undefined,{month:"short",day:"numeric"}) + " " +
            d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+  }
+  var speakingBtn = null;
+  function speakDrugName(name, btnEl){
+    if (!name || !("speechSynthesis" in window)) return;
+    try{
+      window.speechSynthesis.cancel();
+      if (speakingBtn) speakingBtn.removeAttribute("data-playing");
+      var u = new SpeechSynthesisUtterance(name);
+      u.rate = 0.85;
+      var voices = window.speechSynthesis.getVoices();
+      var v = voices.find(function(x){ return /^en-CA/i.test(x.lang); }) || voices.find(function(x){ return /^en/i.test(x.lang); });
+      if (v) u.voice = v;
+      if (btnEl){
+        btnEl.setAttribute("data-playing","true");
+        speakingBtn = btnEl;
+        u.onend = u.onerror = function(){
+          btnEl.removeAttribute("data-playing");
+          if (speakingBtn===btnEl) speakingBtn = null;
+        };
+      }
+      window.speechSynthesis.speak(u);
+    }catch(e){}
   }
 
   /* ---------------- Router / view state ---------------- */
@@ -1253,11 +1282,15 @@
           '<div class="drug-section"><h4>Main side effects</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
         '</div>'
       ) : '';
+      var speakIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 9 3 15 8 15 13 20 13 4 8 9 3 9"></polygon><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>';
+      var pron = d.pronunciation ?
+        '<button type="button" class="drug-pronunciation" data-generic="'+esc(d.generic)+'" aria-label="Play pronunciation of '+esc(d.generic)+'">'+esc(d.pronunciation)+' '+speakIcon+'</button>'
+        : '';
       return '<div class="drug-card">'+
-        '<button class="drug-card-head" data-id="'+id+'">'+
-          '<span><span class="drug-name">'+esc(d.generic)+'</span>'+(d.pronunciation ? '<span class="drug-pronunciation">'+esc(d.pronunciation)+'</span>' : '')+'<div class="drug-brand">'+esc(brandStr)+' · '+esc(d.class)+'</div></span>'+
+        '<div class="drug-card-head" data-id="'+id+'" role="button" tabindex="0">'+
+          '<span><span class="drug-name">'+esc(d.generic)+'</span>'+pron+'<div class="drug-brand">'+esc(brandStr)+' · '+esc(d.class)+'</div></span>'+
           '<span class="badge badge-accent">'+esc(topicLabel(d.topic))+'</span>'+
-        '</button>'+body+
+        '</div>'+body+
       '</div>';
     }).join("");
 
@@ -1284,11 +1317,21 @@
     document.getElementById("drugTopicSelect").addEventListener("change", function(e){
       drugFilter = e.target.value; render();
     });
-    Array.prototype.forEach.call(document.querySelectorAll(".drug-card-head"), function(btn){
-      btn.addEventListener("click", function(){
-        var id = btn.getAttribute("data-id");
+    Array.prototype.forEach.call(document.querySelectorAll(".drug-card-head"), function(el){
+      var toggle = function(){
+        var id = el.getAttribute("data-id");
         drugOpenId = (drugOpenId===id) ? null : id;
         render();
+      };
+      el.addEventListener("click", toggle);
+      el.addEventListener("keydown", function(e){
+        if (e.key==="Enter" || e.key===" "){ e.preventDefault(); toggle(); }
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".drug-pronunciation"), function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        speakDrugName(btn.getAttribute("data-generic"), btn);
       });
     });
   }
