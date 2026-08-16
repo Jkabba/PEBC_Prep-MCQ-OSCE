@@ -1289,6 +1289,7 @@
         '<div class="drug-card-body">'+
           '<div class="drug-section"><h4>Pharmacology</h4><p>'+esc(d.moa)+'</p></div>'+
           '<div class="drug-section"><h4>Main indication</h4><p>'+esc(d.indication)+'</p></div>'+
+          '<div class="drug-section"><h4>Typical adult dosage</h4><p>'+esc(d.dosage)+'</p></div>'+
           '<div class="drug-section"><h4>Exam must-knows</h4><ul>'+(d.examPoints||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
           '<div class="drug-section"><h4>Counselling the patient</h4><ul>'+(d.counselling||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
           '<div class="drug-section"><h4>Main side effects</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
