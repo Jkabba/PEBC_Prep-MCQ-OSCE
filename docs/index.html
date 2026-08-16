@@ -386,6 +386,7 @@
   }
   .drug-card-head:hover{ background:var(--surface-2); }
   .drug-name{ font-weight:700; font-size:0.98rem; color:var(--text); }
+  .drug-pronunciation{ font-size:0.8rem; color:var(--text-muted); font-style:italic; margin-left:6px; }
   .drug-brand{ font-size:0.8rem; color:var(--text-muted); margin-top:2px; }
   .drug-card-body{ padding:0 16px 18px; border-top:1px solid var(--border); }
   .drug-section{ margin-top:14px; }
@@ -1254,7 +1255,7 @@
       ) : '';
       return '<div class="drug-card">'+
         '<button class="drug-card-head" data-id="'+id+'">'+
-          '<span><span class="drug-name">'+esc(d.generic)+'</span><div class="drug-brand">'+esc(brandStr)+' · '+esc(d.class)+'</div></span>'+
+          '<span><span class="drug-name">'+esc(d.generic)+'</span>'+(d.pronunciation ? '<span class="drug-pronunciation">'+esc(d.pronunciation)+'</span>' : '')+'<div class="drug-brand">'+esc(brandStr)+' · '+esc(d.class)+'</div></span>'+
           '<span class="badge badge-accent">'+esc(topicLabel(d.topic))+'</span>'+
         '</button>'+body+
       '</div>';
