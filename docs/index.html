@@ -778,15 +778,27 @@
            d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
   }
   var speakingBtn = null;
+  if ("speechSynthesis" in window){
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.addEventListener("voiceschanged", function(){ window.speechSynthesis.getVoices(); });
+  }
   function speakDrugName(name, btnEl){
     if (!name || !("speechSynthesis" in window)) return;
     try{
       window.speechSynthesis.cancel();
       if (speakingBtn) speakingBtn.removeAttribute("data-playing");
       var u = new SpeechSynthesisUtterance(name);
-      u.rate = 0.85;
+      u.rate = 0.95;
+      u.pitch = 1;
       var voices = window.speechSynthesis.getVoices();
-      var v = voices.find(function(x){ return /^en-CA/i.test(x.lang); }) || voices.find(function(x){ return /^en/i.test(x.lang); });
+      var enVoices = voices.filter(function(x){ return /^en/i.test(x.lang); });
+      var quality = /Google|Natural|Enhanced|Premium|Neural|Siri/i;
+      var v =
+        enVoices.find(function(x){ return /^en-CA/i.test(x.lang) && quality.test(x.name); }) ||
+        enVoices.find(function(x){ return quality.test(x.name); }) ||
+        enVoices.find(function(x){ return /^en-CA/i.test(x.lang); }) ||
+        enVoices.find(function(x){ return /^en-US/i.test(x.lang); }) ||
+        enVoices[0];
       if (v) u.voice = v;
       if (btnEl){
         btnEl.setAttribute("data-playing","true");
