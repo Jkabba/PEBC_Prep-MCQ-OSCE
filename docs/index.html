@@ -405,6 +405,36 @@
   .divider{ height:1px; background:var(--border); border:none; margin:18px 0; }
   .field-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
   .qcount{ font-family:var(--font-mono); font-size:0.78rem; color:var(--text-muted); }
+
+  /* ---- Quick reference ---- */
+  .sched-card{ border:1px solid var(--border); border-radius:12px; background:var(--bg-elevated); padding:16px; margin-bottom:12px; }
+  .sched-card .sched-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+  .sched-card .sched-title{ font-weight:700; font-size:0.98rem; }
+  .sched-card .sched-desc{ font-size:0.88rem; color:var(--text-muted); margin:6px 0 10px; line-height:1.55; }
+  .sched-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+  .sched-tag{ font-size:0.78rem; background:var(--surface-2); color:var(--text); padding:3px 9px; border-radius:100px; }
+  .sched-rules{ margin:0; padding-left:18px; font-size:0.85rem; line-height:1.6; color:var(--text); }
+
+  .abbrev-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; }
+  .abbrev-item{ border:1px solid var(--border); border-radius:9px; background:var(--bg-elevated); padding:9px 12px; }
+  .abbrev-item .a-code{ font-family:var(--font-mono); font-weight:700; font-size:0.86rem; color:var(--accent); }
+  .abbrev-item .a-mean{ font-size:0.83rem; color:var(--text-muted); margin-top:2px; }
+  .danger-row{ border:1px solid var(--danger); background:var(--danger-soft); border-radius:9px; padding:10px 14px; margin-bottom:8px; }
+  .danger-row .d-bad{ font-family:var(--font-mono); font-weight:700; color:var(--danger); font-size:0.88rem; }
+  .danger-row .d-why{ font-size:0.83rem; margin:3px 0; }
+  .danger-row .d-fix{ font-size:0.83rem; color:var(--success); font-weight:600; }
+
+  .kroll-card{ border:1px solid var(--border); border-radius:12px; background:var(--bg-elevated); padding:15px; margin-bottom:10px; cursor:pointer; }
+  .kroll-card:hover{ background:var(--surface-2); }
+  .kroll-card .k-head{ display:flex; align-items:center; gap:10px; }
+  .kroll-card .k-num{ flex:none; width:26px; height:26px; border-radius:50%; background:var(--accent-soft); color:var(--accent); font-family:var(--font-mono); font-weight:700; font-size:0.78rem; display:flex; align-items:center; justify-content:center; }
+  .kroll-card .k-title{ font-weight:700; font-size:0.92rem; }
+  .kroll-steps{ list-style:none; margin:12px 0 0; padding:0; counter-reset:kstep; }
+  .kroll-steps li{ counter-increment:kstep; position:relative; padding:8px 0 8px 30px; font-size:0.9rem; line-height:1.55; border-top:1px dashed var(--border); }
+  .kroll-steps li:first-child{ border-top:none; }
+  .kroll-steps li::before{ content:counter(kstep); position:absolute; left:0; top:8px; width:20px; height:20px; border-radius:50%; background:var(--accent); color:var(--accent-contrast); font-family:var(--font-mono); font-size:0.72rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .kroll-diagram-wrap{ overflow-x:auto; margin-bottom:8px; }
+  .kroll-diagram-wrap svg{ display:block; min-width:640px; }
 </style>
 
 </head>
@@ -457,6 +487,169 @@
     for (var i=0;i<TOPICS.length;i++){ if (TOPICS[i].key===key) return TOPICS[i].label; }
     return key;
   }
+
+  /* ---------------- Quick reference: drug schedules ---------------- */
+  var DRUG_SCHEDULES = {
+    napra: [
+      {sched:"Schedule I", title:"Prescription drugs", desc:"Requires a valid prescription. Sold only pursuant to a prescription, kept behind the counter, and recorded by the pharmacy.",
+       examples:["Amoxicillin","Ramipril","Atorvastatin","Warfarin"],
+       rules:["Cannot be sold without a prescription from an authorized prescriber","Pharmacist must be involved in every dispense"]},
+      {sched:"Schedule II", title:"Pharmacy (behind-the-counter)", desc:"No prescription required, but the product cannot be self-selected — it's kept in an area with no public access, and a pharmacist must be directly involved before sale.",
+       examples:["Emergency contraception (levonorgestrel / Plan B)","Naloxone kits","Insulin syringes/needles (most provinces)"],
+       rules:["Patient cannot pick it off a shelf themselves","Pharmacist consultation is required, even though no Rx is needed"]},
+      {sched:"Schedule III", title:"Pharmacy (self-selection)", desc:"Available on the open shelf for the patient to self-select, but only within a licensed pharmacy where a pharmacist is available for consultation if needed.",
+       examples:["Low-dose ibuprofen (200 mg)","Diphenhydramine","Hydrocortisone 0.5% cream","Loperamide"],
+       rules:["Only sold where a pharmacist is present in the store (even if not directly involved in the sale)"]},
+      {sched:"Unscheduled", title:"Open / general sale", desc:"No restriction on where it can be sold — grocery stores, gas stations, convenience stores.",
+       examples:["Plain acetaminophen (regular-strength, limited pack size)","Basic vitamins","Most cosmetics"],
+       rules:["No pharmacy or pharmacist involvement required at all"]}
+    ],
+    cdsa: [
+      {sched:"CDSA Schedule I", title:"Narcotics — strictest control", desc:"Opioids and select stimulants. The single most heavily tested CDSA schedule on licensing exams.",
+       examples:["Morphine","Oxycodone","Fentanyl","Methadone","Heroin","Cocaine"],
+       rules:["Verbal orders NOT permitted (except narrowly defined emergencies)","NO refills — every fill needs a brand-new written/faxed prescription","Cannot be transferred between pharmacies","Loss or theft must be reported to Health Canada"]},
+      {sched:"CDSA Schedule II", title:"Cannabis", desc:"Historically scheduled here; medical and non-medical cannabis are now primarily governed by the separate Cannabis Act (2018), with their own access frameworks.",
+       examples:["Dried cannabis","Cannabis oil"], rules:["Largely superseded by Cannabis Act rules for legal product"]},
+      {sched:"CDSA Schedule III", title:"Restricted / limited accepted medical use", desc:"Traditionally no accepted medical use, though some are now used via Health Canada's Special Access Program or clinical trials.",
+       examples:["LSD","Psilocybin","MDMA"], rules:["Tightly restricted access outside of approved research/special-access pathways"]},
+      {sched:"CDSA Schedule IV", title:"Targeted substances — moderate control", desc:"Meaningfully less strict than Schedule I — this is the classic exam contrast question (\"why is this drug's dispensing different from a narcotic?\").",
+       examples:["Benzodiazepines (e.g., diazepam, lorazepam)","Anabolic steroids","Barbiturates"],
+       rules:["Verbal orders ARE permitted","Refills ARE permitted (up to 1 year from the original date)"]},
+      {sched:"CDSA Schedule VI", title:"Precursor chemicals", desc:"Substances that can be used to manufacture controlled drugs; sale is quantity-limited and tracked, often via NAPRA Schedule II behind-the-counter access.",
+       examples:["Pseudoephedrine"], rules:["Purchase quantity limits apply","Photo ID and log of purchaser typically required"]}
+    ]
+  };
+
+  /* ---------------- Quick reference: prescription abbreviations ---------------- */
+  var RX_ABBREV = [
+    {cat:"Frequency & timing", items:[
+      {a:"BID", m:"Twice daily"}, {a:"TID", m:"Three times daily"}, {a:"QID", m:"Four times daily"},
+      {a:"Q4H", m:"Every 4 hours"}, {a:"Q6H", m:"Every 6 hours"}, {a:"QHS / HS", m:"At bedtime"},
+      {a:"AC", m:"Before meals"}, {a:"PC", m:"After meals"}, {a:"PRN", m:"As needed"}, {a:"STAT", m:"Immediately"}
+    ]},
+    {cat:"Route", items:[
+      {a:"PO", m:"By mouth"}, {a:"SL", m:"Sublingual"}, {a:"SC / subcut", m:"Subcutaneous"},
+      {a:"IM", m:"Intramuscular"}, {a:"IV", m:"Intravenous"}, {a:"PR", m:"Per rectum"},
+      {a:"PV", m:"Per vagina"}, {a:"Top", m:"Topical"}, {a:"NG", m:"Nasogastric"}, {a:"Inh", m:"Inhalation"}
+    ]},
+    {cat:"Eye & ear — high-risk confusable set", items:[
+      {a:"OD", m:"Right eye (⚠ NOT \"once daily\" — a classic dangerous mix-up)"}, {a:"OS", m:"Left eye"}, {a:"OU", m:"Both eyes"},
+      {a:"AD", m:"Right ear"}, {a:"AS", m:"Left ear"}, {a:"AU", m:"Both ears"}
+    ]},
+    {cat:"Dosage form & measurement", items:[
+      {a:"Tab", m:"Tablet"}, {a:"Cap", m:"Capsule"}, {a:"Susp", m:"Suspension"}, {a:"Gtt", m:"Drop"},
+      {a:"Ung", m:"Ointment"}, {a:"Supp", m:"Suppository"}, {a:"mL", m:"Millilitre"}, {a:"mg / mcg", m:"Milligram / microgram"}
+    ]},
+    {cat:"Dispensing", items:[
+      {a:"Disp", m:"Dispense (quantity)"}, {a:"Sig", m:"Directions — what goes on the label"},
+      {a:"Rpt / Refill", m:"Repeat"}, {a:"NR", m:"No repeat"}, {a:"Qs", m:"Quantity sufficient"}
+    ]}
+  ];
+  var RX_ABBREV_DANGER = [
+    {bad:"U or IU", why:"Misread as \"0\" or \"4\" (10-fold overdose risk)", fix:"Write \"units\" / \"international units\" in full"},
+    {bad:"QD or QOD", why:"Confused with each other, or with QID", fix:"Write \"daily\" or \"every other day\""},
+    {bad:"Trailing zero (1.0 mg)", why:"Misread as \"10 mg\" if the decimal point is missed", fix:"Never use a trailing zero — write \"1 mg\""},
+    {bad:"No leading zero (.5 mg)", why:"Misread as \"5 mg\" if the decimal point is missed", fix:"Always use a leading zero — write \"0.5 mg\""},
+    {bad:"MS, MSO4, MgSO4", why:"Confused between morphine sulfate and magnesium sulfate — has caused fatal errors", fix:"Write the full drug name"},
+    {bad:"cc", why:"Confused with \"U\" (units)", fix:"Write \"mL\""},
+    {bad:"µg", why:"Confused with \"mg\" — a 1000-fold overdose risk", fix:"Write \"mcg\""}
+  ];
+
+  /* ---------------- Quick reference: Kroll workflow ---------------- */
+  var KROLL_OPS = [
+    {n:1, title:"New prescription (hard-copy) entry", steps:[
+      "Search for the existing patient profile, or create a new one (demographics, allergies, insurance/Drug Service Card)",
+      "Enter or verify the prescriber (search the prescriber database, or add a new one)",
+      "Search the drug by DIN, brand, or generic name; select the correct strength and formulation",
+      "Enter the Sig, quantity, days supply, and refills authorized",
+      "Review any automatic allergy / interaction / DUR alerts before proceeding",
+      "Route the prescription to the fill queue for label printing"
+    ]},
+    {n:2, title:"e-Prescription (PrescribeIT) intake", steps:[
+      "An incoming e-prescription arrives electronically — no fax or manual re-transcription needed",
+      "Verify the patient match against the existing profile, or create a new one",
+      "Confirm the prescriber, drug, and Sig auto-populated correctly; edit only if needed",
+      "Accept the prescription into the fill queue"
+    ]},
+    {n:3, title:"Refill / renewal request processing", steps:[
+      "Pull the prescription history from the patient's profile",
+      "Check refills remaining and days since the last fill (flags early refills)",
+      "For online renewal requests, review and approve or deny",
+      "Re-adjudicate to insurance, print the label, and queue for pharmacist verification"
+    ]},
+    {n:4, title:"Third-party / insurance adjudication", steps:[
+      "The system auto-maps the DIN plus intervention, service, and program codes from the patient's Drug Service Card",
+      "Submit the claim electronically to the payer in real time",
+      "Resolve any rejection codes (plan limits, duplicate therapy, prior authorization needed)",
+      "Confirm the co-pay / patient portion before dispensing"
+    ]},
+    {n:5, title:"Drug interaction / allergy / DUR alert review", steps:[
+      "An alert triggers automatically at data entry (interaction, allergy, duplicate therapy, dose range)",
+      "The pharmacist reviews severity and clinical context",
+      "Document the clinical decision or override reason in the patient record",
+      "Contact the prescriber if a significant interaction requires intervention"
+    ]},
+    {n:6, title:"Pharmacist verification (RPh check) & barcode scan", steps:[
+      "Compare the filled product against the original prescription image/order",
+      "Scan the product barcode to confirm the correct DIN and lot against what was entered",
+      "Visually verify the tablet or capsule against the reference image",
+      "Sign off electronically before the prescription is released to the patient"
+    ]},
+    {n:7, title:"Compliance packaging (blister pack / robotic packager)", steps:[
+      "Set up a multi-drug compliance pack cycle for the patient (weekly or bi-weekly)",
+      "Confirm all ongoing medications are included and PRN medications are excluded appropriately",
+      "Synchronize refill dates across all included medications",
+      "Send the job to the blister card printer or robotic packager integration"
+    ]},
+    {n:8, title:"MedsCheck / medication review documentation & billing", steps:[
+      "Book and document the medication review appointment in the patient record",
+      "Complete the standardized review template (indications, adherence, therapeutic duplications)",
+      "Generate the patient's medication list/summary document",
+      "Submit the professional service billing claim under the applicable program"
+    ]},
+    {n:9, title:"Immunization documentation & billing", steps:[
+      "Record the vaccine given — product, lot number, injection site, and dose — in the patient's immunization record",
+      "Screen and document contraindications and consent",
+      "Submit the immunization billing claim under the applicable program code",
+      "Update the patient's vaccine history for future interval/schedule tracking"
+    ]},
+    {n:10, title:"Pharmacist prescription adaptation / extension", steps:[
+      "Identify an eligible scenario under provincial scope (therapeutic substitution, dose adjustment, extending a lapsed prescription)",
+      "Document the clinical rationale in the patient record",
+      "Generate the adapted prescription under the pharmacist's own authority",
+      "Notify the original prescriber, per provincial requirements"
+    ]},
+    {n:11, title:"Prescription transfer (in / out)", steps:[
+      "Transfer OUT: verify remaining quantity/refills, mark the prescription as transferred, record the receiving pharmacy",
+      "Transfer IN: record the transferring pharmacy, refills remaining, and original prescriber",
+      "Remember: narcotics/controlled substances generally CANNOT be transferred between pharmacies (CDSA restriction)",
+      "Update the patient profile to reflect the new fill source"
+    ]},
+    {n:12, title:"Inventory management & purchase orders", steps:[
+      "Monitor stock levels against reorder points (often automated via wholesaler integration)",
+      "Generate and electronically transmit a purchase order to the wholesaler",
+      "Receive and reconcile incoming stock against the purchase order on arrival",
+      "Adjust on-hand quantities and resolve discrepancies or backorders"
+    ]},
+    {n:13, title:"Compounding record (non-sterile / sterile)", steps:[
+      "Select or create the master compounding formula in the system",
+      "Enter and verify ingredient lots, and calculate quantities per the formula",
+      "Document the beyond-use date and compounding record per NAPRA standards",
+      "Generate the compounding label and route it for pharmacist verification"
+    ]},
+    {n:14, title:"Long-term care (MAR / eMAR) management", steps:[
+      "Maintain the resident's active medication profile synced with facility orders",
+      "Generate or update the Medication Administration Record (MAR/eMAR) for nursing staff",
+      "Process physician order changes and reconcile against the existing MAR",
+      "Coordinate cycle-fill packaging aligned to the facility's administration schedule"
+    ]},
+    {n:15, title:"Workflow queue management (batch fill & label)", steps:[
+      "Review the day's fill queue by status: data entry → clinical check → adjudication → label → verification → will-call",
+      "Batch-process routine refills together for efficiency",
+      "Route flagged/exception prescriptions (interactions, insurance holds) for priority handling",
+      "Track will-call/pickup status and manage return-to-stock for unclaimed prescriptions"
+    ]}
+  ];
 
   /* ---------------- Question bank ---------------- */
   var MCQ_SEED = [
@@ -827,6 +1020,8 @@
   var drugOpenId = null;
   var STUDY = window.STUDY_DATA || [];
   var studyCurrent = null;
+  var refSection = null;
+  var krollOpen = null;
 
   var VIEWS = [
     {key:"dashboard", label:"Dashboard"},
@@ -834,6 +1029,7 @@
     {key:"osce", label:"OSCE Stations"},
     {key:"study", label:"Study Guides"},
     {key:"drugs", label:"Drug Reference"},
+    {key:"ref", label:"Quick Reference"},
     {key:"history", label:"History"}
   ];
 
@@ -1260,6 +1456,151 @@
     document.getElementById("backStudy").addEventListener("click", closeStudyGuide);
   }
 
+  /* ---------------- Render: Quick Reference ---------------- */
+  function openRef(section){ refSection = section; krollOpen = null; render(); window.scrollTo(0,0); }
+  function closeRef(){ refSection = null; render(); }
+
+  function renderReference(){
+    if (!refSection){
+      document.getElementById("main").innerHTML =
+        '<div class="pagehead"><h1>Quick reference</h1><p>Fast lookups for the details that are easy to blank on mid-exam.</p></div>'+
+        '<div class="station-grid">'+
+          '<button class="station-card" data-ref="schedules"><div class="st-title">Canadian drug schedules</div><div class="st-blurb">NAPRA Schedule I/II/III/Unscheduled and CDSA controlled-substance schedules, with examples and dispensing rules.</div></button>'+
+          '<button class="station-card" data-ref="abbrev"><div class="st-title">Prescription abbreviations</div><div class="st-blurb">Common Sig abbreviations by category, plus the ISMP Canada "Do Not Use" dangerous-abbreviation list.</div></button>'+
+          '<button class="station-card" data-ref="kroll"><div class="st-title">Kroll workflow — top 15 operations</div><div class="st-blurb">Step-by-step walkthroughs of the most common Kroll pharmacy-software operations, plus one flow diagram.</div></button>'+
+        '</div>';
+      Array.prototype.forEach.call(document.querySelectorAll("[data-ref]"), function(btn){
+        btn.addEventListener("click", function(){ openRef(btn.getAttribute("data-ref")); });
+      });
+      return;
+    }
+    if (refSection==="schedules") renderDrugSchedules();
+    else if (refSection==="abbrev") renderRxAbbrev();
+    else if (refSection==="kroll") renderKrollOps();
+  }
+
+  function refBackBtn(title){
+    return '<div class="pagehead"><button class="btn btn-ghost btn-sm" id="backRef" style="margin-bottom:10px;">&larr; Quick reference</button><h1>'+esc(title)+'</h1></div>';
+  }
+  function wireRefBack(){
+    document.getElementById("backRef").addEventListener("click", closeRef);
+  }
+
+  function renderDrugSchedules(){
+    function schedCard(s){
+      return '<div class="sched-card">'+
+        '<div class="sched-head"><span class="badge badge-accent">'+esc(s.sched)+'</span><span class="sched-title">'+esc(s.title)+'</span></div>'+
+        '<div class="sched-desc">'+esc(s.desc)+'</div>'+
+        '<div class="sched-tags">'+s.examples.map(function(e){ return '<span class="sched-tag">'+esc(e)+'</span>'; }).join("")+'</div>'+
+        '<ul class="sched-rules">'+s.rules.map(function(r){ return '<li>'+esc(r)+'</li>'; }).join("")+'</ul>'+
+      '</div>';
+    }
+    document.getElementById("main").innerHTML =
+      refBackBtn("Canadian drug schedules")+
+      '<div class="panel"><h2>NAPRA National Drug Schedules</h2>'+
+        '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">Governs how a drug may be sold — provincial colleges adopt these with minor variation.</p>'+
+        DRUG_SCHEDULES.napra.map(schedCard).join("")+
+      '</div>'+
+      '<div class="panel"><h2>CDSA — Controlled Drugs and Substances Act</h2>'+
+        '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">Federal law governing narcotics and controlled substances — separate from, and layered on top of, NAPRA scheduling. Schedules I and IV are the most heavily tested.</p>'+
+        DRUG_SCHEDULES.cdsa.map(schedCard).join("")+
+      '</div>'+
+      '<p class="footnote">Study aid summarizing NAPRA and CDSA scheduling for exam prep — always confirm against the current NAPRA National Drug Schedules and CDSA text for practice.</p>';
+    wireRefBack();
+  }
+
+  function renderRxAbbrev(){
+    var catsHtml = RX_ABBREV.map(function(cat){
+      return '<div class="panel"><h2>'+esc(cat.cat)+'</h2>'+
+        '<div class="abbrev-grid" style="margin-top:12px;">'+cat.items.map(function(it){
+          return '<div class="abbrev-item"><div class="a-code">'+esc(it.a)+'</div><div class="a-mean">'+esc(it.m)+'</div></div>';
+        }).join("")+'</div></div>';
+    }).join("");
+
+    var dangerHtml = RX_ABBREV_DANGER.map(function(d){
+      return '<div class="danger-row">'+
+        '<div class="d-bad">'+esc(d.bad)+'</div>'+
+        '<div class="d-why">'+esc(d.why)+'</div>'+
+        '<div class="d-fix">Instead: '+esc(d.fix)+'</div>'+
+      '</div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      refBackBtn("Prescription abbreviations")+
+      '<div class="panel" style="border-color:var(--danger);">'+
+        '<h2 style="color:var(--danger);">⚠ ISMP Canada "Do Not Use" list</h2>'+
+        '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">These abbreviations are common exam trap questions — they look convenient but have caused real dispensing errors.</p>'+
+        dangerHtml+
+      '</div>'+
+      catsHtml+
+      '<p class="footnote">Reference only — always follow your provincial college\'s current prescription-labelling standards.</p>';
+    wireRefBack();
+  }
+
+  function buildKrollDiagram(){
+    var stages = [
+      "Rx Received\n(fax / e-Rx / verbal / transfer-in)",
+      "Patient Profile\ncheck / update",
+      "Data Entry\ndrug, DIN, Sig",
+      "Clinical Check\nDUR, interactions, allergy",
+      "Adjudication\ninsurance claim",
+      "Fill & Label\nbatch / blister / compound",
+      "RPh Verify\nbarcode scan",
+      "Counsel & Bill\npickup, documentation"
+    ];
+    var bw=150, bh=74, gap=22, y=54;
+    var svgW = stages.length*bw + (stages.length-1)*gap;
+    var boxes = "", arrows = "";
+    stages.forEach(function(label, i){
+      var x = i*(bw+gap);
+      var lines = label.split("\n");
+      boxes += '<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="10" fill="var(--bg-elevated)" stroke="var(--accent)" stroke-width="1.5"></rect>';
+      boxes += '<text x="'+(x+bw/2)+'" y="'+(y+30)+'" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text)">'+esc(lines[0])+'</text>';
+      boxes += '<text x="'+(x+bw/2)+'" y="'+(y+48)+'" text-anchor="middle" font-size="10.5" fill="var(--text-muted)">'+esc(lines[1]||"")+'</text>';
+      if (i < stages.length-1){
+        var ax = x+bw, ax2 = x+bw+gap;
+        arrows += '<line x1="'+ax+'" y1="'+(y+bh/2)+'" x2="'+(ax2-6)+'" y2="'+(y+bh/2)+'" stroke="var(--gold)" stroke-width="2" marker-end="url(#krollArrow)"></line>';
+      }
+    });
+    return '<div class="kroll-diagram-wrap"><svg viewBox="0 0 '+svgW+' 170" xmlns="http://www.w3.org/2000/svg">'+
+      '<defs><marker id="krollArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--gold)"></path></marker></defs>'+
+      arrows+boxes+
+    '</svg></div>';
+  }
+
+  function renderKrollOps(){
+    var opsHtml;
+    if (krollOpen==null){
+      opsHtml = '<div class="panel">'+KROLL_OPS.map(function(op){
+        return '<div class="kroll-card" data-op="'+op.n+'"><div class="k-head"><span class="k-num">'+op.n+'</span><span class="k-title">'+esc(op.title)+'</span></div></div>';
+      }).join("")+'</div>';
+    } else {
+      var op = KROLL_OPS.filter(function(o){ return o.n===krollOpen; })[0];
+      opsHtml = '<div class="panel">'+
+        '<button class="btn btn-ghost btn-sm" id="backKrollList" style="margin-bottom:10px;">&larr; All 15 operations</button>'+
+        '<h2>'+op.n+'. '+esc(op.title)+'</h2>'+
+        '<ol class="kroll-steps">'+op.steps.map(function(s){ return '<li>'+esc(s)+'</li>'; }).join("")+'</ol>'+
+      '</div>';
+    }
+
+    document.getElementById("main").innerHTML =
+      refBackBtn("Kroll workflow — top 15 operations")+
+      '<div class="panel">'+
+        '<h2>End-to-end prescription flow</h2>'+
+        '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">Most of the 15 operations below slot into this core lifecycle. Scroll sideways on small screens.</p>'+
+        buildKrollDiagram()+
+      '</div>'+
+      opsHtml+
+      '<p class="footnote">General Kroll/Canadian-PMS workflow, based on Kroll\'s publicly documented feature set (TELUS Health) — not a certified user manual. Exact menu paths vary by version and pharmacy configuration; use your store\'s own Kroll training for click-by-click navigation.</p>';
+
+    wireRefBack();
+    var backList = document.getElementById("backKrollList");
+    if (backList) backList.addEventListener("click", function(){ krollOpen = null; render(); });
+    Array.prototype.forEach.call(document.querySelectorAll(".kroll-card"), function(card){
+      card.addEventListener("click", function(){ krollOpen = parseInt(card.getAttribute("data-op"),10); render(); window.scrollTo(0,0); });
+    });
+  }
+
   /* ---------------- Render: Drug Reference ---------------- */
   function renderDrugs(){
     var availableTopics = [];
@@ -1388,6 +1729,7 @@
     else if (view==="osce") renderOsce();
     else if (view==="study") renderStudyGuides();
     else if (view==="drugs") renderDrugs();
+    else if (view==="ref") renderReference();
     else if (view==="history") renderHistory();
   }
 
