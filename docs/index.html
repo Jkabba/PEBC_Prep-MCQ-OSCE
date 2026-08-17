@@ -1029,6 +1029,7 @@
     {key:"osce", label:"OSCE Stations"},
     {key:"study", label:"Study Guides"},
     {key:"drugs", label:"Drug Reference"},
+    {key:"schedules", label:"Drug Schedules"},
     {key:"ref", label:"Quick Reference"},
     {key:"history", label:"History"}
   ];
@@ -1465,7 +1466,6 @@
       document.getElementById("main").innerHTML =
         '<div class="pagehead"><h1>Quick reference</h1><p>Fast lookups for the details that are easy to blank on mid-exam.</p></div>'+
         '<div class="station-grid">'+
-          '<button class="station-card" data-ref="schedules"><div class="st-title">Canadian drug schedules</div><div class="st-blurb">NAPRA Schedule I/II/III/Unscheduled and CDSA controlled-substance schedules, with examples and dispensing rules.</div></button>'+
           '<button class="station-card" data-ref="abbrev"><div class="st-title">Prescription abbreviations</div><div class="st-blurb">Common Sig abbreviations by category, plus the ISMP Canada "Do Not Use" dangerous-abbreviation list.</div></button>'+
           '<button class="station-card" data-ref="kroll"><div class="st-title">Kroll workflow — top 15 operations</div><div class="st-blurb">Step-by-step walkthroughs of the most common Kroll pharmacy-software operations, plus one flow diagram.</div></button>'+
         '</div>';
@@ -1474,8 +1474,7 @@
       });
       return;
     }
-    if (refSection==="schedules") renderDrugSchedules();
-    else if (refSection==="abbrev") renderRxAbbrev();
+    if (refSection==="abbrev") renderRxAbbrev();
     else if (refSection==="kroll") renderKrollOps();
   }
 
@@ -1496,7 +1495,7 @@
       '</div>';
     }
     document.getElementById("main").innerHTML =
-      refBackBtn("Canadian drug schedules")+
+      '<div class="pagehead"><h1>Canadian drug schedules</h1><p>NAPRA National Drug Schedules and CDSA controlled-substance schedules — how a drug may be sold, and what dispensing rules apply.</p></div>'+
       '<div class="panel"><h2>NAPRA National Drug Schedules</h2>'+
         '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">Governs how a drug may be sold — provincial colleges adopt these with minor variation.</p>'+
         DRUG_SCHEDULES.napra.map(schedCard).join("")+
@@ -1506,7 +1505,6 @@
         DRUG_SCHEDULES.cdsa.map(schedCard).join("")+
       '</div>'+
       '<p class="footnote">Study aid summarizing NAPRA and CDSA scheduling for exam prep — always confirm against the current NAPRA National Drug Schedules and CDSA text for practice.</p>';
-    wireRefBack();
   }
 
   function renderRxAbbrev(){
@@ -1729,6 +1727,7 @@
     else if (view==="osce") renderOsce();
     else if (view==="study") renderStudyGuides();
     else if (view==="drugs") renderDrugs();
+    else if (view==="schedules") renderDrugSchedules();
     else if (view==="ref") renderReference();
     else if (view==="history") renderHistory();
   }
