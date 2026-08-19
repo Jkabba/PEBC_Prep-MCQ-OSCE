@@ -435,6 +435,21 @@
   .kroll-steps li::before{ content:counter(kstep); position:absolute; left:0; top:8px; width:20px; height:20px; border-radius:50%; background:var(--accent); color:var(--accent-contrast); font-family:var(--font-mono); font-size:0.72rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
   .kroll-diagram-wrap{ overflow-x:auto; margin-bottom:8px; }
   .kroll-diagram-wrap svg{ display:block; min-width:640px; }
+
+  .abbr-term{
+    border-bottom:1.5px dotted var(--gold); color:inherit; cursor:pointer;
+    font-weight:600;
+  }
+  .abbr-term:hover, .abbr-term:focus-visible{ color:var(--gold); }
+
+  .calc-card{ border:1px solid var(--border); border-radius:12px; background:var(--bg-elevated); padding:16px; margin-bottom:12px; }
+  .calc-card h3{ font-size:0.98rem; margin-bottom:8px; }
+  .calc-formula{
+    font-family:var(--font-mono); font-size:0.86rem; background:var(--surface-2);
+    border-radius:8px; padding:10px 12px; margin-bottom:12px; line-height:1.6; white-space:pre-wrap;
+  }
+  .calc-card h4{ font-size:0.74rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); margin:12px 0 6px; }
+  .calc-card ul{ margin:0; padding-left:18px; font-size:0.87rem; line-height:1.6; }
 </style>
 
 </head>
@@ -554,6 +569,120 @@
     {bad:"cc", why:"Confused with \"U\" (units)", fix:"Write \"mL\""},
     {bad:"µg", why:"Confused with \"mg\" — a 1000-fold overdose risk", fix:"Write \"mcg\""}
   ];
+
+  /* ---------------- Clinical & drug-class abbreviation glossary ---------------- */
+  /* Used for (1) the browsable Abbreviations page and (2) auto-highlighting in Study Guides,
+     since that's where "too many abbreviations I don't understand" was reported. */
+  var GLOSSARY = [
+    {a:"ACEi", m:"ACE inhibitor (angiotensin-converting enzyme inhibitor)"},
+    {a:"ARB", m:"Angiotensin receptor blocker"},
+    {a:"ARNI", m:"Angiotensin receptor-neprilysin inhibitor (e.g., sacubitril/valsartan)"},
+    {a:"MRA", m:"Mineralocorticoid receptor antagonist (e.g., spironolactone)"},
+    {a:"CCB", m:"Calcium channel blocker"},
+    {a:"DHP", m:"Dihydropyridine (a type of calcium channel blocker)"},
+    {a:"HFrEF", m:"Heart failure with reduced ejection fraction"},
+    {a:"HFpEF", m:"Heart failure with preserved ejection fraction"},
+    {a:"CHF", m:"Congestive heart failure (older/general term for heart failure)"},
+    {a:"EF", m:"Ejection fraction"},
+    {a:"AFib", m:"Atrial fibrillation"},
+    {a:"MI", m:"Myocardial infarction (heart attack)"},
+    {a:"ACS", m:"Acute coronary syndrome"},
+    {a:"STEMI", m:"ST-elevation myocardial infarction"},
+    {a:"NSTEMI", m:"Non-ST-elevation myocardial infarction"},
+    {a:"CVA", m:"Cerebrovascular accident (stroke)"},
+    {a:"TIA", m:"Transient ischemic attack (\"mini-stroke\")"},
+    {a:"DVT", m:"Deep vein thrombosis"},
+    {a:"PE", m:"Pulmonary embolism"},
+    {a:"VTE", m:"Venous thromboembolism (umbrella term for DVT/PE)"},
+    {a:"DOAC", m:"Direct oral anticoagulant (e.g., apixaban, rivaroxaban)"},
+    {a:"LMWH", m:"Low molecular weight heparin (e.g., dalteparin, enoxaparin)"},
+    {a:"INR", m:"International normalized ratio (warfarin monitoring)"},
+    {a:"CrCl", m:"Creatinine clearance"},
+    {a:"SCr", m:"Serum creatinine"},
+    {a:"eGFR", m:"Estimated glomerular filtration rate"},
+    {a:"CKD", m:"Chronic kidney disease"},
+    {a:"AKI", m:"Acute kidney injury"},
+    {a:"T1DM", m:"Type 1 diabetes mellitus"},
+    {a:"T2DM", m:"Type 2 diabetes mellitus"},
+    {a:"A1C", m:"Glycated hemoglobin (HbA1c) — a 3-month average blood sugar marker"},
+    {a:"SGLT2i", m:"Sodium-glucose cotransporter-2 inhibitor (e.g., empagliflozin)"},
+    {a:"GLP-1", m:"Glucagon-like peptide-1 (receptor agonist, e.g., semaglutide)"},
+    {a:"DPP-4i", m:"Dipeptidyl peptidase-4 inhibitor (e.g., sitagliptin)"},
+    {a:"TSH", m:"Thyroid-stimulating hormone"},
+    {a:"PCOS", m:"Polycystic ovary syndrome"},
+    {a:"COPD", m:"Chronic obstructive pulmonary disease"},
+    {a:"ICS", m:"Inhaled corticosteroid"},
+    {a:"LABA", m:"Long-acting beta agonist"},
+    {a:"LAMA", m:"Long-acting muscarinic antagonist"},
+    {a:"SABA", m:"Short-acting beta agonist"},
+    {a:"SAMA", m:"Short-acting muscarinic antagonist"},
+    {a:"GINA", m:"Global Initiative for Asthma (guideline body)"},
+    {a:"GOLD", m:"Global Initiative for Chronic Obstructive Lung Disease (guideline body)"},
+    {a:"pMDI", m:"Pressurized metered-dose inhaler (a \"puffer\")"},
+    {a:"SSRI", m:"Selective serotonin reuptake inhibitor"},
+    {a:"SNRI", m:"Serotonin-norepinephrine reuptake inhibitor"},
+    {a:"MAOI", m:"Monoamine oxidase inhibitor"},
+    {a:"TCA", m:"Tricyclic antidepressant"},
+    {a:"EPS", m:"Extrapyramidal symptoms (movement side effects of antipsychotics)"},
+    {a:"NMS", m:"Neuroleptic malignant syndrome (rare, serious antipsychotic reaction)"},
+    {a:"UTI", m:"Urinary tract infection"},
+    {a:"STI", m:"Sexually transmitted infection"},
+    {a:"CAP", m:"Community-acquired pneumonia"},
+    {a:"MRSA", m:"Methicillin-resistant Staphylococcus aureus"},
+    {a:"TB", m:"Tuberculosis"},
+    {a:"PPI", m:"Proton pump inhibitor"},
+    {a:"H2RA", m:"Histamine-2 receptor antagonist"},
+    {a:"GERD", m:"Gastroesophageal reflux disease"},
+    {a:"PUD", m:"Peptic ulcer disease"},
+    {a:"IBD", m:"Inflammatory bowel disease"},
+    {a:"IBS", m:"Irritable bowel syndrome"},
+    {a:"NSAID", m:"Nonsteroidal anti-inflammatory drug"},
+    {a:"RA", m:"Rheumatoid arthritis"},
+    {a:"OA", m:"Osteoarthritis"},
+    {a:"DMARD", m:"Disease-modifying antirheumatic drug"},
+    {a:"MTX", m:"Methotrexate"},
+    {a:"COC", m:"Combined oral contraceptive"},
+    {a:"POP", m:"Progestin-only pill"},
+    {a:"IUD", m:"Intrauterine device"},
+    {a:"HRT", m:"Hormone replacement therapy"},
+    {a:"EC", m:"Emergency contraception"},
+    {a:"CDSA", m:"Controlled Drugs and Substances Act (federal narcotics law)"},
+    {a:"NAPRA", m:"National Association of Pharmacy Regulatory Authorities"},
+    {a:"DIN", m:"Drug Identification Number"},
+    {a:"NPN", m:"Natural Product Number"},
+    {a:"MAID", m:"Medical assistance in dying"},
+    {a:"SDM", m:"Substitute decision-maker"},
+    {a:"CYP", m:"Cytochrome P450 (liver drug-metabolizing enzyme family)"},
+    {a:"TDM", m:"Therapeutic drug monitoring"},
+    {a:"DUR", m:"Drug utilization review"},
+    {a:"OAT", m:"Opioid agonist therapy (e.g., methadone, buprenorphine/naloxone)"},
+    {a:"LTC", m:"Long-term care"},
+    {a:"MAR", m:"Medication administration record"},
+    {a:"eMAR", m:"Electronic medication administration record"},
+    {a:"GCSF", m:"Granulocyte colony-stimulating factor (boosts white blood cell recovery)"},
+    {a:"CINV", m:"Chemotherapy-induced nausea and vomiting"},
+    {a:"NACI", m:"National Advisory Committee on Immunization"},
+    {a:"BSA", m:"Body surface area (used in some dosing calculations)"},
+    {a:"CBC", m:"Complete blood count"},
+    {a:"WBC", m:"White blood cell (count)"},
+    {a:"ANC", m:"Absolute neutrophil count"},
+    {a:"Dx", m:"Diagnosis"},
+    {a:"Hx", m:"History"},
+    {a:"Sx", m:"Symptoms"},
+    {a:"NHP", m:"Natural health product"}
+  ];
+  var GLOSSARY_MAP = {};
+  GLOSSARY.forEach(function(g){ GLOSSARY_MAP[g.a.toUpperCase()] = g.m; });
+  var GLOSSARY_REGEX = new RegExp("\\b(" + GLOSSARY.slice().sort(function(a,b){ return b.a.length-a.a.length; })
+    .map(function(g){ return g.a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).join("|") + ")\\b", "gi");
+  function highlightAbbrev(escapedText){
+    return escapedText.replace(GLOSSARY_REGEX, function(match){
+      if (match===match.toLowerCase()) return match; // skip all-lowercase matches (e.g. "cap") to avoid colliding with real words
+      var full = GLOSSARY_MAP[match.toUpperCase()];
+      if (!full) return match;
+      return '<span class="abbr-term" tabindex="0" data-full="'+esc(full)+'">'+match+'</span>';
+    });
+  }
 
   /* ---------------- Quick reference: Kroll workflow ---------------- */
   var KROLL_OPS = [
@@ -1022,6 +1151,7 @@
   var studyCurrent = null;
   var refSection = null;
   var krollOpen = null;
+  var abbrevSearch = "";
 
   var VIEWS = [
     {key:"dashboard", label:"Dashboard"},
@@ -1030,6 +1160,7 @@
     {key:"study", label:"Study Guides"},
     {key:"drugs", label:"Drug Reference"},
     {key:"schedules", label:"Drug Schedules"},
+    {key:"calc", label:"Calculations"},
     {key:"ref", label:"Quick Reference"},
     {key:"history", label:"History"}
   ];
@@ -1442,7 +1573,7 @@
     var sectionsHtml = guide.sections.map(function(sec){
       return '<div class="panel"><h2>'+esc(sec.heading)+'</h2>'+
         '<ul class="drug-section-list" style="margin:10px 0 0; padding-left:18px; font-size:0.92rem; line-height:1.7;">'+
-        sec.bullets.map(function(b){ return '<li>'+esc(b)+'</li>'; }).join("")+
+        sec.bullets.map(function(b){ return '<li>'+highlightAbbrev(esc(b))+'</li>'; }).join("")+
         '</ul></div>';
     }).join("");
 
@@ -1450,11 +1581,17 @@
       '<div class="pagehead">'+
         '<button class="btn btn-ghost btn-sm" id="backStudy" style="margin-bottom:10px;">&larr; All topics</button>'+
         '<h1>'+esc(guide.title)+'</h1>'+
+        '<p>Underlined terms are abbreviations — tap one for the full meaning.</p>'+
       '</div>'+
       sectionsHtml+
-      '<p class="footnote">High-yield review content — pairs well with MCQ Practice on the same topic to test recall right after reading.</p>';
+      '<p class="footnote">High-yield review content — pairs well with MCQ Practice on the same topic to test recall right after reading. Full abbreviation list under Quick Reference → Abbreviations.</p>';
 
     document.getElementById("backStudy").addEventListener("click", closeStudyGuide);
+    Array.prototype.forEach.call(document.querySelectorAll(".abbr-term"), function(el){
+      var show = function(e){ e.stopPropagation(); toast(el.textContent + " — " + el.getAttribute("data-full")); };
+      el.addEventListener("click", show);
+      el.addEventListener("keydown", function(e){ if (e.key==="Enter" || e.key===" "){ e.preventDefault(); show(e); } });
+    });
   }
 
   /* ---------------- Render: Quick Reference ---------------- */
@@ -1466,7 +1603,7 @@
       document.getElementById("main").innerHTML =
         '<div class="pagehead"><h1>Quick reference</h1><p>Fast lookups for the details that are easy to blank on mid-exam.</p></div>'+
         '<div class="station-grid">'+
-          '<button class="station-card" data-ref="abbrev"><div class="st-title">Prescription abbreviations</div><div class="st-blurb">Common Sig abbreviations by category, plus the ISMP Canada "Do Not Use" dangerous-abbreviation list.</div></button>'+
+          '<button class="station-card" data-ref="abbrev"><div class="st-title">Abbreviations</div><div class="st-blurb">Searchable: Sig/prescription abbreviations, the ISMP "Do Not Use" list, and every clinical/drug-class abbreviation used across Study Guides.</div></button>'+
           '<button class="station-card" data-ref="kroll"><div class="st-title">Kroll workflow — top 15 operations</div><div class="st-blurb">Step-by-step walkthroughs of the most common Kroll pharmacy-software operations, plus one flow diagram.</div></button>'+
         '</div>';
       Array.prototype.forEach.call(document.querySelectorAll("[data-ref]"), function(btn){
@@ -1507,8 +1644,41 @@
       '<p class="footnote">Study aid summarizing NAPRA and CDSA scheduling for exam prep — always confirm against the current NAPRA National Drug Schedules and CDSA text for practice.</p>';
   }
 
+  /* ---------------- Render: Pharmaceutical calculations ---------------- */
+  function renderCalculations(){
+    var items = DRUGS.filter(function(d){ return d.topic==="calc"; }).sort(function(a,b){ return a.generic.localeCompare(b.generic); });
+    var cardsHtml = items.map(function(d){
+      return '<div class="calc-card">'+
+        '<h3>'+esc(d.generic)+'</h3>'+
+        '<div class="calc-formula">'+esc(d.moa)+'</div>'+
+        '<h4>Worked example &amp; exam must-knows</h4><ul>'+(d.examPoints||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+        '<h4>How to apply it</h4><ul>'+(d.counselling||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+        '<h4>Common mistakes</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+      '</div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead"><h1>Pharmaceutical calculations</h1><p>Every core calculation tested on PEBC — the formula, a worked example, and the mistakes people actually make.</p></div>'+
+      '<div class="panel"><div class="btn-row" style="margin-top:0;"><button class="btn btn-primary" id="goCalcMcq">Practice calculation MCQs</button></div></div>'+
+      (cardsHtml || '<div class="panel"><p class="empty">Calculation content is still being generated — check back soon.</p></div>')+
+      '<p class="footnote">Reference only — verify against your compounding/calculation course materials and current NAPRA/USP standards.</p>';
+
+    document.getElementById("goCalcMcq").addEventListener("click", function(){
+      mcqFilter = "calc"; mcqQueue = []; mcqCurrent = null; mcqAnswered = false; setView("mcq");
+    });
+  }
+
   function renderRxAbbrev(){
-    var catsHtml = RX_ABBREV.map(function(cat){
+    var q = abbrevSearch.trim().toLowerCase();
+    var allCats = RX_ABBREV.concat([{cat:"Clinical & drug-class abbreviations", items:GLOSSARY}]);
+    var filteredCats = allCats.map(function(cat){
+      var items = !q ? cat.items : cat.items.filter(function(it){
+        return it.a.toLowerCase().indexOf(q)!==-1 || it.m.toLowerCase().indexOf(q)!==-1;
+      });
+      return {cat:cat.cat, items:items};
+    }).filter(function(cat){ return cat.items.length>0; });
+
+    var catsHtml = filteredCats.map(function(cat){
       return '<div class="panel"><h2>'+esc(cat.cat)+'</h2>'+
         '<div class="abbrev-grid" style="margin-top:12px;">'+cat.items.map(function(it){
           return '<div class="abbrev-item"><div class="a-code">'+esc(it.a)+'</div><div class="a-mean">'+esc(it.m)+'</div></div>';
@@ -1524,15 +1694,26 @@
     }).join("");
 
     document.getElementById("main").innerHTML =
-      refBackBtn("Prescription abbreviations")+
+      refBackBtn("Abbreviations")+
+      '<div class="panel" style="margin-bottom:16px;">'+
+        '<input type="text" class="textinput" id="abbrevSearch" placeholder="Search an abbreviation (e.g. ACEi, BID, CrCl)…" value="'+esc(abbrevSearch)+'" style="width:100%;">'+
+      '</div>'+
+      (q ? '' :
       '<div class="panel" style="border-color:var(--danger);">'+
         '<h2 style="color:var(--danger);">⚠ ISMP Canada "Do Not Use" list</h2>'+
         '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">These abbreviations are common exam trap questions — they look convenient but have caused real dispensing errors.</p>'+
         dangerHtml+
-      '</div>'+
-      catsHtml+
-      '<p class="footnote">Reference only — always follow your provincial college\'s current prescription-labelling standards.</p>';
+      '</div>')+
+      (catsHtml || '<div class="panel"><p class="empty">No abbreviation matches — try a different search.</p></div>')+
+      '<p class="footnote">Reference only — always follow your provincial college\'s current prescription-labelling standards. Clinical abbreviations here are also what get auto-highlighted (tap for the full term) in Study Guides.</p>';
     wireRefBack();
+    document.getElementById("abbrevSearch").addEventListener("input", function(e){
+      abbrevSearch = e.target.value;
+      var caret = e.target.selectionStart;
+      render();
+      var el = document.getElementById("abbrevSearch");
+      if (el){ el.focus(); el.setSelectionRange(caret, caret); }
+    });
   }
 
   function buildKrollDiagram(){
@@ -1728,6 +1909,7 @@
     else if (view==="study") renderStudyGuides();
     else if (view==="drugs") renderDrugs();
     else if (view==="schedules") renderDrugSchedules();
+    else if (view==="calc") renderCalculations();
     else if (view==="ref") renderReference();
     else if (view==="history") renderHistory();
   }
