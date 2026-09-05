@@ -369,11 +369,103 @@
     #pebc-app *{ transition:none !important; }
   }
 
+  /* ---- Drug reference ---- */
+  input.textinput{
+    font-family:inherit; font-size:0.86rem; padding:9px 12px;
+    border-radius:8px; border:1px solid var(--border);
+    background:var(--bg-elevated); color:var(--text); flex:1; min-width:180px;
+  }
+  .drug-list{ display:flex; flex-direction:column; gap:10px; }
+  .drug-card{
+    border:1px solid var(--border); border-radius:12px; background:var(--bg-elevated);
+    overflow:hidden;
+  }
+  .drug-card-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 16px; cursor:pointer; text-align:left; width:100%; background:none; border:none; font-family:inherit;
+  }
+  .drug-card-head:hover{ background:var(--surface-2); }
+  .drug-name{ font-weight:700; font-size:0.98rem; color:var(--text); }
+  .drug-pronunciation{
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:0.8rem; color:var(--text-muted); font-style:italic; margin-left:6px;
+    background:none; border:none; padding:0; font-family:inherit; cursor:pointer;
+  }
+  .drug-pronunciation:hover, .drug-pronunciation:focus-visible{ color:var(--accent); }
+  .drug-pronunciation svg{ width:12px; height:12px; flex:none; }
+  .drug-pronunciation[data-playing="true"]{ color:var(--accent); }
+  .drug-brand{ font-size:0.8rem; color:var(--text-muted); margin-top:2px; }
+  .drug-card-body{ padding:0 16px 18px; border-top:1px solid var(--border); }
+  .drug-section{ margin-top:14px; }
+  .drug-section h4{ font-size:0.76rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); margin:0 0 6px; }
+  .drug-section p{ margin:0; font-size:0.9rem; }
+  .drug-section ul{ margin:0; padding-left:18px; font-size:0.88rem; line-height:1.6; }
   .footnote{ font-size:0.76rem; color:var(--text-muted); margin-top:26px; line-height:1.6; }
   .footnote a{ color:var(--accent); }
   .divider{ height:1px; background:var(--border); border:none; margin:18px 0; }
   .field-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
   .qcount{ font-family:var(--font-mono); font-size:0.78rem; color:var(--text-muted); }
+
+  /* ---- Quick reference ---- */
+  .sched-card{ border:1px solid var(--border); border-radius:12px; background:var(--bg-elevated); padding:16px; margin-bottom:12px; }
+  .sched-card .sched-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+  .sched-card .sched-title{ font-weight:700; font-size:0.98rem; }
+  .sched-card .sched-desc{ font-size:0.88rem; color:var(--text-muted); margin:6px 0 10px; line-height:1.55; }
+  .sched-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+  .sched-tag{ font-size:0.78rem; background:var(--surface-2); color:var(--text); padding:3px 9px; border-radius:100px; }
+  .sched-rules{ margin:0; padding-left:18px; font-size:0.85rem; line-height:1.6; color:var(--text); }
+
+  .abbrev-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; }
+  .abbrev-item{ border:1px solid var(--border); border-radius:9px; background:var(--bg-elevated); padding:9px 12px; }
+  .abbrev-item .a-code{ font-family:var(--font-mono); font-weight:700; font-size:0.86rem; color:var(--accent); }
+  .abbrev-item .a-mean{ font-size:0.83rem; color:var(--text-muted); margin-top:2px; }
+  .danger-row{ border:1px solid var(--danger); background:var(--danger-soft); border-radius:9px; padding:10px 14px; margin-bottom:8px; }
+  .danger-row .d-bad{ font-family:var(--font-mono); font-weight:700; color:var(--danger); font-size:0.88rem; }
+  .danger-row .d-why{ font-size:0.83rem; margin:3px 0; }
+  .danger-row .d-fix{ font-size:0.83rem; color:var(--success); font-weight:600; }
+
+  .kroll-card{ border:1px solid var(--border); border-radius:12px; background:var(--bg-elevated); padding:15px; margin-bottom:10px; cursor:pointer; }
+  .kroll-card:hover{ background:var(--surface-2); }
+  .kroll-card .k-head{ display:flex; align-items:center; gap:10px; }
+  .kroll-card .k-num{ flex:none; width:26px; height:26px; border-radius:50%; background:var(--accent-soft); color:var(--accent); font-family:var(--font-mono); font-weight:700; font-size:0.78rem; display:flex; align-items:center; justify-content:center; }
+  .kroll-card .k-title{ font-weight:700; font-size:0.92rem; }
+  .kroll-steps{ list-style:none; margin:12px 0 0; padding:0; counter-reset:kstep; }
+  .kroll-steps li{ counter-increment:kstep; position:relative; padding:8px 0 8px 30px; font-size:0.9rem; line-height:1.55; border-top:1px dashed var(--border); }
+  .kroll-steps li:first-child{ border-top:none; }
+  .kroll-steps li::before{ content:counter(kstep); position:absolute; left:0; top:8px; width:20px; height:20px; border-radius:50%; background:var(--accent); color:var(--accent-contrast); font-family:var(--font-mono); font-size:0.72rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .kroll-diagram-wrap{ overflow-x:auto; margin-bottom:8px; }
+  .kroll-diagram-wrap svg{ display:block; min-width:640px; }
+
+  .abbr-term{
+    border-bottom:1.5px dotted var(--gold); color:inherit; cursor:pointer;
+    font-weight:600;
+  }
+  .abbr-term:hover, .abbr-term:focus-visible{ color:var(--gold); }
+
+  .calc-card{ border:1px solid var(--border); border-radius:12px; background:var(--bg-elevated); padding:16px; margin-bottom:12px; }
+  .calc-card h3{ font-size:0.98rem; margin-bottom:8px; }
+  .calc-formula{
+    font-family:var(--font-mono); font-size:0.86rem; background:var(--surface-2);
+    border-radius:8px; padding:10px 12px; margin-bottom:12px; line-height:1.6; white-space:pre-wrap;
+  }
+  .calc-card h4{ font-size:0.74rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); margin:12px 0 6px; }
+  .calc-card ul{ margin:0; padding-left:18px; font-size:0.87rem; line-height:1.6; }
+
+  /* ---- Drug classes ---- */
+  .class-name{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .class-name h2{ font-size:1.3rem; }
+  .pron{ font-size:0.9rem; color:var(--gold); font-style:italic; }
+  .diagram-wrap{ overflow-x:auto; margin-bottom:8px; }
+  .diagram-wrap svg{ display:block; min-width:520px; margin:8px auto; }
+  table.member-table{ width:100%; border-collapse:collapse; font-size:0.85rem; }
+  table.member-table th{ text-align:left; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); border-bottom:1px solid var(--border); padding:8px 8px; }
+  table.member-table td{ padding:9px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+  table.member-table tr:last-child td{ border-bottom:none; }
+  .drugname{ font-weight:700; }
+  .pop-card{ border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:10px; background:var(--surface-2); }
+  .pop-card .pop-label{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--info); font-weight:700; margin-bottom:4px; }
+  .pop-card.warn{ border-color:var(--danger); }
+  .pop-card.warn .pop-label{ color:var(--danger); }
 </style>
 
 </head>
@@ -393,6 +485,10 @@
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="data/mcq-data.js"></script>
+<script src="data/drug-data.js"></script>
+<script src="data/study-data.js"></script>
+<script src="data/class-data.js"></script>
 <script>
 (function(){
   "use strict";
@@ -409,15 +505,300 @@
     {key:"womens", label:"Women's Health"},
     {key:"regs",   label:"Regulations & Law"},
     {key:"pk",     label:"Pharmacokinetics & Calculations"},
-    {key:"inter",  label:"Drug Interactions"}
+    {key:"inter",  label:"Drug Interactions"},
+    {key:"peds",   label:"Pediatrics"},
+    {key:"geri",   label:"Geriatrics & Palliative Care"},
+    {key:"onc",    label:"Oncology & Hematology"},
+    {key:"immun",  label:"Immunizations & Travel Health"},
+    {key:"derm",   label:"Dermatology, Eye & ENT"},
+    {key:"otc",    label:"OTC & Natural Health Products"},
+    {key:"ethics", label:"Ethics & Professional Practice"},
+    {key:"calc",   label:"Calculations & Compounding"}
   ];
   function topicLabel(key){
     for (var i=0;i<TOPICS.length;i++){ if (TOPICS[i].key===key) return TOPICS[i].label; }
     return key;
   }
 
+  /* ---------------- Quick reference: drug schedules ---------------- */
+  var DRUG_SCHEDULES = {
+    napra: [
+      {sched:"Schedule I", title:"Prescription drugs", desc:"Requires a valid prescription. Sold only pursuant to a prescription, kept behind the counter, and recorded by the pharmacy.",
+       examples:["Amoxicillin","Ramipril","Atorvastatin","Warfarin"],
+       rules:["Cannot be sold without a prescription from an authorized prescriber","Pharmacist must be involved in every dispense"]},
+      {sched:"Schedule II", title:"Pharmacy (behind-the-counter)", desc:"No prescription required, but the product cannot be self-selected — it's kept in an area with no public access, and a pharmacist must be directly involved before sale.",
+       examples:["Emergency contraception (levonorgestrel / Plan B)","Naloxone kits","Insulin syringes/needles (most provinces)"],
+       rules:["Patient cannot pick it off a shelf themselves","Pharmacist consultation is required, even though no Rx is needed"]},
+      {sched:"Schedule III", title:"Pharmacy (self-selection)", desc:"Available on the open shelf for the patient to self-select, but only within a licensed pharmacy where a pharmacist is available for consultation if needed.",
+       examples:["Low-dose ibuprofen (200 mg)","Diphenhydramine","Hydrocortisone 0.5% cream","Loperamide"],
+       rules:["Only sold where a pharmacist is present in the store (even if not directly involved in the sale)"]},
+      {sched:"Unscheduled", title:"Open / general sale", desc:"No restriction on where it can be sold — grocery stores, gas stations, convenience stores.",
+       examples:["Plain acetaminophen (regular-strength, limited pack size)","Basic vitamins","Most cosmetics"],
+       rules:["No pharmacy or pharmacist involvement required at all"]}
+    ],
+    cdsa: [
+      {sched:"CDSA Schedule I", title:"Narcotics — strictest control", desc:"Opioids and select stimulants. The single most heavily tested CDSA schedule on licensing exams.",
+       examples:["Morphine","Oxycodone","Fentanyl","Methadone","Heroin","Cocaine"],
+       rules:["Verbal orders NOT permitted (except narrowly defined emergencies)","NO refills — every fill needs a brand-new written/faxed prescription","Cannot be transferred between pharmacies","Loss or theft must be reported to Health Canada"]},
+      {sched:"CDSA Schedule II", title:"Cannabis", desc:"Historically scheduled here; medical and non-medical cannabis are now primarily governed by the separate Cannabis Act (2018), with their own access frameworks.",
+       examples:["Dried cannabis","Cannabis oil"], rules:["Largely superseded by Cannabis Act rules for legal product"]},
+      {sched:"CDSA Schedule III", title:"Restricted / limited accepted medical use", desc:"Traditionally no accepted medical use, though some are now used via Health Canada's Special Access Program or clinical trials.",
+       examples:["LSD","Psilocybin","MDMA"], rules:["Tightly restricted access outside of approved research/special-access pathways"]},
+      {sched:"CDSA Schedule IV", title:"Targeted substances — moderate control", desc:"Meaningfully less strict than Schedule I — this is the classic exam contrast question (\"why is this drug's dispensing different from a narcotic?\").",
+       examples:["Benzodiazepines (e.g., diazepam, lorazepam)","Anabolic steroids","Barbiturates"],
+       rules:["Verbal orders ARE permitted","Refills ARE permitted (up to 1 year from the original date)"]},
+      {sched:"CDSA Schedule VI", title:"Precursor chemicals", desc:"Substances that can be used to manufacture controlled drugs; sale is quantity-limited and tracked, often via NAPRA Schedule II behind-the-counter access.",
+       examples:["Pseudoephedrine"], rules:["Purchase quantity limits apply","Photo ID and log of purchaser typically required"]}
+    ]
+  };
+
+  /* ---------------- Quick reference: prescription abbreviations ---------------- */
+  var RX_ABBREV = [
+    {cat:"Frequency & timing", items:[
+      {a:"BID", m:"Twice daily"}, {a:"TID", m:"Three times daily"}, {a:"QID", m:"Four times daily"},
+      {a:"Q4H", m:"Every 4 hours"}, {a:"Q6H", m:"Every 6 hours"}, {a:"QHS / HS", m:"At bedtime"},
+      {a:"AC", m:"Before meals"}, {a:"PC", m:"After meals"}, {a:"PRN", m:"As needed"}, {a:"STAT", m:"Immediately"}
+    ]},
+    {cat:"Route", items:[
+      {a:"PO", m:"By mouth"}, {a:"SL", m:"Sublingual"}, {a:"SC / subcut", m:"Subcutaneous"},
+      {a:"IM", m:"Intramuscular"}, {a:"IV", m:"Intravenous"}, {a:"PR", m:"Per rectum"},
+      {a:"PV", m:"Per vagina"}, {a:"Top", m:"Topical"}, {a:"NG", m:"Nasogastric"}, {a:"Inh", m:"Inhalation"}
+    ]},
+    {cat:"Eye & ear — high-risk confusable set", items:[
+      {a:"OD", m:"Right eye (⚠ NOT \"once daily\" — a classic dangerous mix-up)"}, {a:"OS", m:"Left eye"}, {a:"OU", m:"Both eyes"},
+      {a:"AD", m:"Right ear"}, {a:"AS", m:"Left ear"}, {a:"AU", m:"Both ears"}
+    ]},
+    {cat:"Dosage form & measurement", items:[
+      {a:"Tab", m:"Tablet"}, {a:"Cap", m:"Capsule"}, {a:"Susp", m:"Suspension"}, {a:"Gtt", m:"Drop"},
+      {a:"Ung", m:"Ointment"}, {a:"Supp", m:"Suppository"}, {a:"mL", m:"Millilitre"}, {a:"mg / mcg", m:"Milligram / microgram"}
+    ]},
+    {cat:"Dispensing", items:[
+      {a:"Disp", m:"Dispense (quantity)"}, {a:"Sig", m:"Directions — what goes on the label"},
+      {a:"Rpt / Refill", m:"Repeat"}, {a:"NR", m:"No repeat"}, {a:"Qs", m:"Quantity sufficient"}
+    ]}
+  ];
+  var RX_ABBREV_DANGER = [
+    {bad:"U or IU", why:"Misread as \"0\" or \"4\" (10-fold overdose risk)", fix:"Write \"units\" / \"international units\" in full"},
+    {bad:"QD or QOD", why:"Confused with each other, or with QID", fix:"Write \"daily\" or \"every other day\""},
+    {bad:"Trailing zero (1.0 mg)", why:"Misread as \"10 mg\" if the decimal point is missed", fix:"Never use a trailing zero — write \"1 mg\""},
+    {bad:"No leading zero (.5 mg)", why:"Misread as \"5 mg\" if the decimal point is missed", fix:"Always use a leading zero — write \"0.5 mg\""},
+    {bad:"MS, MSO4, MgSO4", why:"Confused between morphine sulfate and magnesium sulfate — has caused fatal errors", fix:"Write the full drug name"},
+    {bad:"cc", why:"Confused with \"U\" (units)", fix:"Write \"mL\""},
+    {bad:"µg", why:"Confused with \"mg\" — a 1000-fold overdose risk", fix:"Write \"mcg\""}
+  ];
+
+  /* ---------------- Clinical & drug-class abbreviation glossary ---------------- */
+  /* Used for (1) the browsable Abbreviations page and (2) auto-highlighting in Study Guides,
+     since that's where "too many abbreviations I don't understand" was reported. */
+  var GLOSSARY = [
+    {a:"ACEi", m:"ACE inhibitor (angiotensin-converting enzyme inhibitor)"},
+    {a:"ARB", m:"Angiotensin receptor blocker"},
+    {a:"ARNI", m:"Angiotensin receptor-neprilysin inhibitor (e.g., sacubitril/valsartan)"},
+    {a:"MRA", m:"Mineralocorticoid receptor antagonist (e.g., spironolactone)"},
+    {a:"CCB", m:"Calcium channel blocker"},
+    {a:"DHP", m:"Dihydropyridine (a type of calcium channel blocker)"},
+    {a:"HFrEF", m:"Heart failure with reduced ejection fraction"},
+    {a:"HFpEF", m:"Heart failure with preserved ejection fraction"},
+    {a:"CHF", m:"Congestive heart failure (older/general term for heart failure)"},
+    {a:"EF", m:"Ejection fraction"},
+    {a:"AFib", m:"Atrial fibrillation"},
+    {a:"MI", m:"Myocardial infarction (heart attack)"},
+    {a:"ACS", m:"Acute coronary syndrome"},
+    {a:"STEMI", m:"ST-elevation myocardial infarction"},
+    {a:"NSTEMI", m:"Non-ST-elevation myocardial infarction"},
+    {a:"CVA", m:"Cerebrovascular accident (stroke)"},
+    {a:"TIA", m:"Transient ischemic attack (\"mini-stroke\")"},
+    {a:"DVT", m:"Deep vein thrombosis"},
+    {a:"PE", m:"Pulmonary embolism"},
+    {a:"VTE", m:"Venous thromboembolism (umbrella term for DVT/PE)"},
+    {a:"DOAC", m:"Direct oral anticoagulant (e.g., apixaban, rivaroxaban)"},
+    {a:"LMWH", m:"Low molecular weight heparin (e.g., dalteparin, enoxaparin)"},
+    {a:"INR", m:"International normalized ratio (warfarin monitoring)"},
+    {a:"CrCl", m:"Creatinine clearance"},
+    {a:"SCr", m:"Serum creatinine"},
+    {a:"eGFR", m:"Estimated glomerular filtration rate"},
+    {a:"CKD", m:"Chronic kidney disease"},
+    {a:"AKI", m:"Acute kidney injury"},
+    {a:"T1DM", m:"Type 1 diabetes mellitus"},
+    {a:"T2DM", m:"Type 2 diabetes mellitus"},
+    {a:"A1C", m:"Glycated hemoglobin (HbA1c) — a 3-month average blood sugar marker"},
+    {a:"SGLT2i", m:"Sodium-glucose cotransporter-2 inhibitor (e.g., empagliflozin)"},
+    {a:"GLP-1", m:"Glucagon-like peptide-1 (receptor agonist, e.g., semaglutide)"},
+    {a:"DPP-4i", m:"Dipeptidyl peptidase-4 inhibitor (e.g., sitagliptin)"},
+    {a:"TSH", m:"Thyroid-stimulating hormone"},
+    {a:"PCOS", m:"Polycystic ovary syndrome"},
+    {a:"COPD", m:"Chronic obstructive pulmonary disease"},
+    {a:"ICS", m:"Inhaled corticosteroid"},
+    {a:"LABA", m:"Long-acting beta agonist"},
+    {a:"LAMA", m:"Long-acting muscarinic antagonist"},
+    {a:"SABA", m:"Short-acting beta agonist"},
+    {a:"SAMA", m:"Short-acting muscarinic antagonist"},
+    {a:"GINA", m:"Global Initiative for Asthma (guideline body)"},
+    {a:"GOLD", m:"Global Initiative for Chronic Obstructive Lung Disease (guideline body)"},
+    {a:"pMDI", m:"Pressurized metered-dose inhaler (a \"puffer\")"},
+    {a:"SSRI", m:"Selective serotonin reuptake inhibitor"},
+    {a:"SNRI", m:"Serotonin-norepinephrine reuptake inhibitor"},
+    {a:"MAOI", m:"Monoamine oxidase inhibitor"},
+    {a:"TCA", m:"Tricyclic antidepressant"},
+    {a:"EPS", m:"Extrapyramidal symptoms (movement side effects of antipsychotics)"},
+    {a:"NMS", m:"Neuroleptic malignant syndrome (rare, serious antipsychotic reaction)"},
+    {a:"UTI", m:"Urinary tract infection"},
+    {a:"STI", m:"Sexually transmitted infection"},
+    {a:"CAP", m:"Community-acquired pneumonia"},
+    {a:"MRSA", m:"Methicillin-resistant Staphylococcus aureus"},
+    {a:"TB", m:"Tuberculosis"},
+    {a:"PPI", m:"Proton pump inhibitor"},
+    {a:"H2RA", m:"Histamine-2 receptor antagonist"},
+    {a:"GERD", m:"Gastroesophageal reflux disease"},
+    {a:"PUD", m:"Peptic ulcer disease"},
+    {a:"IBD", m:"Inflammatory bowel disease"},
+    {a:"IBS", m:"Irritable bowel syndrome"},
+    {a:"NSAID", m:"Nonsteroidal anti-inflammatory drug"},
+    {a:"RA", m:"Rheumatoid arthritis"},
+    {a:"OA", m:"Osteoarthritis"},
+    {a:"DMARD", m:"Disease-modifying antirheumatic drug"},
+    {a:"MTX", m:"Methotrexate"},
+    {a:"COC", m:"Combined oral contraceptive"},
+    {a:"POP", m:"Progestin-only pill"},
+    {a:"IUD", m:"Intrauterine device"},
+    {a:"HRT", m:"Hormone replacement therapy"},
+    {a:"EC", m:"Emergency contraception"},
+    {a:"CDSA", m:"Controlled Drugs and Substances Act (federal narcotics law)"},
+    {a:"NAPRA", m:"National Association of Pharmacy Regulatory Authorities"},
+    {a:"DIN", m:"Drug Identification Number"},
+    {a:"NPN", m:"Natural Product Number"},
+    {a:"MAID", m:"Medical assistance in dying"},
+    {a:"SDM", m:"Substitute decision-maker"},
+    {a:"CYP", m:"Cytochrome P450 (liver drug-metabolizing enzyme family)"},
+    {a:"TDM", m:"Therapeutic drug monitoring"},
+    {a:"DUR", m:"Drug utilization review"},
+    {a:"OAT", m:"Opioid agonist therapy (e.g., methadone, buprenorphine/naloxone)"},
+    {a:"LTC", m:"Long-term care"},
+    {a:"MAR", m:"Medication administration record"},
+    {a:"eMAR", m:"Electronic medication administration record"},
+    {a:"GCSF", m:"Granulocyte colony-stimulating factor (boosts white blood cell recovery)"},
+    {a:"CINV", m:"Chemotherapy-induced nausea and vomiting"},
+    {a:"NACI", m:"National Advisory Committee on Immunization"},
+    {a:"BSA", m:"Body surface area (used in some dosing calculations)"},
+    {a:"CBC", m:"Complete blood count"},
+    {a:"WBC", m:"White blood cell (count)"},
+    {a:"ANC", m:"Absolute neutrophil count"},
+    {a:"Dx", m:"Diagnosis"},
+    {a:"Hx", m:"History"},
+    {a:"Sx", m:"Symptoms"},
+    {a:"NHP", m:"Natural health product"}
+  ];
+  var GLOSSARY_MAP = {};
+  GLOSSARY.forEach(function(g){ GLOSSARY_MAP[g.a.toUpperCase()] = g.m; });
+  var GLOSSARY_REGEX = new RegExp("\\b(" + GLOSSARY.slice().sort(function(a,b){ return b.a.length-a.a.length; })
+    .map(function(g){ return g.a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).join("|") + ")\\b", "gi");
+  function highlightAbbrev(escapedText){
+    return escapedText.replace(GLOSSARY_REGEX, function(match){
+      if (match===match.toLowerCase()) return match; // skip all-lowercase matches (e.g. "cap") to avoid colliding with real words
+      var full = GLOSSARY_MAP[match.toUpperCase()];
+      if (!full) return match;
+      return '<span class="abbr-term" tabindex="0" data-full="'+esc(full)+'">'+match+'</span>';
+    });
+  }
+
+  /* ---------------- Quick reference: Kroll workflow ---------------- */
+  var KROLL_OPS = [
+    {n:1, title:"New prescription (hard-copy) entry", steps:[
+      "Search for the existing patient profile, or create a new one (demographics, allergies, insurance/Drug Service Card)",
+      "Enter or verify the prescriber (search the prescriber database, or add a new one)",
+      "Search the drug by DIN, brand, or generic name; select the correct strength and formulation",
+      "Enter the Sig, quantity, days supply, and refills authorized",
+      "Review any automatic allergy / interaction / DUR alerts before proceeding",
+      "Route the prescription to the fill queue for label printing"
+    ]},
+    {n:2, title:"e-Prescription (PrescribeIT) intake", steps:[
+      "An incoming e-prescription arrives electronically — no fax or manual re-transcription needed",
+      "Verify the patient match against the existing profile, or create a new one",
+      "Confirm the prescriber, drug, and Sig auto-populated correctly; edit only if needed",
+      "Accept the prescription into the fill queue"
+    ]},
+    {n:3, title:"Refill / renewal request processing", steps:[
+      "Pull the prescription history from the patient's profile",
+      "Check refills remaining and days since the last fill (flags early refills)",
+      "For online renewal requests, review and approve or deny",
+      "Re-adjudicate to insurance, print the label, and queue for pharmacist verification"
+    ]},
+    {n:4, title:"Third-party / insurance adjudication", steps:[
+      "The system auto-maps the DIN plus intervention, service, and program codes from the patient's Drug Service Card",
+      "Submit the claim electronically to the payer in real time",
+      "Resolve any rejection codes (plan limits, duplicate therapy, prior authorization needed)",
+      "Confirm the co-pay / patient portion before dispensing"
+    ]},
+    {n:5, title:"Drug interaction / allergy / DUR alert review", steps:[
+      "An alert triggers automatically at data entry (interaction, allergy, duplicate therapy, dose range)",
+      "The pharmacist reviews severity and clinical context",
+      "Document the clinical decision or override reason in the patient record",
+      "Contact the prescriber if a significant interaction requires intervention"
+    ]},
+    {n:6, title:"Pharmacist verification (RPh check) & barcode scan", steps:[
+      "Compare the filled product against the original prescription image/order",
+      "Scan the product barcode to confirm the correct DIN and lot against what was entered",
+      "Visually verify the tablet or capsule against the reference image",
+      "Sign off electronically before the prescription is released to the patient"
+    ]},
+    {n:7, title:"Compliance packaging (blister pack / robotic packager)", steps:[
+      "Set up a multi-drug compliance pack cycle for the patient (weekly or bi-weekly)",
+      "Confirm all ongoing medications are included and PRN medications are excluded appropriately",
+      "Synchronize refill dates across all included medications",
+      "Send the job to the blister card printer or robotic packager integration"
+    ]},
+    {n:8, title:"MedsCheck / medication review documentation & billing", steps:[
+      "Book and document the medication review appointment in the patient record",
+      "Complete the standardized review template (indications, adherence, therapeutic duplications)",
+      "Generate the patient's medication list/summary document",
+      "Submit the professional service billing claim under the applicable program"
+    ]},
+    {n:9, title:"Immunization documentation & billing", steps:[
+      "Record the vaccine given — product, lot number, injection site, and dose — in the patient's immunization record",
+      "Screen and document contraindications and consent",
+      "Submit the immunization billing claim under the applicable program code",
+      "Update the patient's vaccine history for future interval/schedule tracking"
+    ]},
+    {n:10, title:"Pharmacist prescription adaptation / extension", steps:[
+      "Identify an eligible scenario under provincial scope (therapeutic substitution, dose adjustment, extending a lapsed prescription)",
+      "Document the clinical rationale in the patient record",
+      "Generate the adapted prescription under the pharmacist's own authority",
+      "Notify the original prescriber, per provincial requirements"
+    ]},
+    {n:11, title:"Prescription transfer (in / out)", steps:[
+      "Transfer OUT: verify remaining quantity/refills, mark the prescription as transferred, record the receiving pharmacy",
+      "Transfer IN: record the transferring pharmacy, refills remaining, and original prescriber",
+      "Remember: narcotics/controlled substances generally CANNOT be transferred between pharmacies (CDSA restriction)",
+      "Update the patient profile to reflect the new fill source"
+    ]},
+    {n:12, title:"Inventory management & purchase orders", steps:[
+      "Monitor stock levels against reorder points (often automated via wholesaler integration)",
+      "Generate and electronically transmit a purchase order to the wholesaler",
+      "Receive and reconcile incoming stock against the purchase order on arrival",
+      "Adjust on-hand quantities and resolve discrepancies or backorders"
+    ]},
+    {n:13, title:"Compounding record (non-sterile / sterile)", steps:[
+      "Select or create the master compounding formula in the system",
+      "Enter and verify ingredient lots, and calculate quantities per the formula",
+      "Document the beyond-use date and compounding record per NAPRA standards",
+      "Generate the compounding label and route it for pharmacist verification"
+    ]},
+    {n:14, title:"Long-term care (MAR / eMAR) management", steps:[
+      "Maintain the resident's active medication profile synced with facility orders",
+      "Generate or update the Medication Administration Record (MAR/eMAR) for nursing staff",
+      "Process physician order changes and reconcile against the existing MAR",
+      "Coordinate cycle-fill packaging aligned to the facility's administration schedule"
+    ]},
+    {n:15, title:"Workflow queue management (batch fill & label)", steps:[
+      "Review the day's fill queue by status: data entry → clinical check → adjudication → label → verification → will-call",
+      "Batch-process routine refills together for efficiency",
+      "Route flagged/exception prescriptions (interactions, insurance holds) for priority handling",
+      "Track will-call/pickup status and manage return-to-stock for unclaimed prescriptions"
+    ]}
+  ];
+
   /* ---------------- Question bank ---------------- */
-  var MCQ = [
+  var MCQ_SEED = [
     {t:"cardio", q:"A 64-year-old man with newly diagnosed HFrEF (EF 30%) is being started on a beta-blocker in addition to an ACE inhibitor. Which agent is appropriate?",
      o:["Metoprolol tartrate (immediate-release)","Atenolol","Carvedilol","Propranolol"], a:2,
      r:"Only carvedilol, metoprolol succinate (extended-release), and bisoprolol have proven mortality benefit in HFrEF. Metoprolol tartrate (immediate-release) is not the studied formulation, and atenolol/propranolol lack HF outcome data.",
@@ -618,6 +999,9 @@
      o:["No interaction exists","St. John's Wort is a potent CYP3A4 inducer that can significantly reduce contraceptive hormone levels, raising the risk of contraceptive failure","St. John's Wort will make the contraceptive more effective","St. John's Wort only interacts with prescription antidepressants"], a:1,
      r:"St. John's Wort strongly induces CYP3A4 (and P-glycoprotein), lowering plasma levels of many drugs including combined hormonal contraceptives, cyclosporine, and warfarin.", m:null}
   ];
+  // Additional generated questions (docs/data/mcq-data.js), deduped and merged with the hand-written seed set above.
+  var MCQ = MCQ_SEED.concat(window.MCQ_GENERATED || []);
+  var DRUGS = window.DRUG_DATA || [];
 
   /* ---------------- OSCE stations ---------------- */
   var OSCE = [
@@ -732,21 +1116,74 @@
     return d.toLocaleDateString(undefined,{month:"short",day:"numeric"}) + " " +
            d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
   }
+  var speakingBtn = null;
+  if ("speechSynthesis" in window){
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.addEventListener("voiceschanged", function(){ window.speechSynthesis.getVoices(); });
+  }
+  function speakDrugName(name, btnEl){
+    if (!name || !("speechSynthesis" in window)) return;
+    try{
+      window.speechSynthesis.cancel();
+      if (speakingBtn) speakingBtn.removeAttribute("data-playing");
+      var u = new SpeechSynthesisUtterance(name);
+      u.rate = 0.95;
+      u.pitch = 1;
+      var voices = window.speechSynthesis.getVoices();
+      var enVoices = voices.filter(function(x){ return /^en/i.test(x.lang); });
+      var quality = /Google|Natural|Enhanced|Premium|Neural|Siri/i;
+      var v =
+        enVoices.find(function(x){ return /^en-CA/i.test(x.lang) && quality.test(x.name); }) ||
+        enVoices.find(function(x){ return quality.test(x.name); }) ||
+        enVoices.find(function(x){ return /^en-CA/i.test(x.lang); }) ||
+        enVoices.find(function(x){ return /^en-US/i.test(x.lang); }) ||
+        enVoices[0];
+      if (v) u.voice = v;
+      if (btnEl){
+        btnEl.setAttribute("data-playing","true");
+        speakingBtn = btnEl;
+        u.onend = u.onerror = function(){
+          btnEl.removeAttribute("data-playing");
+          if (speakingBtn===btnEl) speakingBtn = null;
+        };
+      }
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
 
   /* ---------------- Router / view state ---------------- */
   var view = "dashboard";
   var mcqFilter = "all";
+  var mcqDifficulty = "all";
   var mcqQueue = [];
   var mcqCurrent = null;
   var mcqAnswered = false;
   var osceCurrent = null;
   var osceRevealed = false;
   var timerSecs = 300, timerRunning = false, timerHandle = null;
+  var drugFilter = "all";
+  var drugSearch = "";
+  var drugOpenId = null;
+  var STUDY = window.STUDY_DATA || [];
+  var studyCurrent = null;
+  var refSection = null;
+  var krollOpen = null;
+  var abbrevSearch = "";
+  var CLASSES = window.CLASS_DATA || [];
+  var classCurrent = null;
+  var classFilter = "all";
+  var classSearch = "";
 
   var VIEWS = [
     {key:"dashboard", label:"Dashboard"},
     {key:"mcq", label:"MCQ Practice"},
     {key:"osce", label:"OSCE Stations"},
+    {key:"study", label:"Study Guides"},
+    {key:"drugs", label:"Drug Reference"},
+    {key:"classes", label:"Drug Classes"},
+    {key:"schedules", label:"Drug Schedules"},
+    {key:"calc", label:"Calculations"},
+    {key:"ref", label:"Quick Reference"},
     {key:"history", label:"History"}
   ];
 
@@ -764,6 +1201,7 @@
   function buildQueue(){
     var pool = MCQ.map(function(q,idx){ return Object.assign({idx:idx}, q); });
     if (mcqFilter !== "all") pool = pool.filter(function(q){ return q.t===mcqFilter; });
+    if (mcqDifficulty !== "all") pool = pool.filter(function(q){ return (q.d||"standard")===mcqDifficulty; });
     mcqQueue = shuffle(pool);
   }
   function nextQuestion(){
@@ -1000,6 +1438,7 @@
 
       body = '<div class="panel">'+
         '<div class="q-meta"><span class="badge badge-accent">'+esc(topicLabel(mcqCurrent.t))+'</span>'+
+        (mcqCurrent.d==="hard" ? '<span class="badge badge-gold">Hard</span>' : '')+
         '<span class="qcount">'+(mcqQueue.length)+' left in this set</span></div>'+
         '<div class="q-stem">'+esc(mcqCurrent.q)+'</div>'+
         '<div class="options">'+optsHtml+'</div>'+
@@ -1007,16 +1446,28 @@
         '</div>';
     }
 
+    var diffOptions = ['all','standard','hard'].map(function(d){
+      var lbl = d==="all"?"All difficulties":(d==="hard"?"Hard (longer vignettes)":"Standard");
+      return '<option value="'+d+'"'+(mcqDifficulty===d?' selected':'')+'>'+lbl+'</option>';
+    }).join("");
+
     document.getElementById("main").innerHTML =
       '<div class="pagehead"><h1>MCQ practice</h1><p>Clinical vignette-style questions modeled on PEBC MCQ patterns — pick a topic, answer, and read the rationale.</p></div>'+
       '<div class="panel" style="margin-bottom:16px;">'+
         '<div class="field-row"><label for="topicSelect" style="font-size:0.85rem; color:var(--text-muted);">Topic</label>'+
-        '<select class="select" id="topicSelect">'+options+'</select></div>'+
+        '<select class="select" id="topicSelect">'+options+'</select>'+
+        '<label for="diffSelect" style="font-size:0.85rem; color:var(--text-muted);">Difficulty</label>'+
+        '<select class="select" id="diffSelect">'+diffOptions+'</select></div>'+
       '</div>'+
       body;
 
     document.getElementById("topicSelect").addEventListener("change", function(e){
       mcqFilter = e.target.value;
+      mcqQueue = []; mcqCurrent = null; mcqAnswered = false;
+      render();
+    });
+    document.getElementById("diffSelect").addEventListener("change", function(e){
+      mcqDifficulty = e.target.value;
       mcqQueue = []; mcqCurrent = null; mcqAnswered = false;
       render();
     });
@@ -1115,6 +1566,423 @@
     }
   }
 
+  /* ---------------- Render: Study Guides ---------------- */
+  function openStudyGuide(topic){ studyCurrent = topic; render(); window.scrollTo(0,0); }
+  function closeStudyGuide(){ studyCurrent = null; render(); }
+  function renderStudyGuides(){
+    if (!studyCurrent){
+      var byTopic = {};
+      STUDY.forEach(function(s){ byTopic[s.topic] = s; });
+      var cards = TOPICS.filter(function(tp){ return byTopic[tp.key]; }).map(function(tp){
+        var s = byTopic[tp.key];
+        return '<button class="station-card" data-topic="'+tp.key+'">'+
+          '<div class="st-title">'+esc(tp.label)+'</div>'+
+          '<div class="st-blurb">'+s.sections.length+' high-yield sections</div>'+
+        '</button>';
+      }).join("");
+      document.getElementById("main").innerHTML =
+        '<div class="pagehead"><h1>Study guides</h1><p>Fast, bite-sized review per competency topic — key facts, thresholds, and exam-trap pearls. Pick a topic.</p></div>'+
+        (cards ? '<div class="station-grid">'+cards+'</div>' : '<div class="panel"><p class="empty">Study guides are still being generated for this topic set — check back soon.</p></div>');
+      Array.prototype.forEach.call(document.querySelectorAll(".station-card"), function(btn){
+        btn.addEventListener("click", function(){ openStudyGuide(btn.getAttribute("data-topic")); });
+      });
+      return;
+    }
+
+    var guide = STUDY.filter(function(s){ return s.topic===studyCurrent; })[0];
+    if (!guide){ studyCurrent = null; renderStudyGuides(); return; }
+
+    var sectionsHtml = guide.sections.map(function(sec){
+      return '<div class="panel"><h2>'+esc(sec.heading)+'</h2>'+
+        '<ul class="drug-section-list" style="margin:10px 0 0; padding-left:18px; font-size:0.92rem; line-height:1.7;">'+
+        sec.bullets.map(function(b){ return '<li>'+highlightAbbrev(esc(b))+'</li>'; }).join("")+
+        '</ul></div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead">'+
+        '<button class="btn btn-ghost btn-sm" id="backStudy" style="margin-bottom:10px;">&larr; All topics</button>'+
+        '<h1>'+esc(guide.title)+'</h1>'+
+        '<p>Underlined terms are abbreviations — tap one for the full meaning.</p>'+
+      '</div>'+
+      sectionsHtml+
+      '<p class="footnote">High-yield review content — pairs well with MCQ Practice on the same topic to test recall right after reading. Full abbreviation list under Quick Reference → Abbreviations.</p>';
+
+    document.getElementById("backStudy").addEventListener("click", closeStudyGuide);
+    Array.prototype.forEach.call(document.querySelectorAll(".abbr-term"), function(el){
+      var show = function(e){ e.stopPropagation(); toast(el.textContent + " — " + el.getAttribute("data-full")); };
+      el.addEventListener("click", show);
+      el.addEventListener("keydown", function(e){ if (e.key==="Enter" || e.key===" "){ e.preventDefault(); show(e); } });
+    });
+  }
+
+  /* ---------------- Render: Quick Reference ---------------- */
+  function openRef(section){ refSection = section; krollOpen = null; render(); window.scrollTo(0,0); }
+  function closeRef(){ refSection = null; render(); }
+
+  function renderReference(){
+    if (!refSection){
+      document.getElementById("main").innerHTML =
+        '<div class="pagehead"><h1>Quick reference</h1><p>Fast lookups for the details that are easy to blank on mid-exam.</p></div>'+
+        '<div class="station-grid">'+
+          '<button class="station-card" data-ref="abbrev"><div class="st-title">Abbreviations</div><div class="st-blurb">Searchable: Sig/prescription abbreviations, the ISMP "Do Not Use" list, and every clinical/drug-class abbreviation used across Study Guides.</div></button>'+
+          '<button class="station-card" data-ref="kroll"><div class="st-title">Kroll workflow — top 15 operations</div><div class="st-blurb">Step-by-step walkthroughs of the most common Kroll pharmacy-software operations, plus one flow diagram.</div></button>'+
+        '</div>';
+      Array.prototype.forEach.call(document.querySelectorAll("[data-ref]"), function(btn){
+        btn.addEventListener("click", function(){ openRef(btn.getAttribute("data-ref")); });
+      });
+      return;
+    }
+    if (refSection==="abbrev") renderRxAbbrev();
+    else if (refSection==="kroll") renderKrollOps();
+  }
+
+  function refBackBtn(title){
+    return '<div class="pagehead"><button class="btn btn-ghost btn-sm" id="backRef" style="margin-bottom:10px;">&larr; Quick reference</button><h1>'+esc(title)+'</h1></div>';
+  }
+  function wireRefBack(){
+    document.getElementById("backRef").addEventListener("click", closeRef);
+  }
+
+  function renderDrugSchedules(){
+    function schedCard(s){
+      return '<div class="sched-card">'+
+        '<div class="sched-head"><span class="badge badge-accent">'+esc(s.sched)+'</span><span class="sched-title">'+esc(s.title)+'</span></div>'+
+        '<div class="sched-desc">'+esc(s.desc)+'</div>'+
+        '<div class="sched-tags">'+s.examples.map(function(e){ return '<span class="sched-tag">'+esc(e)+'</span>'; }).join("")+'</div>'+
+        '<ul class="sched-rules">'+s.rules.map(function(r){ return '<li>'+esc(r)+'</li>'; }).join("")+'</ul>'+
+      '</div>';
+    }
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead"><h1>Canadian drug schedules</h1><p>NAPRA National Drug Schedules and CDSA controlled-substance schedules — how a drug may be sold, and what dispensing rules apply.</p></div>'+
+      '<div class="panel"><h2>NAPRA National Drug Schedules</h2>'+
+        '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">Governs how a drug may be sold — provincial colleges adopt these with minor variation.</p>'+
+        DRUG_SCHEDULES.napra.map(schedCard).join("")+
+      '</div>'+
+      '<div class="panel"><h2>CDSA — Controlled Drugs and Substances Act</h2>'+
+        '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">Federal law governing narcotics and controlled substances — separate from, and layered on top of, NAPRA scheduling. Schedules I and IV are the most heavily tested.</p>'+
+        DRUG_SCHEDULES.cdsa.map(schedCard).join("")+
+      '</div>'+
+      '<p class="footnote">Study aid summarizing NAPRA and CDSA scheduling for exam prep — always confirm against the current NAPRA National Drug Schedules and CDSA text for practice.</p>';
+  }
+
+  /* ---------------- Render: Pharmaceutical calculations ---------------- */
+  function renderCalculations(){
+    var items = DRUGS.filter(function(d){ return d.topic==="calc"; }).sort(function(a,b){ return a.generic.localeCompare(b.generic); });
+    var cardsHtml = items.map(function(d){
+      return '<div class="calc-card">'+
+        '<h3>'+esc(d.generic)+'</h3>'+
+        '<div class="calc-formula">'+esc(d.moa)+'</div>'+
+        '<h4>Worked example &amp; exam must-knows</h4><ul>'+(d.examPoints||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+        '<h4>How to apply it</h4><ul>'+(d.counselling||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+        '<h4>Common mistakes</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+      '</div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead"><h1>Pharmaceutical calculations</h1><p>Every core calculation tested on PEBC — the formula, a worked example, and the mistakes people actually make.</p></div>'+
+      '<div class="panel"><div class="btn-row" style="margin-top:0;"><button class="btn btn-primary" id="goCalcMcq">Practice calculation MCQs</button></div></div>'+
+      (cardsHtml || '<div class="panel"><p class="empty">Calculation content is still being generated — check back soon.</p></div>')+
+      '<p class="footnote">Reference only — verify against your compounding/calculation course materials and current NAPRA/USP standards.</p>';
+
+    document.getElementById("goCalcMcq").addEventListener("click", function(){
+      mcqFilter = "calc"; mcqQueue = []; mcqCurrent = null; mcqAnswered = false; setView("mcq");
+    });
+  }
+
+  /* ---------------- Render: Drug Classes ---------------- */
+  function openClass(key){ classCurrent = key; render(); window.scrollTo(0,0); }
+  function closeClass(){ classCurrent = null; render(); }
+
+  function renderDrugClasses(){
+    if (!classCurrent){
+      var availableTopics = [];
+      var seenTopics = {};
+      CLASSES.forEach(function(c){
+        if (!seenTopics[c.topic]){ seenTopics[c.topic] = true; availableTopics.push(c.topic); }
+      });
+      availableTopics.sort(function(a,b){ return topicLabel(a).localeCompare(topicLabel(b)); });
+      var filterOptions = '<option value="all">All topics</option>' + availableTopics.map(function(t){
+        return '<option value="'+t+'"'+(classFilter===t?' selected':'')+'>'+esc(topicLabel(t))+'</option>';
+      }).join("");
+
+      var q = classSearch.trim().toLowerCase();
+      var list = CLASSES.filter(function(c){
+        if (classFilter!=="all" && c.topic!==classFilter) return false;
+        if (!q) return true;
+        return (c.name+" "+c.blurb).toLowerCase().indexOf(q)!==-1;
+      }).sort(function(a,b){ return a.name.localeCompare(b.name); });
+
+      var cardsHtml = list.map(function(c){
+        return '<button class="station-card" data-key="'+esc(c.key)+'">'+
+          '<div class="st-title">'+esc(c.name)+'</div>'+
+          '<div class="st-blurb">'+esc(c.blurb)+'</div>'+
+          '<div class="st-foot"><span class="badge badge-accent">'+esc(topicLabel(c.topic))+'</span><span class="badge">'+c.members.length+' drugs</span></div>'+
+        '</button>';
+      }).join("");
+
+      document.getElementById("main").innerHTML =
+        '<div class="pagehead"><h1>Drug classes</h1><p>Grouped by mechanism, not individual drug — general class behavior, how members differ, and special-population guidance in one place.</p></div>'+
+        '<div class="panel" style="margin-bottom:16px;">'+
+          '<div class="field-row">'+
+            '<input type="text" class="textinput" id="classSearch" placeholder="Search a class (e.g. beta-blockers, statins)…" value="'+esc(classSearch)+'">'+
+            '<select class="select" id="classTopicSelect">'+filterOptions+'</select>'+
+          '</div>'+
+        '</div>'+
+        (list.length ? '<div class="station-grid">'+cardsHtml+'</div>' : '<div class="panel"><p class="empty">No classes match — try a different search or topic.</p></div>')+
+        '<p class="footnote">Coverage is still growing topic by topic. Educational reference content, not a substitute for the full product monograph.</p>';
+
+      document.getElementById("classSearch").addEventListener("input", function(e){
+        classSearch = e.target.value;
+        var caret = e.target.selectionStart;
+        render();
+        var el = document.getElementById("classSearch");
+        if (el){ el.focus(); el.setSelectionRange(caret, caret); }
+      });
+      document.getElementById("classTopicSelect").addEventListener("change", function(e){
+        classFilter = e.target.value; render();
+      });
+      Array.prototype.forEach.call(document.querySelectorAll(".station-card"), function(btn){
+        btn.addEventListener("click", function(){ openClass(btn.getAttribute("data-key")); });
+      });
+      return;
+    }
+
+    var c = CLASSES.filter(function(x){ return x.key===classCurrent; })[0];
+    if (!c){ classCurrent = null; renderDrugClasses(); return; }
+
+    var generalHtml = '<div class="panel"><h2>General characteristics <span style="color:var(--text-muted); font-weight:400; font-size:0.8rem;">— true for the whole class</span></h2><ul>'+
+      c.general.map(function(g){
+        var parts = g.split(/:(.+)/);
+        return parts.length>1 ? '<li><b>'+esc(parts[0])+':</b>'+esc(parts[1])+'</li>' : '<li>'+esc(g)+'</li>';
+      }).join("")+'</ul></div>';
+
+    var diagramHtml = c.diagramSvg ? '<div class="panel"><h2>Mechanism diagram</h2><div class="diagram-wrap">'+c.diagramSvg+'</div>'+(c.diagramNote?'<p class="footnote">'+esc(c.diagramNote)+'</p>':'')+'</div>' : '';
+
+    var memberRows = c.members.map(function(m){
+      return '<tr><td class="drugname">'+esc(m.name)+'</td><td>'+esc(m.a)+'</td><td>'+esc(m.b)+'</td><td>'+esc(m.c)+'</td></tr>';
+    }).join("");
+    var memberHtml = '<div class="panel"><h2>Specific characteristics <span style="color:var(--text-muted); font-weight:400; font-size:0.8rem;">— how the '+c.members.length+' members differ</span></h2>'+
+      '<div style="overflow-x:auto;"><table class="member-table"><thead><tr><th>Drug</th><th>'+esc(c.memberCols[0])+'</th><th>'+esc(c.memberCols[1])+'</th><th>'+esc(c.memberCols[2])+'</th></tr></thead>'+
+      '<tbody>'+memberRows+'</tbody></table></div></div>';
+
+    var popHtml = '<div class="panel"><h2>Use in special populations</h2>'+
+      c.specialPopulations.map(function(p){
+        return '<div class="pop-card'+(p.warn?' warn':'')+'"><div class="pop-label">'+esc(p.label)+'</div>'+esc(p.text)+'</div>';
+      }).join("")+'</div>';
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead"><button class="btn btn-ghost btn-sm" id="backClasses" style="margin-bottom:10px;">&larr; All classes</button>'+
+        '<div class="class-name"><h1>'+esc(c.name)+'</h1><span class="pron">/'+esc(c.pronunciation)+'/</span><span class="badge badge-accent">'+esc(topicLabel(c.topic))+'</span></div>'+
+        '<p>'+esc(c.blurb)+'</p>'+
+      '</div>'+
+      generalHtml+diagramHtml+memberHtml+popHtml+
+      '<p class="footnote">Educational reference content — not a substitute for the full product monograph.</p>';
+
+    document.getElementById("backClasses").addEventListener("click", closeClass);
+  }
+
+  function renderRxAbbrev(){
+    var q = abbrevSearch.trim().toLowerCase();
+    var allCats = RX_ABBREV.concat([{cat:"Clinical & drug-class abbreviations", items:GLOSSARY}]);
+    var filteredCats = allCats.map(function(cat){
+      var items = !q ? cat.items : cat.items.filter(function(it){
+        return it.a.toLowerCase().indexOf(q)!==-1 || it.m.toLowerCase().indexOf(q)!==-1;
+      });
+      return {cat:cat.cat, items:items};
+    }).filter(function(cat){ return cat.items.length>0; });
+
+    var catsHtml = filteredCats.map(function(cat){
+      return '<div class="panel"><h2>'+esc(cat.cat)+'</h2>'+
+        '<div class="abbrev-grid" style="margin-top:12px;">'+cat.items.map(function(it){
+          return '<div class="abbrev-item"><div class="a-code">'+esc(it.a)+'</div><div class="a-mean">'+esc(it.m)+'</div></div>';
+        }).join("")+'</div></div>';
+    }).join("");
+
+    var dangerHtml = RX_ABBREV_DANGER.map(function(d){
+      return '<div class="danger-row">'+
+        '<div class="d-bad">'+esc(d.bad)+'</div>'+
+        '<div class="d-why">'+esc(d.why)+'</div>'+
+        '<div class="d-fix">Instead: '+esc(d.fix)+'</div>'+
+      '</div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      refBackBtn("Abbreviations")+
+      '<div class="panel" style="margin-bottom:16px;">'+
+        '<input type="text" class="textinput" id="abbrevSearch" placeholder="Search an abbreviation (e.g. ACEi, BID, CrCl)…" value="'+esc(abbrevSearch)+'" style="width:100%;">'+
+      '</div>'+
+      (q ? '' :
+      '<div class="panel" style="border-color:var(--danger);">'+
+        '<h2 style="color:var(--danger);">⚠ ISMP Canada "Do Not Use" list</h2>'+
+        '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">These abbreviations are common exam trap questions — they look convenient but have caused real dispensing errors.</p>'+
+        dangerHtml+
+      '</div>')+
+      (catsHtml || '<div class="panel"><p class="empty">No abbreviation matches — try a different search.</p></div>')+
+      '<p class="footnote">Reference only — always follow your provincial college\'s current prescription-labelling standards. Clinical abbreviations here are also what get auto-highlighted (tap for the full term) in Study Guides.</p>';
+    wireRefBack();
+    document.getElementById("abbrevSearch").addEventListener("input", function(e){
+      abbrevSearch = e.target.value;
+      var caret = e.target.selectionStart;
+      render();
+      var el = document.getElementById("abbrevSearch");
+      if (el){ el.focus(); el.setSelectionRange(caret, caret); }
+    });
+  }
+
+  function buildKrollDiagram(){
+    var stages = [
+      "Rx Received\n(fax / e-Rx / verbal / transfer-in)",
+      "Patient Profile\ncheck / update",
+      "Data Entry\ndrug, DIN, Sig",
+      "Clinical Check\nDUR, interactions, allergy",
+      "Adjudication\ninsurance claim",
+      "Fill & Label\nbatch / blister / compound",
+      "RPh Verify\nbarcode scan",
+      "Counsel & Bill\npickup, documentation"
+    ];
+    var bw=150, bh=74, gap=22, y=54;
+    var svgW = stages.length*bw + (stages.length-1)*gap;
+    var boxes = "", arrows = "";
+    stages.forEach(function(label, i){
+      var x = i*(bw+gap);
+      var lines = label.split("\n");
+      boxes += '<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="10" fill="var(--bg-elevated)" stroke="var(--accent)" stroke-width="1.5"></rect>';
+      boxes += '<text x="'+(x+bw/2)+'" y="'+(y+30)+'" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text)">'+esc(lines[0])+'</text>';
+      boxes += '<text x="'+(x+bw/2)+'" y="'+(y+48)+'" text-anchor="middle" font-size="10.5" fill="var(--text-muted)">'+esc(lines[1]||"")+'</text>';
+      if (i < stages.length-1){
+        var ax = x+bw, ax2 = x+bw+gap;
+        arrows += '<line x1="'+ax+'" y1="'+(y+bh/2)+'" x2="'+(ax2-6)+'" y2="'+(y+bh/2)+'" stroke="var(--gold)" stroke-width="2" marker-end="url(#krollArrow)"></line>';
+      }
+    });
+    return '<div class="kroll-diagram-wrap"><svg viewBox="0 0 '+svgW+' 170" xmlns="http://www.w3.org/2000/svg">'+
+      '<defs><marker id="krollArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--gold)"></path></marker></defs>'+
+      arrows+boxes+
+    '</svg></div>';
+  }
+
+  function renderKrollOps(){
+    var opsHtml;
+    if (krollOpen==null){
+      opsHtml = '<div class="panel">'+KROLL_OPS.map(function(op){
+        return '<div class="kroll-card" data-op="'+op.n+'"><div class="k-head"><span class="k-num">'+op.n+'</span><span class="k-title">'+esc(op.title)+'</span></div></div>';
+      }).join("")+'</div>';
+    } else {
+      var op = KROLL_OPS.filter(function(o){ return o.n===krollOpen; })[0];
+      opsHtml = '<div class="panel">'+
+        '<button class="btn btn-ghost btn-sm" id="backKrollList" style="margin-bottom:10px;">&larr; All 15 operations</button>'+
+        '<h2>'+op.n+'. '+esc(op.title)+'</h2>'+
+        '<ol class="kroll-steps">'+op.steps.map(function(s){ return '<li>'+esc(s)+'</li>'; }).join("")+'</ol>'+
+      '</div>';
+    }
+
+    document.getElementById("main").innerHTML =
+      refBackBtn("Kroll workflow — top 15 operations")+
+      '<div class="panel">'+
+        '<h2>End-to-end prescription flow</h2>'+
+        '<p style="color:var(--text-muted); font-size:0.86rem; margin:4px 0 14px;">Most of the 15 operations below slot into this core lifecycle. Scroll sideways on small screens.</p>'+
+        buildKrollDiagram()+
+      '</div>'+
+      opsHtml+
+      '<p class="footnote">General Kroll/Canadian-PMS workflow, based on Kroll\'s publicly documented feature set (TELUS Health) — not a certified user manual. Exact menu paths vary by version and pharmacy configuration; use your store\'s own Kroll training for click-by-click navigation.</p>';
+
+    wireRefBack();
+    var backList = document.getElementById("backKrollList");
+    if (backList) backList.addEventListener("click", function(){ krollOpen = null; render(); });
+    Array.prototype.forEach.call(document.querySelectorAll(".kroll-card"), function(card){
+      card.addEventListener("click", function(){ krollOpen = parseInt(card.getAttribute("data-op"),10); render(); window.scrollTo(0,0); });
+    });
+  }
+
+  /* ---------------- Render: Drug Reference ---------------- */
+  function renderDrugs(){
+    var availableTopics = [];
+    var seenTopics = {};
+    DRUGS.forEach(function(d){
+      if (!seenTopics[d.topic]){ seenTopics[d.topic] = true; availableTopics.push(d.topic); }
+    });
+    availableTopics.sort(function(a,b){ return topicLabel(a).localeCompare(topicLabel(b)); });
+
+    var filterOptions = '<option value="all">All topics</option>' + availableTopics.map(function(t){
+      return '<option value="'+t+'"'+(drugFilter===t?' selected':'')+'>'+esc(topicLabel(t))+'</option>';
+    }).join("");
+
+    var q = drugSearch.trim().toLowerCase();
+    var list = DRUGS.filter(function(d){
+      if (drugFilter!=="all" && d.topic!==drugFilter) return false;
+      if (!q) return true;
+      var hay = (d.generic+" "+(d.brand||[]).join(" ")+" "+d.class).toLowerCase();
+      return hay.indexOf(q) !== -1;
+    }).sort(function(a,b){ return a.generic.localeCompare(b.generic); });
+
+    var cardsHtml = list.map(function(d, i){
+      var id = "drug_"+d.topic+"_"+i;
+      var open = drugOpenId === id;
+      var brandStr = (d.brand||[]).length ? (d.brand||[]).join(", ") : "Generic only";
+      var body = open ? (
+        '<div class="drug-card-body">'+
+          '<div class="drug-section"><h4>Pharmacology</h4><p>'+esc(d.moa)+'</p></div>'+
+          '<div class="drug-section"><h4>Main indication</h4><p>'+esc(d.indication)+'</p></div>'+
+          '<div class="drug-section"><h4>Typical adult dosage</h4><p>'+esc(d.dosage)+'</p></div>'+
+          '<div class="drug-section"><h4>Exam must-knows</h4><ul>'+(d.examPoints||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
+          '<div class="drug-section"><h4>Counselling the patient</h4><ul>'+(d.counselling||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
+          '<div class="drug-section"><h4>Main side effects</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
+        '</div>'
+      ) : '';
+      var speakIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 9 3 15 8 15 13 20 13 4 8 9 3 9"></polygon><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>';
+      var pron = d.pronunciation ?
+        '<button type="button" class="drug-pronunciation" data-generic="'+esc(d.generic)+'" aria-label="Play pronunciation of '+esc(d.generic)+'">'+esc(d.pronunciation)+' '+speakIcon+'</button>'
+        : '';
+      return '<div class="drug-card">'+
+        '<div class="drug-card-head" data-id="'+id+'" role="button" tabindex="0">'+
+          '<span><span class="drug-name">'+esc(d.generic)+'</span>'+pron+'<div class="drug-brand">'+esc(brandStr)+' · '+esc(d.class)+'</div></span>'+
+          '<span class="badge badge-accent">'+esc(topicLabel(d.topic))+'</span>'+
+        '</div>'+body+
+      '</div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead"><h1>Drug reference</h1><p>Generic &amp; brand names, pharmacology, main indication, exam must-knows, patient counselling, and main side effects. Tap a drug to expand it.</p></div>'+
+      '<div class="panel" style="margin-bottom:16px;">'+
+        '<div class="field-row">'+
+          '<input type="text" class="textinput" id="drugSearch" placeholder="Search by generic or brand name…" value="'+esc(drugSearch)+'">'+
+          '<select class="select" id="drugTopicSelect">'+filterOptions+'</select>'+
+        '</div>'+
+      '</div>'+
+      (list.length ?
+        '<div class="drug-list">'+cardsHtml+'</div>'
+        : '<div class="panel"><p class="empty">No drugs match — try a different search or topic.</p></div>')+
+      '<p class="footnote">Coverage is still growing topic by topic — this list will keep expanding. Educational reference content, not a substitute for the full product monograph.</p>';
+
+    document.getElementById("drugSearch").addEventListener("input", function(e){
+      drugSearch = e.target.value;
+      var caret = e.target.selectionStart;
+      render();
+      var el = document.getElementById("drugSearch");
+      if (el){ el.focus(); el.setSelectionRange(caret, caret); }
+    });
+    document.getElementById("drugTopicSelect").addEventListener("change", function(e){
+      drugFilter = e.target.value; render();
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".drug-card-head"), function(el){
+      var toggle = function(){
+        var id = el.getAttribute("data-id");
+        drugOpenId = (drugOpenId===id) ? null : id;
+        render();
+      };
+      el.addEventListener("click", toggle);
+      el.addEventListener("keydown", function(e){
+        if (e.key==="Enter" || e.key===" "){ e.preventDefault(); toggle(); }
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".drug-pronunciation"), function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        speakDrugName(btn.getAttribute("data-generic"), btn);
+      });
+    });
+  }
+
   /* ---------------- Render: History ---------------- */
   function renderHistory(){
     var rows = [];
@@ -1152,6 +2020,12 @@
     if (view==="dashboard") renderDashboard();
     else if (view==="mcq") renderMcq();
     else if (view==="osce") renderOsce();
+    else if (view==="study") renderStudyGuides();
+    else if (view==="drugs") renderDrugs();
+    else if (view==="schedules") renderDrugSchedules();
+    else if (view==="calc") renderCalculations();
+    else if (view==="classes") renderDrugClasses();
+    else if (view==="ref") renderReference();
     else if (view==="history") renderHistory();
   }
 
