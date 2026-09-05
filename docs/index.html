@@ -450,6 +450,22 @@
   }
   .calc-card h4{ font-size:0.74rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); margin:12px 0 6px; }
   .calc-card ul{ margin:0; padding-left:18px; font-size:0.87rem; line-height:1.6; }
+
+  /* ---- Drug classes ---- */
+  .class-name{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .class-name h2{ font-size:1.3rem; }
+  .pron{ font-size:0.9rem; color:var(--gold); font-style:italic; }
+  .diagram-wrap{ overflow-x:auto; margin-bottom:8px; }
+  .diagram-wrap svg{ display:block; min-width:520px; margin:8px auto; }
+  table.member-table{ width:100%; border-collapse:collapse; font-size:0.85rem; }
+  table.member-table th{ text-align:left; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); border-bottom:1px solid var(--border); padding:8px 8px; }
+  table.member-table td{ padding:9px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+  table.member-table tr:last-child td{ border-bottom:none; }
+  .drugname{ font-weight:700; }
+  .pop-card{ border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:10px; background:var(--surface-2); }
+  .pop-card .pop-label{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--info); font-weight:700; margin-bottom:4px; }
+  .pop-card.warn{ border-color:var(--danger); }
+  .pop-card.warn .pop-label{ color:var(--danger); }
 </style>
 
 </head>
@@ -472,6 +488,7 @@
 <script src="data/mcq-data.js"></script>
 <script src="data/drug-data.js"></script>
 <script src="data/study-data.js"></script>
+<script src="data/class-data.js"></script>
 <script>
 (function(){
   "use strict";
@@ -1152,6 +1169,10 @@
   var refSection = null;
   var krollOpen = null;
   var abbrevSearch = "";
+  var CLASSES = window.CLASS_DATA || [];
+  var classCurrent = null;
+  var classFilter = "all";
+  var classSearch = "";
 
   var VIEWS = [
     {key:"dashboard", label:"Dashboard"},
@@ -1159,6 +1180,7 @@
     {key:"osce", label:"OSCE Stations"},
     {key:"study", label:"Study Guides"},
     {key:"drugs", label:"Drug Reference"},
+    {key:"classes", label:"Drug Classes"},
     {key:"schedules", label:"Drug Schedules"},
     {key:"calc", label:"Calculations"},
     {key:"ref", label:"Quick Reference"},
@@ -1668,6 +1690,98 @@
     });
   }
 
+  /* ---------------- Render: Drug Classes ---------------- */
+  function openClass(key){ classCurrent = key; render(); window.scrollTo(0,0); }
+  function closeClass(){ classCurrent = null; render(); }
+
+  function renderDrugClasses(){
+    if (!classCurrent){
+      var availableTopics = [];
+      var seenTopics = {};
+      CLASSES.forEach(function(c){
+        if (!seenTopics[c.topic]){ seenTopics[c.topic] = true; availableTopics.push(c.topic); }
+      });
+      availableTopics.sort(function(a,b){ return topicLabel(a).localeCompare(topicLabel(b)); });
+      var filterOptions = '<option value="all">All topics</option>' + availableTopics.map(function(t){
+        return '<option value="'+t+'"'+(classFilter===t?' selected':'')+'>'+esc(topicLabel(t))+'</option>';
+      }).join("");
+
+      var q = classSearch.trim().toLowerCase();
+      var list = CLASSES.filter(function(c){
+        if (classFilter!=="all" && c.topic!==classFilter) return false;
+        if (!q) return true;
+        return (c.name+" "+c.blurb).toLowerCase().indexOf(q)!==-1;
+      }).sort(function(a,b){ return a.name.localeCompare(b.name); });
+
+      var cardsHtml = list.map(function(c){
+        return '<button class="station-card" data-key="'+esc(c.key)+'">'+
+          '<div class="st-title">'+esc(c.name)+'</div>'+
+          '<div class="st-blurb">'+esc(c.blurb)+'</div>'+
+          '<div class="st-foot"><span class="badge badge-accent">'+esc(topicLabel(c.topic))+'</span><span class="badge">'+c.members.length+' drugs</span></div>'+
+        '</button>';
+      }).join("");
+
+      document.getElementById("main").innerHTML =
+        '<div class="pagehead"><h1>Drug classes</h1><p>Grouped by mechanism, not individual drug — general class behavior, how members differ, and special-population guidance in one place.</p></div>'+
+        '<div class="panel" style="margin-bottom:16px;">'+
+          '<div class="field-row">'+
+            '<input type="text" class="textinput" id="classSearch" placeholder="Search a class (e.g. beta-blockers, statins)…" value="'+esc(classSearch)+'">'+
+            '<select class="select" id="classTopicSelect">'+filterOptions+'</select>'+
+          '</div>'+
+        '</div>'+
+        (list.length ? '<div class="station-grid">'+cardsHtml+'</div>' : '<div class="panel"><p class="empty">No classes match — try a different search or topic.</p></div>')+
+        '<p class="footnote">Coverage is still growing topic by topic. Educational reference content, not a substitute for the full product monograph.</p>';
+
+      document.getElementById("classSearch").addEventListener("input", function(e){
+        classSearch = e.target.value;
+        var caret = e.target.selectionStart;
+        render();
+        var el = document.getElementById("classSearch");
+        if (el){ el.focus(); el.setSelectionRange(caret, caret); }
+      });
+      document.getElementById("classTopicSelect").addEventListener("change", function(e){
+        classFilter = e.target.value; render();
+      });
+      Array.prototype.forEach.call(document.querySelectorAll(".station-card"), function(btn){
+        btn.addEventListener("click", function(){ openClass(btn.getAttribute("data-key")); });
+      });
+      return;
+    }
+
+    var c = CLASSES.filter(function(x){ return x.key===classCurrent; })[0];
+    if (!c){ classCurrent = null; renderDrugClasses(); return; }
+
+    var generalHtml = '<div class="panel"><h2>General characteristics <span style="color:var(--text-muted); font-weight:400; font-size:0.8rem;">— true for the whole class</span></h2><ul>'+
+      c.general.map(function(g){
+        var parts = g.split(/:(.+)/);
+        return parts.length>1 ? '<li><b>'+esc(parts[0])+':</b>'+esc(parts[1])+'</li>' : '<li>'+esc(g)+'</li>';
+      }).join("")+'</ul></div>';
+
+    var diagramHtml = c.diagramSvg ? '<div class="panel"><h2>Mechanism diagram</h2><div class="diagram-wrap">'+c.diagramSvg+'</div>'+(c.diagramNote?'<p class="footnote">'+esc(c.diagramNote)+'</p>':'')+'</div>' : '';
+
+    var memberRows = c.members.map(function(m){
+      return '<tr><td class="drugname">'+esc(m.name)+'</td><td>'+esc(m.a)+'</td><td>'+esc(m.b)+'</td><td>'+esc(m.c)+'</td></tr>';
+    }).join("");
+    var memberHtml = '<div class="panel"><h2>Specific characteristics <span style="color:var(--text-muted); font-weight:400; font-size:0.8rem;">— how the '+c.members.length+' members differ</span></h2>'+
+      '<div style="overflow-x:auto;"><table class="member-table"><thead><tr><th>Drug</th><th>'+esc(c.memberCols[0])+'</th><th>'+esc(c.memberCols[1])+'</th><th>'+esc(c.memberCols[2])+'</th></tr></thead>'+
+      '<tbody>'+memberRows+'</tbody></table></div></div>';
+
+    var popHtml = '<div class="panel"><h2>Use in special populations</h2>'+
+      c.specialPopulations.map(function(p){
+        return '<div class="pop-card'+(p.warn?' warn':'')+'"><div class="pop-label">'+esc(p.label)+'</div>'+esc(p.text)+'</div>';
+      }).join("")+'</div>';
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead"><button class="btn btn-ghost btn-sm" id="backClasses" style="margin-bottom:10px;">&larr; All classes</button>'+
+        '<div class="class-name"><h1>'+esc(c.name)+'</h1><span class="pron">/'+esc(c.pronunciation)+'/</span><span class="badge badge-accent">'+esc(topicLabel(c.topic))+'</span></div>'+
+        '<p>'+esc(c.blurb)+'</p>'+
+      '</div>'+
+      generalHtml+diagramHtml+memberHtml+popHtml+
+      '<p class="footnote">Educational reference content — not a substitute for the full product monograph.</p>';
+
+    document.getElementById("backClasses").addEventListener("click", closeClass);
+  }
+
   function renderRxAbbrev(){
     var q = abbrevSearch.trim().toLowerCase();
     var allCats = RX_ABBREV.concat([{cat:"Clinical & drug-class abbreviations", items:GLOSSARY}]);
@@ -1910,6 +2024,7 @@
     else if (view==="drugs") renderDrugs();
     else if (view==="schedules") renderDrugSchedules();
     else if (view==="calc") renderCalculations();
+    else if (view==="classes") renderDrugClasses();
     else if (view==="ref") renderReference();
     else if (view==="history") renderHistory();
   }
