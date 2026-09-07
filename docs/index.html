@@ -343,6 +343,36 @@
     display:flex; align-items:center; justify-content:center;
   }
 
+  /* ---- OSCE official-format additions ---- */
+  .format-badge{ font-size:0.68rem; text-transform:uppercase; letter-spacing:0.03em; font-weight:700; padding:2px 8px; border-radius:6px; }
+  .format-badge.patient{ background:var(--info-soft); color:var(--info); }
+  .format-badge.hp{ background:var(--gold-soft); color:var(--gold); }
+  .format-badge.screen-rx, .format-badge.check-meds{ background:var(--surface-2); color:var(--text-muted); }
+  .osce-meta-row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
+  .competency-card{ border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin-bottom:8px; background:var(--bg-elevated); }
+  .competency-card .code{ display:inline-block; font-family:var(--font-mono); font-weight:700; color:var(--accent); margin-right:8px; }
+  .competency-card ul{ margin:6px 0 0; padding-left:18px; font-size:0.85rem; color:var(--text-muted); }
+  .participant-panel{ border:1px solid var(--info); border-radius:10px; padding:14px 16px; margin-bottom:12px; background:var(--info-soft); }
+  .participant-panel h3{ font-size:0.92rem; margin-bottom:6px; }
+  .participant-line{ font-style:italic; padding:8px 12px; border-left:3px solid var(--info); margin:8px 0; font-size:0.9rem; background:var(--bg-elevated); border-radius:0 8px 8px 0; }
+  .response-cue{ font-size:0.76rem; color:var(--text-muted); margin-top:8px; }
+  .assessor-tiers{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin:10px 0; }
+  .assessor-tier{ border-radius:10px; padding:10px 12px; font-size:0.82rem; }
+  .assessor-tier h4{ font-size:0.74rem; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:6px; }
+  .assessor-tier ul{ margin:0; padding-left:16px; line-height:1.5; }
+  .assessor-tier.solved{ background:var(--success-soft); } .assessor-tier.solved h4{ color:var(--success); }
+  .assessor-tier.marginal{ background:var(--info-soft); } .assessor-tier.marginal h4{ color:var(--info); }
+  .assessor-tier.uncertain{ background:var(--gold-soft); } .assessor-tier.uncertain h4{ color:var(--gold); }
+  .assessor-tier.unsolved{ background:var(--danger-soft); } .assessor-tier.unsolved h4{ color:var(--danger); }
+  .rating-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .rating-row .rating-label{ font-size:0.85rem; font-weight:600; min-width:130px; }
+  .rating-pill{ border:1px solid var(--border); background:var(--bg-elevated); border-radius:20px; padding:5px 12px; font-size:0.78rem; cursor:pointer; }
+  .rating-pill[data-active="1"]{ background:var(--accent); color:var(--accent-contrast); border-color:var(--accent); }
+  .rx-item-card{ border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:12px; background:var(--bg-elevated); }
+  .rx-item-card .rx-label{ font-weight:700; margin-bottom:4px; }
+  .rx-item-card .rx-detail{ font-family:var(--font-mono); font-size:0.86rem; background:var(--surface-2); padding:8px 10px; border-radius:6px; margin-bottom:10px; }
+  .rx-item-card .rx-answer{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); font-size:0.86rem; }
+
   /* ---- History ---- */
   .hist-table{ width:100%; border-collapse:collapse; font-size:0.85rem; }
   .hist-table th{
@@ -539,6 +569,7 @@
 <script src="data/juris-data.js"></script>
 <script src="data/tutor-data.js"></script>
 <script src="data/calc-formulas.js"></script>
+<script src="data/mcq-cases.js"></script>
 <script>
 (function(){
   "use strict";
@@ -575,7 +606,8 @@
     "canadian-system":"Canadian Healthcare System & Scope of Practice",
     "privacy-error":"Privacy, Documentation & Error Management",
     "maid":"Medical Assistance in Dying (MAiD)",
-    "emergency-public-health":"Emergency Preparedness & Public Health"
+    "emergency-public-health":"Emergency Preparedness & Public Health",
+    "bc-jurisprudence":"Provincial Deep-Dive: British Columbia"
   };
   function topicLabel(key){
     for (var i=0;i<TOPICS.length;i++){ if (TOPICS[i].key===key) return TOPICS[i].label; }
@@ -966,202 +998,202 @@
     {t:"cardio", q:"A 64-year-old man with newly diagnosed HFrEF (EF 30%) is being started on a beta-blocker in addition to an ACE inhibitor. Which agent is appropriate?",
      o:["Metoprolol tartrate (immediate-release)","Atenolol","Carvedilol","Propranolol"], a:2,
      r:"Only carvedilol, metoprolol succinate (extended-release), and bisoprolol have proven mortality benefit in HFrEF. Metoprolol tartrate (immediate-release) is not the studied formulation, and atenolol/propranolol lack HF outcome data.",
-     m:"BAMS — Beta-blocker, ACEi/ARB/ARNI, MRA, SGLT2i are the four pillars of HFrEF therapy."},
+     m:"BAMS — Beta-blocker, ACEi/ARB/ARNI, MRA, SGLT2i are the four pillars of HFrEF therapy.", why:["Metoprolol tartrate is the immediate-release salt — the mortality benefit in HFrEF trials was shown specifically with metoprolol succinate (extended-release), not this formulation.", "Atenolol has never been studied in HFrEF outcome trials and lacks the mortality-benefit evidence base of the guideline-directed agents.", "Correct — carvedilol is one of the three beta-blockers (with metoprolol succinate and bisoprolol) proven to reduce mortality in HFrEF and is part of core guideline-directed therapy.", "Propranolol is a non-selective beta-blocker with no HFrEF outcome data and is not used for this indication."]},
     {t:"cardio", q:"Per current Hypertension Canada guidance, which thiazide-type diuretic is preferred over hydrochlorothiazide for treating essential hypertension?",
      o:["Hydrochlorothiazide","Chlorthalidone","Furosemide","Amiloride"], a:1,
-     r:"Chlorthalidone has a longer half-life and stronger evidence for cardiovascular outcome reduction, and is preferred by Hypertension Canada over hydrochlorothiazide. Furosemide is a loop diuretic (not first-line for uncomplicated HTN); amiloride is potassium-sparing and used as add-on therapy.", m:null},
+     r:"Chlorthalidone has a longer half-life and stronger evidence for cardiovascular outcome reduction, and is preferred by Hypertension Canada over hydrochlorothiazide. Furosemide is a loop diuretic (not first-line for uncomplicated HTN); amiloride is potassium-sparing and used as add-on therapy.", m:null, why:["Hydrochlorothiazide is effective but has a shorter half-life and weaker outcome-trial evidence than chlorthalidone, which is why Hypertension Canada favours the latter.", "Correct — chlorthalidone's longer half-life and stronger cardiovascular outcome evidence make it the preferred thiazide-type agent.", "Furosemide is a loop diuretic, useful for volume overload but not preferred first-line for uncomplicated essential hypertension.", "Amiloride is a potassium-sparing diuretic used as add-on therapy for resistant hypertension or to offset hypokalemia, not as first-line monotherapy."]},
     {t:"cardio", q:"A patient with atrial fibrillation and a history of prior MI is being considered for rhythm control. Which antiarrhythmic should be AVOIDED due to structural heart disease?",
      o:["Amiodarone","Digoxin","Flecainide","Sotalol with close ECG monitoring"], a:2,
-     r:"Flecainide (and other Class IC agents like propafenone) are contraindicated in structural or ischemic heart disease due to increased mortality risk (CAST trial). Amiodarone is the preferred rhythm-control agent when structural heart disease/HF is present.", m:null},
+     r:"Flecainide (and other Class IC agents like propafenone) are contraindicated in structural or ischemic heart disease due to increased mortality risk (CAST trial). Amiodarone is the preferred rhythm-control agent when structural heart disease/HF is present.", m:null, why:["Amiodarone is actually the preferred rhythm-control agent in patients with structural heart disease because it lacks the pro-arrhythmic mortality signal seen with Class IC agents.", "Digoxin is used mainly for rate control, not rhythm control, and isn't the drug being asked about avoiding here.", "Correct — flecainide (a Class IC agent) is contraindicated in structural or ischemic heart disease; the CAST trial showed increased mortality from its pro-arrhythmic effects in this population.", "Sotalol can be used with structural heart disease provided QT is monitored closely — it carries a proarrhythmia risk but is not absolutely contraindicated the way flecainide is."]},
     {t:"cardio", q:"A patient presents to the ED with a suspected acute STEMI. What is the appropriate initial aspirin dose?",
      o:["81 mg chewed","162–325 mg chewed (non-enteric-coated)","325 mg swallowed whole with water","650 mg per rectum"], a:1,
-     r:"Non-enteric-coated aspirin 162–325 mg should be chewed immediately in suspected ACS for rapid buccal absorption. Long-term secondary prevention afterward uses 81 mg daily.", m:null},
+     r:"Non-enteric-coated aspirin 162–325 mg should be chewed immediately in suspected ACS for rapid buccal absorption. Long-term secondary prevention afterward uses 81 mg daily.", m:null, why:["81 mg is the long-term secondary-prevention maintenance dose, not the immediate loading dose needed in suspected ACS.", "Correct — a non-enteric-coated 162–325 mg dose chewed immediately achieves rapid buccal absorption and antiplatelet effect, critical in the first minutes of suspected STEMI.", "Enteric-coated or swallowed-whole tablets delay absorption through gastric transit, which is too slow when rapid antiplatelet effect is needed.", "A rectal route and 650 mg dose are not standard for acute ACS management; oral chewed non-enteric aspirin is the recommended route and dose."]},
     {t:"cardio", q:"A patient stable on simvastatin 40 mg daily is prescribed a 7-day course of clarithromycin. What is the most appropriate action?",
      o:["Continue simvastatin as usual","Hold simvastatin during the course or switch to a statin less dependent on CYP3A4 (e.g., rosuvastatin, pravastatin)","Increase the simvastatin dose","No action needed — this is not clinically significant"], a:1,
      r:"Clarithromycin is a strong CYP3A4 inhibitor; combined with simvastatin (a CYP3A4-dependent statin) it markedly increases rhabdomyolysis risk.",
-     m:"“Love Simba” — Lovastatin + Simvastatin have the most CYP3A4-dependent interactions among statins."},
+     m:"“Love Simba” — Lovastatin + Simvastatin have the most CYP3A4-dependent interactions among statins.", why:["Continuing unchanged ignores a clinically significant CYP3A4 interaction that substantially raises rhabdomyolysis risk during the antibiotic course.", "Correct — clarithromycin strongly inhibits CYP3A4, and simvastatin is highly CYP3A4-dependent, so holding the statin or switching to one less dependent on this pathway (rosuvastatin, pravastatin) avoids the interaction.", "Increasing the dose would compound the interaction and further raise myopathy/rhabdomyolysis risk — the opposite of the safe action.", "This is a well-documented, clinically significant interaction, not one that can be safely ignored."]},
 
     {t:"endo", q:"A patient on metformin (eGFR 55) is scheduled for a CT scan with IV iodinated contrast tomorrow. What should the pharmacist advise?",
      o:["Continue metformin without interruption","Hold metformin around the time of contrast and for ~48 hours after, resuming once renal function is confirmed stable","Permanently discontinue metformin","Double the metformin dose to compensate"], a:1,
-     r:"Iodinated contrast can transiently impair renal function, raising lactic acidosis risk with metformin. Standard practice is to hold metformin around contrast administration, especially when eGFR <60, and resume after confirming stable renal function.", m:null},
+     r:"Iodinated contrast can transiently impair renal function, raising lactic acidosis risk with metformin. Standard practice is to hold metformin around contrast administration, especially when eGFR <60, and resume after confirming stable renal function.", m:null, why:["Continuing metformin uninterrupted ignores the real (if transient) risk that contrast-induced renal impairment poses for lactic acidosis.", "Correct — standard practice is to hold metformin around the time of contrast administration and for about 48 hours after, resuming only once renal function is confirmed stable.", "Permanent discontinuation is unnecessary — the risk is time-limited to the period of possible transient renal impairment after contrast.", "Doubling the dose during a period of potential renal impairment would increase lactic acidosis risk, not reduce it."]},
     {t:"endo", q:"A patient on empagliflozin develops vomiting and poor oral intake from a GI illness. Applying sick-day medication rules, what should the pharmacist recommend?",
      o:["Continue empagliflozin as usual","Temporarily hold empagliflozin until eating/drinking normally, given the risk of euglycemic DKA and dehydration","Double the dose to control blood sugar","Switch immediately to insulin"], a:1,
      r:"SGLT2 inhibitors should be held during acute illness with poor intake, due to risk of euglycemic diabetic ketoacidosis — glucose can look deceptively normal.",
-     m:"SADMANS sick-day list: Sulfonylureas, ACEi/ARB, Diuretics, Metformin, SGLT2i — hold during illness."},
+     m:"SADMANS sick-day list: Sulfonylureas, ACEi/ARB, Diuretics, Metformin, SGLT2i — hold during illness.", why:["Continuing an SGLT2 inhibitor during acute illness with poor intake raises the risk of euglycemic DKA, where glucose looks falsely reassuring while ketoacidosis develops.", "Correct — SGLT2 inhibitors are on the standard sick-day list and should be held until the patient is eating/drinking normally and the illness resolves.", "Doubling the dose during illness would worsen dehydration and euglycemic DKA risk rather than help.", "Switching to insulin is an overreaction for a temporary illness; the correct sick-day action is simply to hold the SGLT2 inhibitor, not change therapy entirely."]},
     {t:"endo", q:"According to Diabetes Canada, what is the general A1C target for most adults with type 2 diabetes?",
      o:["≤6.0%","≤7.0%","≤8.0%","≤9.0%"], a:1,
-     r:"Diabetes Canada recommends an A1C target of ≤7.0% for most adults, with looser targets (7.1–8.5%) considered for frail elderly patients or those at high hypoglycemia risk.", m:null},
+     r:"Diabetes Canada recommends an A1C target of ≤7.0% for most adults, with looser targets (7.1–8.5%) considered for frail elderly patients or those at high hypoglycemia risk.", m:null, why:["A target this tight increases hypoglycemia risk without added benefit for most adults and is not the Diabetes Canada general target.", "Correct — Diabetes Canada recommends an A1C of ≤7.0% for most adults with type 2 diabetes, balancing glycemic control against hypoglycemia risk.", "This looser target is reserved for frail or hypoglycemia-prone patients, not the general adult population.", "A target this loose would be considered under-treatment for most adults and is only appropriate in specific high-risk or limited-life-expectancy situations."]},
     {t:"endo", q:"A type 1 diabetic patient is found unconscious at home with a glucose of 2.1 mmol/L. Only an untrained family member is present. What is the most appropriate immediate treatment?",
      o:["Oral glucose tablets","IM or intranasal glucagon","Wait for the patient to wake up on their own","IV dextrose given by the family member"], a:1,
-     r:"When a hypoglycemic patient is unconscious or unable to safely swallow, glucagon (IM or intranasal) given by a caregiver is the appropriate emergency treatment. Oral glucose (15-15 rule) requires a conscious, cooperative patient.", m:null},
+     r:"When a hypoglycemic patient is unconscious or unable to safely swallow, glucagon (IM or intranasal) given by a caregiver is the appropriate emergency treatment. Oral glucose (15-15 rule) requires a conscious, cooperative patient.", m:null, why:["Oral glucose requires a conscious, cooperative patient who can safely swallow — giving anything by mouth to an unconscious person risks aspiration.", "Correct — glucagon (IM or intranasal) is designed to be given by a lay caregiver in exactly this scenario, when the patient cannot safely take anything orally.", "Waiting risks prolonged severe hypoglycemia and neurological injury; immediate treatment is required.", "IV administration requires training and equipment an untrained family member does not have — this is not a safe or realistic recommendation."]},
     {t:"endo", q:"A patient is newly started on levothyroxine. Which counselling point about administration timing is most important?",
      o:["Take with breakfast for better absorption","Take on an empty stomach, 30–60 minutes before breakfast, separated from calcium/iron by ≥4 hours","Take at bedtime with a snack","Timing does not matter as long as it's taken daily"], a:1,
-     r:"Levothyroxine absorption is significantly reduced by food and by calcium/iron (chelation); it should be taken consistently on an empty stomach. TSH is rechecked 6–8 weeks after starting or any dose change.", m:null},
+     r:"Levothyroxine absorption is significantly reduced by food and by calcium/iron (chelation); it should be taken consistently on an empty stomach. TSH is rechecked 6–8 weeks after starting or any dose change.", m:null, why:["Food significantly reduces levothyroxine absorption, so taking it with breakfast undermines consistent dosing.", "Correct — levothyroxine should be taken on an empty stomach, 30–60 minutes before food, and separated from calcium/iron by at least 4 hours to avoid chelation and ensure reliable absorption.", "Bedtime dosing with a snack introduces the same food-interference problem as taking it with a meal.", "Timing significantly affects absorption and TSH control — inconsistent timing is a common, correctable cause of unstable thyroid levels."]},
 
     {t:"resp", q:"Per current GINA guidance for adults with mild asthma, what is the preferred reliever therapy over SABA-alone (e.g., salbutamol)?",
      o:["Regular scheduled SABA","As-needed low-dose ICS-formoterol","An oral corticosteroid burst","A long-acting muscarinic antagonist alone"], a:1,
-     r:"GINA recommends as-needed low-dose ICS-formoterol as the preferred reliever over SABA alone across severity steps, because SABA-only reliance is linked to increased exacerbation risk and provides no anti-inflammatory effect.", m:null},
+     r:"GINA recommends as-needed low-dose ICS-formoterol as the preferred reliever over SABA alone across severity steps, because SABA-only reliance is linked to increased exacerbation risk and provides no anti-inflammatory effect.", m:null, why:["Regular scheduled SABA use without anti-inflammatory therapy is discouraged — SABA-only reliance is linked to higher exacerbation risk.", "Correct — GINA now recommends as-needed low-dose ICS-formoterol as the preferred reliever across severity steps, since it treats the underlying inflammation each time it's used, unlike SABA alone.", "An oral steroid burst is reserved for exacerbations, not routine reliever therapy.", "A LAMA alone has no fast-onset reliever role and is not recommended as first-line reliever therapy in asthma."]},
     {t:"resp", q:"A COPD patient with frequent exacerbations and a history of recurrent pneumonia is being considered for inhaled corticosteroid (ICS) therapy. What should the pharmacist highlight?",
      o:["ICS have no risks in COPD and should always be added","ICS use in COPD raises pneumonia risk, so the decision should weigh eosinophil count and exacerbation history","ICS are contraindicated in all COPD patients","ICS should replace bronchodilators entirely"], a:1,
-     r:"ICS use in COPD increases pneumonia risk; current guidance restricts ICS add-on to patients with frequent exacerbations AND elevated blood eosinophils, favouring dual bronchodilation (LAMA/LABA) otherwise.", m:null},
+     r:"ICS use in COPD increases pneumonia risk; current guidance restricts ICS add-on to patients with frequent exacerbations AND elevated blood eosinophils, favouring dual bronchodilation (LAMA/LABA) otherwise.", m:null, why:["ICS use in COPD is not risk-free — it raises pneumonia risk, so it shouldn't be added indiscriminately.", "Correct — ICS add-on is reserved for patients with frequent exacerbations and elevated blood eosinophils, since these patients are most likely to benefit enough to outweigh the added pneumonia risk.", "ICS aren't universally contraindicated — they have a defined role in a specific higher-risk subgroup.", "ICS are add-on therapy alongside bronchodilators, not a replacement for them — dual bronchodilation remains foundational."]},
     {t:"resp", q:"During OSCE counselling on a new pMDI (puffer), which technique point is essential to include?",
      o:["Inhale quickly and forcefully through the device","Shake, exhale fully, actuate at the start of a slow deep breath in, then hold breath ~10 seconds","No need to hold the breath after inhaling","Spacer devices are never recommended"], a:1,
-     r:"Correct pMDI technique: shake, exhale away from the device, actuate at the start of a slow deep inhalation, then hold the breath ~10 seconds. A spacer improves delivery and reduces oropharyngeal deposition (important for ICS — lowers thrush risk).", m:null},
+     r:"Correct pMDI technique: shake, exhale away from the device, actuate at the start of a slow deep inhalation, then hold the breath ~10 seconds. A spacer improves delivery and reduces oropharyngeal deposition (important for ICS — lowers thrush risk).", m:null, why:["A quick, forceful inhalation causes most of the dose to impact the throat rather than reach the lower airways — the opposite of correct technique.", "Correct — this sequence maximizes lower-airway deposition: shaking mixes the suspension, exhaling first creates room for a full breath in, actuating at the start of a slow inhalation times the dose with airflow, and the breath-hold allows particles to settle.", "Skipping the breath-hold reduces the time for aerosol particles to deposit in the lungs rather than being exhaled back out.", "Spacers are actively recommended, especially with ICS, because they improve lung deposition and reduce oropharyngeal deposition (and thrush risk) — this option states the opposite."]},
     {t:"resp", q:"A patient wants an OTC recommendation for seasonal allergic rhinitis and needs to avoid drowsiness for work (driving). What should the pharmacist recommend?",
      o:["Diphenhydramine","A second-generation antihistamine such as cetirizine or loratadine","Chlorpheniramine","No OTC treatment is available"], a:1,
-     r:"Second-generation antihistamines cause significantly less sedation and psychomotor impairment than first-generation agents like diphenhydramine, making them preferred for patients who need to drive or operate machinery.", m:null},
+     r:"Second-generation antihistamines cause significantly less sedation and psychomotor impairment than first-generation agents like diphenhydramine, making them preferred for patients who need to drive or operate machinery.", m:null, why:["Diphenhydramine is a first-generation antihistamine with significant sedating and psychomotor-impairing effects — unsuitable when the patient must avoid drowsiness for driving.", "Correct — second-generation antihistamines cross the blood-brain barrier much less, giving effective allergy relief with far less sedation.", "Chlorpheniramine is also a first-generation agent and carries the same drowsiness liability as diphenhydramine.", "Effective, non-sedating OTC options exist for allergic rhinitis, so this isn't correct."]},
     {t:"resp", q:"A patient started on ramipril 2 months ago develops a new, persistent dry cough with no history of asthma. What is the most likely cause and appropriate action?",
      o:["New-onset asthma; recommend a SABA inhaler","ACE-inhibitor-induced cough; recommend she see her physician about switching to an ARB","A common cold; recommend a cough suppressant","A normal side effect that requires no action"], a:1,
-     r:"A dry, persistent cough starting after ACE inhibitor initiation is a classic bradykinin-mediated side effect. It isn't dangerous but is bothersome enough to warrant switching to an ARB, which doesn't cause cough.", m:null},
+     r:"A dry, persistent cough starting after ACE inhibitor initiation is a classic bradykinin-mediated side effect. It isn't dangerous but is bothersome enough to warrant switching to an ARB, which doesn't cause cough.", m:null, why:["A cough beginning after starting an ACE inhibitor with no prior asthma history and no other respiratory symptoms is not a new asthma diagnosis.", "Correct — a dry, persistent cough after starting an ACE inhibitor is a classic bradykinin-mediated class effect; switching to an ARB (which doesn't affect bradykinin) typically resolves it.", "A cold would be self-limited and unrelated to medication timing — the temporal link to ramipril initiation points to a drug cause.", "While not dangerous, ACE-inhibitor cough is often bothersome enough that patients benefit from switching agents rather than being told no action is needed."]},
 
     {t:"cns", q:"A patient on sertraline is prescribed tramadol for acute pain by a walk-in clinic. What is the primary safety concern?",
      o:["QT prolongation","Serotonin syndrome","Extrapyramidal symptoms","Hepatotoxicity"], a:1,
      r:"Tramadol has serotonergic activity in addition to its opioid effect; combined with an SSRI, it raises the risk of serotonin syndrome.",
-     m:"FLUSH — Fever, Loss of coordination, Upset stomach, Shivering/sweating, Hyperreflexia."},
+     m:"FLUSH — Fever, Loss of coordination, Upset stomach, Shivering/sweating, Hyperreflexia.", why:["QT prolongation isn't the primary concern with this particular combination — the shared risk here is serotonergic, not cardiac conduction.", "Correct — tramadol has serotonergic activity in addition to its opioid effect, and combined with an SSRI like sertraline this raises the risk of serotonin syndrome.", "Extrapyramidal symptoms are associated with dopamine-blocking agents (e.g., antipsychotics), not this combination.", "Neither drug is a classic hepatotoxin in this interaction — the relevant risk is serotonergic, not hepatic."]},
     {t:"cns", q:"An 82-year-old with a history of falls asks about restarting lorazepam for sleep. What is the most appropriate counselling point?",
      o:["Benzodiazepines are first-line and safe for insomnia in the elderly","Benzodiazepines are potentially inappropriate per the Beers Criteria — increased fall risk, cognitive impairment, and sedation; discuss safer alternatives with her prescriber","The dose should simply be doubled for effectiveness","No risks are associated with benzodiazepine use in this population"], a:1,
-     r:"Benzodiazepines are on the Beers Criteria list of potentially inappropriate medications in older adults due to increased risk of falls, fractures, motor vehicle accidents, and cognitive impairment.", m:null},
+     r:"Benzodiazepines are on the Beers Criteria list of potentially inappropriate medications in older adults due to increased risk of falls, fractures, motor vehicle accidents, and cognitive impairment.", m:null, why:["Benzodiazepines are specifically flagged as potentially inappropriate in older adults, not a safe first-line choice, especially with a fall history.", "Correct — benzodiazepines are on the Beers Criteria due to increased fall risk, cognitive impairment, and sedation in older adults, so safer alternatives should be discussed with the prescriber.", "Doubling the dose would worsen sedation and fall risk in a population already flagged as high-risk for this medication class.", "This population carries well-documented elevated risk from benzodiazepines — the opposite of 'no risk.'"]},
     {t:"cns", q:"A patient on phenytoin has a small dose increase and experiences a disproportionately large rise in serum concentration with new signs of toxicity (nystagmus, ataxia). What explains this?",
      o:["First-order (linear) kinetics","Zero-order (saturable/nonlinear) kinetics near the therapeutic range","Enhanced renal clearance","Increased protein binding"], a:1,
-     r:"Phenytoin metabolism becomes saturable near the therapeutic range, so small dose increases can cause disproportionately large concentration increases — a classic reason for careful, small-step titration with TDM.", m:null},
+     r:"Phenytoin metabolism becomes saturable near the therapeutic range, so small dose increases can cause disproportionately large concentration increases — a classic reason for careful, small-step titration with TDM.", m:null, why:["First-order kinetics would produce a proportional rise in concentration with a small dose increase, not the disproportionate jump described.", "Correct — phenytoin metabolism becomes saturable (zero-order) near the therapeutic range, so small dose increases can cause disproportionately large concentration rises and toxicity.", "Phenytoin is hepatically metabolized, not renally cleared, so renal clearance isn't the mechanism here.", "Protein binding changes can affect free drug levels but don't explain this specific saturable-metabolism phenomenon."]},
     {t:"cns", q:"Which antipsychotic carries a well-recognized, dose-dependent risk of QT prolongation, especially IV or at high doses?",
      o:["Aripiprazole","Haloperidol","Quetiapine at low bedtime dose","Lurasidone"], a:1,
      r:"Haloperidol, particularly given IV, carries a well-recognized QT prolongation and torsades de pointes risk; ECG monitoring is recommended with IV use or high doses.",
-     m:"HAM SACS — Haloperidol, Amiodarone, Methadone, Sotalol, Azithromycin, Citalopram, fluoroquinolonS."},
+     m:"HAM SACS — Haloperidol, Amiodarone, Methadone, Sotalol, Azithromycin, Citalopram, fluoroquinolonS.", why:["Aripiprazole is relatively QT-neutral among antipsychotics compared to haloperidol.", "Correct — haloperidol, especially given IV or at high doses, carries a well-recognized dose-dependent QT-prolongation and torsades risk, warranting ECG monitoring.", "Low-dose quetiapine at bedtime carries comparatively lower QT risk than IV/high-dose haloperidol.", "Lurasidone has a comparatively favourable QT profile among atypical antipsychotics."]},
     {t:"cns", q:"A patient newly started on olanzapine should be monitored for which of the following?",
      o:["Only extrapyramidal symptoms","Weight gain, dyslipidemia, and hyperglycemia (metabolic syndrome)","Bradycardia only","Peripheral neuropathy"], a:1,
-     r:"Olanzapine and clozapine carry the highest metabolic risk among atypical antipsychotics — weight, waist circumference, fasting glucose, and lipids should be monitored at baseline and regularly during treatment.", m:null},
+     r:"Olanzapine and clozapine carry the highest metabolic risk among atypical antipsychotics — weight, waist circumference, fasting glucose, and lipids should be monitored at baseline and regularly during treatment.", m:null, why:["EPS is more characteristic of high-potency first-generation antipsychotics; olanzapine's defining risk profile is metabolic, not extrapyramidal.", "Correct — olanzapine and clozapine carry the highest metabolic risk among atypical antipsychotics, so weight, waist circumference, glucose, and lipids need baseline and ongoing monitoring.", "Bradycardia is not the hallmark concern with olanzapine — metabolic effects are.", "Peripheral neuropathy is not a recognized olanzapine adverse effect; metabolic syndrome is the key monitoring concern."]},
 
     {t:"infd", q:"A 45-year-old woman (CrCl 25 mL/min) presents with an uncomplicated UTI. Why would nitrofurantoin be an inappropriate choice?",
      o:["It is not effective against common uropathogens","At CrCl <30 mL/min it fails to reach adequate urinary concentrations and carries increased risk of systemic toxicity","It requires IV administration","It is contraindicated in all women"], a:1,
      r:"Nitrofurantoin depends on adequate renal excretion to reach therapeutic urinary concentrations; in significant renal impairment it is both less effective and more likely to cause systemic (e.g., pulmonary) toxicity.",
-     m:"“Nitro needs flow — less than 30, let it go!”"},
+     m:"“Nitro needs flow — less than 30, let it go!”", why:["Nitrofurantoin is actually effective against common uropathogens when renal function is adequate — the problem here is specifically renal impairment, not spectrum of activity.", "Correct — nitrofurantoin depends on renal excretion to reach therapeutic urinary concentrations; below CrCl 30 mL/min it's both less effective and more likely to cause systemic toxicity.", "Nitrofurantoin is an oral agent — it isn't given IV, and that isn't the reason it's inappropriate here.", "Nitrofurantoin is not contraindicated in women generally — the issue is specifically her reduced renal function."]},
     {t:"infd", q:"A patient is dispensed ciprofloxacin for a complicated UTI. Which counselling point is essential?",
      o:["Take with a full glass of milk to improve absorption","Separate from dairy, calcium, iron, and antacids by ≥2 hours, and report any tendon pain immediately","No food or drug precautions are needed","Combine with an antacid to reduce GI upset"], a:1,
-     r:"Divalent/trivalent cations chelate fluoroquinolones and significantly reduce absorption. Tendon rupture, QT prolongation, and CNS effects are also key safety points.", m:null},
+     r:"Divalent/trivalent cations chelate fluoroquinolones and significantly reduce absorption. Tendon rupture, QT prolongation, and CNS effects are also key safety points.", m:null, why:["Milk contains calcium, which chelates fluoroquinolones and reduces absorption — the opposite of what should be recommended.", "Correct — divalent/trivalent cations (dairy, calcium, iron, antacids) significantly reduce fluoroquinolone absorption, and tendon rupture is a serious safety signal patients need to know to report.", "Important food and safety precautions do apply to fluoroquinolones, so 'no precautions' is incorrect.", "An antacid would chelate the drug and reduce its absorption, worsening rather than helping GI tolerability."]},
     {t:"infd", q:"Per current Canadian practice, what is first-line treatment for a first episode of non-severe C. difficile infection?",
      o:["Metronidazole","Oral vancomycin or fidaxomicin","IV vancomycin","Ciprofloxacin"], a:1,
-     r:"Oral vancomycin or fidaxomicin are now preferred over metronidazole for C. difficile infection given superior clinical cure rates; metronidazole is reserved for settings where these aren't available in mild disease.", m:null},
+     r:"Oral vancomycin or fidaxomicin are now preferred over metronidazole for C. difficile infection given superior clinical cure rates; metronidazole is reserved for settings where these aren't available in mild disease.", m:null, why:["Metronidazole is now reserved for settings where oral vancomycin or fidaxomicin aren't available in mild disease, given inferior cure rates.", "Correct — oral vancomycin or fidaxomicin are preferred first-line for C. difficile infection due to superior clinical cure rates compared with metronidazole.", "Oral vancomycin is used for C. difficile because it acts locally in the gut; IV vancomycin doesn't reach the colon in effective concentrations for this indication.", "Ciprofloxacin has no role in treating C. difficile and is actually a common risk factor for causing it."]},
     {t:"infd", q:"A patient stable on warfarin (INR 2.4) is started on a 10-day course of ciprofloxacin. What should the pharmacist anticipate?",
      o:["No interaction; no monitoring needed","Ciprofloxacin may increase INR via CYP inhibition; recommend closer INR monitoring during and after the course","Ciprofloxacin will decrease INR significantly","Warfarin should be stopped completely during antibiotic therapy"], a:1,
      r:"Ciprofloxacin inhibits warfarin metabolism and can significantly raise INR/bleeding risk; closer INR monitoring is warranted during and after any interacting antibiotic course.",
-     m:"CHAMPS — Ciprofloxacin, amiodarone/azoles, Metronidazole, Phenytoin (acute), Sulfonamides raise INR."},
+     m:"CHAMPS — Ciprofloxacin, amiodarone/azoles, Metronidazole, Phenytoin (acute), Sulfonamides raise INR.", why:["Ciprofloxacin is a recognized CYP inhibitor that can raise INR — 'no interaction' understates a real, monitorable risk.", "Correct — ciprofloxacin can inhibit warfarin metabolism and raise INR/bleeding risk, so closer INR monitoring during and after the antibiotic course is the appropriate response.", "The interaction raises INR, not lowers it — this option has the direction backwards.", "Warfarin doesn't need to be stopped outright; the standard approach is increased monitoring, adjusting the dose if INR rises significantly."]},
     {t:"infd", q:"A pharmacist receives a prescription for codeine-containing cough syrup for a 6-year-old. What is the appropriate action?",
      o:["Dispense as written; codeine is safe in all children","Decline to dispense — codeine is contraindicated under age 12 in Canada due to CYP2D6 ultra-rapid metabolizer risk of fatal respiratory depression","Dispense but double the recommended dose","Substitute with a higher dose of codeine"], a:1,
-     r:"Health Canada restricts codeine in children under 12 because CYP2D6 ultra-rapid metabolizers convert codeine to morphine unpredictably fast, risking fatal respiratory depression.", m:null},
+     r:"Health Canada restricts codeine in children under 12 because CYP2D6 ultra-rapid metabolizers convert codeine to morphine unpredictably fast, risking fatal respiratory depression.", m:null, why:["Codeine is not safe in all children — it's specifically restricted in this age group due to unpredictable CYP2D6-driven morphine conversion.", "Correct — Health Canada restricts codeine use in children under 12 because ultra-rapid CYP2D6 metabolizers can convert codeine to morphine unpredictably fast, risking fatal respiratory depression.", "Doubling the dose of a drug already restricted for safety reasons in this age group would compound the risk, not resolve it.", "Substituting a higher codeine dose still exposes the child to the same unpredictable-metabolism danger — a non-codeine alternative is what's actually needed."]},
 
     {t:"renal", q:"A 68-year-old woman, weight 60 kg, SCr 1.0 mg/dL. Using the Cockcroft-Gault equation, what is her estimated creatinine clearance?",
      o:["60 mL/min (forgetting the female correction factor)","51 mL/min","72 mL/min","43 mL/min"], a:1,
-     r:"CrCl = [(140−age) × weight] / [72 × SCr] × 0.85 (female) = [(140−68)×60] / [72×1.0] × 0.85 = 60 × 0.85 = 51 mL/min. Forgetting the 0.85 female correction factor is a common exam error.", m:null},
+     r:"CrCl = [(140−age) × weight] / [72 × SCr] × 0.85 (female) = [(140−68)×60] / [72×1.0] × 0.85 = 60 × 0.85 = 51 mL/min. Forgetting the 0.85 female correction factor is a common exam error.", m:null, why:["This is the value you'd get by omitting the required 0.85 female correction factor — a common calculation error, not the correct answer.", "Correct — CrCl = [(140−68)×60] / (72×1.0) × 0.85 = 60 × 0.85 = 51 mL/min.", "This value doesn't correspond to the correct Cockcroft-Gault calculation using her actual age, weight, and SCr.", "This underestimates her clearance — it doesn't match the correct formula applied to the given values."]},
     {t:"renal", q:"A patient with CKD stage 3 (eGFR 42) asks to purchase ibuprofen OTC for chronic knee pain. What should the pharmacist recommend?",
      o:["Ibuprofen is safe at any renal function","Avoid regular NSAID use; recommend acetaminophen first-line and refer to prescriber if pain persists","Recommend high-dose ibuprofen for best effect","Add a second NSAID for synergy"], a:1,
-     r:"NSAIDs reduce renal prostaglandin-mediated blood flow and can worsen renal function, especially with regular use in CKD. Acetaminophen is generally preferred within recommended dosing limits.", m:null},
+     r:"NSAIDs reduce renal prostaglandin-mediated blood flow and can worsen renal function, especially with regular use in CKD. Acetaminophen is generally preferred within recommended dosing limits.", m:null, why:["NSAIDs are not safe at any renal function — they reduce renal prostaglandin-mediated blood flow and can worsen function, particularly in existing CKD.", "Correct — regular NSAID use should be avoided in CKD; acetaminophen is the preferred first-line option, with referral if pain isn't controlled.", "A higher NSAID dose would increase, not mitigate, the renal risk in a patient with reduced kidney function.", "Combining two NSAIDs adds toxicity risk without added analgesic benefit and is never appropriate."]},
     {t:"renal", q:"A patient on lisinopril and spironolactone for heart failure is started on ibuprofen by another prescriber for back pain. What is the primary concern?",
      o:["Increased risk of hyperkalemia and acute kidney injury from the combination","Increased risk of hypokalemia","No interaction of concern","Increased risk of hypertension only"], a:0,
-     r:"ACE inhibitor + potassium-sparing diuretic + NSAID forms the “triple whammy” — each reduces renal perfusion/potassium excretion, substantially increasing AKI and hyperkalemia risk.", m:null},
+     r:"ACE inhibitor + potassium-sparing diuretic + NSAID forms the “triple whammy” — each reduces renal perfusion/potassium excretion, substantially increasing AKI and hyperkalemia risk.", m:null, why:["Correct — ACE inhibitor + potassium-sparing diuretic + NSAID is the classic 'triple whammy': each component reduces renal perfusion or potassium excretion, and together they substantially raise AKI and hyperkalemia risk.", "This combination raises potassium (via the ACE inhibitor and spironolactone), not lowers it — the direction here is wrong.", "This is one of the best-known drug-interaction patterns in renal pharmacology, not a benign combination.", "The primary concern is renal function and potassium, not blood pressure elevation."]},
     {t:"renal", q:"A patient with AFib and CrCl of 25 mL/min is being considered for anticoagulation. Why is dabigatran an inappropriate choice?",
      o:["Dabigatran is primarily hepatically cleared and unaffected by renal function","Dabigatran is largely renally eliminated (~80%) and is contraindicated when CrCl <30 mL/min","Dabigatran requires no dose adjustment regardless of renal function","Dabigatran is only available as an IV formulation"], a:1,
-     r:"Dabigatran is about 80% renally eliminated — more than other DOACs — and is contraindicated at CrCl <30 mL/min. Apixaban or dose-adjusted warfarin are typically preferred in significant renal impairment.", m:null},
+     r:"Dabigatran is about 80% renally eliminated — more than other DOACs — and is contraindicated at CrCl <30 mL/min. Apixaban or dose-adjusted warfarin are typically preferred in significant renal impairment.", m:null, why:["This has it backwards — dabigatran is predominantly renally eliminated, not hepatically cleared, which is exactly why renal function matters so much for this drug.", "Correct — dabigatran is about 80% renally eliminated, more than other DOACs, and is contraindicated when CrCl is below 30 mL/min; apixaban or dose-adjusted warfarin are typically preferred instead.", "Renal function significantly affects dabigatran clearance and dosing — 'no adjustment regardless' is incorrect.", "Dabigatran is available as an oral capsule, not only IV, and route isn't the issue here — renal elimination is."]},
     {t:"renal", q:"A patient is started on ramipril for hypertension. Which labs should be monitored within 1–2 weeks of initiation?",
      o:["Liver enzymes only","Serum creatinine and potassium","Complete blood count only","Thyroid function"], a:1,
-     r:"ACE inhibitors can cause hyperkalemia and an initial (usually modest, acceptable) creatinine rise from reduced efferent arteriolar tone; SCr and K+ should be checked at baseline and 1–2 weeks after initiation or dose increases.", m:null},
+     r:"ACE inhibitors can cause hyperkalemia and an initial (usually modest, acceptable) creatinine rise from reduced efferent arteriolar tone; SCr and K+ should be checked at baseline and 1–2 weeks after initiation or dose increases.", m:null, why:["Liver enzymes aren't the relevant monitoring parameter for ACE inhibitors — renal function and potassium are.", "Correct — ACE inhibitors can cause hyperkalemia and a typically modest initial creatinine rise from reduced efferent arteriolar tone, so SCr and potassium should be checked at baseline and 1–2 weeks after starting or increasing the dose.", "A CBC isn't the standard monitoring parameter for ACE inhibitor initiation.", "Thyroid function isn't affected by ACE inhibitors and isn't part of their monitoring protocol."]},
 
     {t:"gi", q:"A patient is newly prescribed omeprazole for GERD. What is the correct counselling point regarding timing?",
      o:["Take with food at bedtime","Take 30–60 minutes before the first meal of the day","Timing does not matter","Take only when symptomatic (as needed)"], a:1,
-     r:"PPIs are prodrugs activated in the acidic environment of actively secreting parietal cells; taking 30–60 minutes before a meal maximizes the proportion of proton pumps available for irreversible inhibition.", m:null},
+     r:"PPIs are prodrugs activated in the acidic environment of actively secreting parietal cells; taking 30–60 minutes before a meal maximizes the proportion of proton pumps available for irreversible inhibition.", m:null, why:["Bedtime dosing with food doesn't align PPI activation with actively secreting parietal cells during a meal, reducing effectiveness.", "Correct — PPIs are prodrugs activated only in actively secreting parietal cells; dosing 30–60 minutes before a meal maximizes the proportion of proton pumps available for irreversible inhibition when the drug is active.", "Timing significantly affects how many proton pumps are inhibited — it very much matters for PPI effectiveness.", "PPIs work best with consistent daily dosing tied to a meal, not on an as-needed/symptomatic basis, for reliable acid suppression."]},
     {t:"gi", q:"A patient has been on long-term daily PPI therapy for 5 years. Which is a recognized risk of long-term use?",
      o:["Increased risk of C. difficile infection, fracture risk, and vitamin B12 deficiency","No long-term risks have been identified","Improved bone density","Decreased risk of pneumonia"], a:0,
-     r:"Long-term PPI use is associated with increased risk of enteric infections (including C. difficile), hypomagnesemia, B12 deficiency, and possible fracture risk — periodic reassessment of ongoing need is recommended.", m:null},
+     r:"Long-term PPI use is associated with increased risk of enteric infections (including C. difficile), hypomagnesemia, B12 deficiency, and possible fracture risk — periodic reassessment of ongoing need is recommended.", m:null, why:["Correct — long-term PPI therapy is associated with increased risk of enteric infections including C. difficile, hypomagnesemia, B12 deficiency, and possible fracture risk, supporting periodic reassessment of ongoing need.", "Long-term PPI use does carry recognized risks — this understates a well-documented safety profile.", "PPIs are associated with a possible increase in fracture risk, not improved bone density.", "PPI use has actually been linked to increased (not decreased) risk of certain pneumonias, related to reduced gastric acid's protective antimicrobial effect."]},
     {t:"gi", q:"A patient on warfarin regularly takes acetaminophen 1000 mg four times daily for chronic pain. What is the pharmacist's concern?",
      o:["No interaction exists between acetaminophen and warfarin","Regular high-dose acetaminophen (>2 g/day) can potentiate warfarin's effect and raise INR; more frequent monitoring is warranted","Acetaminophen will decrease INR significantly","This combination must never be used together"], a:1,
-     r:"While occasional acetaminophen use is the safest analgesic option for warfarin patients, regular higher-dose use can raise INR — closer monitoring (not avoidance) is appropriate.", m:null},
+     r:"While occasional acetaminophen use is the safest analgesic option for warfarin patients, regular higher-dose use can raise INR — closer monitoring (not avoidance) is appropriate.", m:null, why:["There is a recognized interaction with regular higher-dose use — 'no interaction' is incorrect.", "Correct — while occasional acetaminophen use is the safest analgesic choice for warfarin patients, regular use above roughly 2 g/day can potentiate warfarin's effect and raise INR, so closer monitoring (not avoidance) is warranted.", "The interaction raises INR, not lowers it.", "This combination isn't prohibited — acetaminophen remains the preferred analgesic in warfarin patients; it just needs monitoring at regular higher doses."]},
     {t:"gi", q:"A new prescription arrives for methotrexate 2.5 mg tablets, “take one tablet daily,” for rheumatoid arthritis. What should the pharmacist do?",
      o:["Dispense as written","Contact the prescriber to clarify — low-dose methotrexate for RA is dosed once WEEKLY; daily dosing is a well-known fatal error","Assume it's correct since it's a low dose","Change the frequency without contacting the prescriber"], a:1,
-     r:"Low-dose methotrexate for RA/psoriasis is dosed once weekly, not daily. Daily-dosing errors are a classic, potentially fatal prescribing error, and catching this is a critical pharmacist safety check.", m:null},
+     r:"Low-dose methotrexate for RA/psoriasis is dosed once weekly, not daily. Daily-dosing errors are a classic, potentially fatal prescribing error, and catching this is a critical pharmacist safety check.", m:null, why:["Dispensing daily-dosed low-dose methotrexate as written would carry forward a well-known, potentially fatal prescribing error.", "Correct — low-dose methotrexate for RA is dosed once weekly, not daily; this is one of the most important pharmacist safety checks, and the prescriber must be contacted to clarify/correct the order.", "Assuming it's correct because the dose is 'low' ignores that daily dosing of even a small tablet strength accumulates to a dangerous cumulative weekly dose.", "A pharmacist should never unilaterally change a prescription's frequency without first clarifying with the prescriber, even when an error is suspected."]},
     {t:"gi", q:"A patient is counselled on new alendronate therapy for osteoporosis. What are the essential administration instructions?",
      o:["Take with a large meal to reduce stomach upset","Take first thing in the morning on an empty stomach with a full glass of plain water, and remain upright for ≥30 minutes without eating","Take at bedtime lying down","Crush and mix with food for easier swallowing"], a:1,
-     r:"Oral bisphosphonates have poor bioavailability and can cause esophageal irritation; they must be taken on an empty stomach with plain water, remaining upright for at least 30 minutes before eating or lying down.", m:null},
+     r:"Oral bisphosphonates have poor bioavailability and can cause esophageal irritation; they must be taken on an empty stomach with plain water, remaining upright for at least 30 minutes before eating or lying down.", m:null, why:["Food significantly impairs the already-poor bioavailability of oral bisphosphonates, so taking it with a meal defeats the purpose.", "Correct — bisphosphonates must be taken first thing in the morning on an empty stomach with a full glass of plain water, remaining upright for at least 30 minutes, to maximize absorption and prevent esophageal irritation.", "Lying down after dosing risks reflux of the drug into the esophagus, causing irritation or ulceration.", "Crushing and mixing with food both reduces absorption and increases the risk of esophageal irritation — the opposite of correct administration."]},
 
     {t:"pain", q:"A patient on rivaroxaban for AFib asks to add naproxen for knee arthritis pain. What should the pharmacist advise?",
      o:["This combination is safe with no additional risk","Combining an NSAID with a DOAC significantly raises GI bleeding risk; recommend acetaminophen first-line and discuss with the prescriber if an NSAID is truly needed","Increase the rivaroxaban dose to compensate","NSAIDs enhance the anticoagulant effect safely"], a:1,
-     r:"NSAIDs impair platelet function and irritate the GI mucosa; combined with any anticoagulant this substantially raises bleeding risk. Acetaminophen is preferred first-line for pain in anticoagulated patients.", m:null},
+     r:"NSAIDs impair platelet function and irritate the GI mucosa; combined with any anticoagulant this substantially raises bleeding risk. Acetaminophen is preferred first-line for pain in anticoagulated patients.", m:null, why:["Combining an NSAID with any anticoagulant is not risk-free — it significantly raises GI bleeding risk.", "Correct — NSAIDs impair platelet function and irritate the GI mucosa, and combined with a DOAC this substantially raises bleeding risk; acetaminophen is preferred first-line, with an NSAID discussed with the prescriber only if truly needed.", "Increasing the anticoagulant dose has nothing to do with the analgesic interaction and would only add bleeding risk.", "NSAIDs don't safely 'enhance' anticoagulation — the interaction is a bleeding-risk concern, not a beneficial synergy."]},
     {t:"pain", q:"A patient calls stating they lost their hydromorphone prescription and asks for a refill from the file. What is the appropriate response?",
      o:["Refill immediately since the original prescription is on file","Explain that narcotic prescriptions cannot be refilled without a new prescription from the prescriber, per CDSA regulations, regardless of the reason","Provide a partial emergency supply without prescriber contact","Transfer the balance from another pharmacy"], a:1,
-     r:"Under the CDSA, narcotic prescriptions cannot be refilled — each dispense requires a new written prescription, and narcotic prescriptions cannot be transferred between pharmacies either.", m:null},
+     r:"Under the CDSA, narcotic prescriptions cannot be refilled — each dispense requires a new written prescription, and narcotic prescriptions cannot be transferred between pharmacies either.", m:null, why:["Narcotic prescriptions cannot legally be refilled from the file regardless of the reason for the request.", "Correct — under the CDSA, narcotic prescriptions have no refills; each dispense requires a new written prescription from the prescriber, and narcotics also cannot be transferred between pharmacies.", "Providing any emergency supply of a narcotic without prescriber contact bypasses the legal requirement for a new prescription.", "Narcotic prescriptions specifically cannot be transferred between pharmacies, unlike most other prescriptions."]},
     {t:"pain", q:"A patient is started on regular opioid therapy for chronic cancer pain. Which adverse effect should be proactively addressed?",
      o:["Opioid-induced constipation — start a stimulant ± osmotic laxative prophylactically, since tolerance to this effect does not develop","Nausea only, since tolerance develops quickly to all opioid effects","No prophylactic measures are needed","Respiratory depression prophylaxis with naloxone for all patients"], a:0,
-     r:"Unlike sedation and nausea (to which tolerance typically develops), opioid-induced constipation does not improve with continued use, so a scheduled bowel regimen should start proactively, not reactively.", m:null},
+     r:"Unlike sedation and nausea (to which tolerance typically develops), opioid-induced constipation does not improve with continued use, so a scheduled bowel regimen should start proactively, not reactively.", m:null, why:["Correct — unlike sedation and nausea, tolerance does not develop to opioid-induced constipation, so a scheduled stimulant ± osmotic laxative should be started proactively at the time opioid therapy begins.", "This describes nausea, to which tolerance often does develop — the point of the question is the adverse effect that does NOT improve with time, which is constipation.", "No prophylaxis would leave the patient to develop constipation before treatment starts, which is the reactive (not recommended) approach.", "Naloxone is for reversing opioid overdose/respiratory depression, not for managing constipation, and prophylactic naloxone for all patients isn't standard practice."]},
     {t:"pain", q:"Which population warrants particular caution or avoidance when counselling on a new NSAID prescription?",
      o:["A healthy 25-year-old with no comorbidities","Patients with heart failure, CKD, active GI ulcer disease, or in the third trimester of pregnancy","Patients with seasonal allergies","Patients with well-controlled hypothyroidism"], a:1,
-     r:"NSAIDs are used cautiously or avoided in heart failure (fluid retention), CKD (nephrotoxicity), active peptic ulcer/GI bleed history, and the third trimester of pregnancy (premature ductus arteriosus closure).", m:null},
+     r:"NSAIDs are used cautiously or avoided in heart failure (fluid retention), CKD (nephrotoxicity), active peptic ulcer/GI bleed history, and the third trimester of pregnancy (premature ductus arteriosus closure).", m:null, why:["A healthy young adult with no comorbidities is actually one of the lower-risk populations for NSAID use, not one requiring particular caution.", "Correct — NSAIDs are used cautiously or avoided in heart failure (fluid retention), CKD (nephrotoxicity), active GI ulcer disease (bleeding risk), and the third trimester of pregnancy (premature ductus arteriosus closure).", "Seasonal allergies have no particular bearing on NSAID safety.", "Well-controlled hypothyroidism doesn't create any specific NSAID risk."]},
     {t:"pain", q:"A patient with a seizure disorder asks about using tramadol for pain. What should the pharmacist highlight?",
      o:["Tramadol has no effect on seizure threshold","Tramadol lowers the seizure threshold and should be used cautiously or avoided, especially at higher doses","Tramadol is the safest opioid option in epilepsy","Tramadol cures seizure disorders"], a:1,
-     r:"Tramadol has a well-documented, dose-dependent risk of lowering seizure threshold, in addition to serotonergic activity; caution is warranted in patients with a seizure disorder.", m:null},
+     r:"Tramadol has a well-documented, dose-dependent risk of lowering seizure threshold, in addition to serotonergic activity; caution is warranted in patients with a seizure disorder.", m:null, why:["Tramadol does affect seizure threshold — this option denies a well-documented risk.", "Correct — tramadol has a well-documented, dose-dependent risk of lowering seizure threshold, so it should be used cautiously or avoided in patients with a seizure disorder.", "Tramadol is actually one of the opioids most associated with seizure risk, making it a poor (not the safest) choice in epilepsy.", "Tramadol is an analgesic with a seizure-risk liability — it has no role in treating or curing seizure disorders."]},
 
     {t:"womens", q:"A 38-year-old who smokes 1 pack/day requests a combined oral contraceptive. What is the pharmacist's primary safety concern?",
      o:["No additional risk in smokers","Combined hormonal contraceptives in smokers ≥35 significantly raise VTE, MI, and stroke risk; a progestin-only or non-hormonal method should be discussed","Smoking has no interaction with hormonal contraceptives","The estrogen dose should simply be increased"], a:1,
-     r:"Smoking plus combined hormonal contraceptives in women ≥35 is a recognized contraindication due to markedly increased cardiovascular and thromboembolic risk; progestin-only options are safer alternatives.", m:null},
+     r:"Smoking plus combined hormonal contraceptives in women ≥35 is a recognized contraindication due to markedly increased cardiovascular and thromboembolic risk; progestin-only options are safer alternatives.", m:null, why:["Smoking combined with combined hormonal contraceptives, especially at age 35+, is a recognized risk factor, not a risk-neutral combination.", "Correct — combined hormonal contraceptives in smokers 35 and older significantly raise VTE, MI, and stroke risk, so a progestin-only or non-hormonal method should be discussed instead.", "There is a well-established interaction between smoking and estrogen-containing contraceptives via increased cardiovascular/thromboembolic risk.", "Increasing the estrogen dose would raise cardiovascular risk further, not mitigate it — the correct action is to avoid estrogen-containing methods in this patient."]},
     {t:"womens", q:"A pregnant patient in her third trimester asks about ibuprofen for back pain. What should the pharmacist recommend?",
      o:["Ibuprofen is safe throughout pregnancy","Avoid NSAIDs in the third trimester due to risk of premature closure of the fetal ductus arteriosus; recommend acetaminophen instead","Recommend a higher dose for effective relief","NSAIDs are only unsafe in the first trimester"], a:1,
-     r:"NSAIDs are avoided in the third trimester due to risk of premature ductus arteriosus closure and effects on fetal renal function/amniotic fluid volume. Acetaminophen remains the analgesic of choice in pregnancy.", m:null},
+     r:"NSAIDs are avoided in the third trimester due to risk of premature ductus arteriosus closure and effects on fetal renal function/amniotic fluid volume. Acetaminophen remains the analgesic of choice in pregnancy.", m:null, why:["NSAIDs are not considered safe throughout pregnancy — third-trimester use carries specific fetal risks.", "Correct — NSAIDs are avoided in the third trimester due to the risk of premature closure of the fetal ductus arteriosus and effects on fetal renal function/amniotic fluid volume; acetaminophen remains the analgesic of choice.", "A higher dose would increase, not reduce, the risk to the fetus in the third trimester.", "The specific ductus arteriosus risk is a third-trimester concern — this option has the timing backwards."]},
     {t:"womens", q:"A patient taking lisinopril for hypertension learns she is 6 weeks pregnant. What is the most appropriate action?",
      o:["Continue lisinopril throughout pregnancy","Discontinue the ACE inhibitor promptly and switch to a pregnancy-safe agent (e.g., labetalol, methyldopa, nifedipine) with her prescriber","Double the dose for better BP control","No changes needed until the third trimester"], a:1,
-     r:"ACE inhibitors/ARBs are contraindicated throughout pregnancy due to risk of fetal renal damage, oligohydramnios, and other fetopathy — they should be switched as soon as pregnancy is identified.", m:null},
+     r:"ACE inhibitors/ARBs are contraindicated throughout pregnancy due to risk of fetal renal damage, oligohydramnios, and other fetopathy — they should be switched as soon as pregnancy is identified.", m:null, why:["ACE inhibitors are contraindicated throughout pregnancy, not just in later trimesters, so continuing is not appropriate.", "Correct — ACE inhibitors/ARBs risk fetal renal damage, oligohydramnios, and other fetopathy; they should be discontinued and switched to a pregnancy-safe agent (labetalol, methyldopa, nifedipine) as soon as pregnancy is identified.", "Doubling the dose of a contraindicated medication would worsen fetal risk, not address the safety concern.", "Waiting until the third trimester leaves the fetus exposed to ACE-inhibitor risk during earlier development — the switch should happen as soon as pregnancy is confirmed."]},
     {t:"womens", q:"A patient requests emergency contraception (levonorgestrel) at the pharmacy. Under NAPRA scheduling, what applies?",
      o:["It requires a prescription in all provinces","It is Schedule II — available without a prescription, through consultation with the pharmacist behind the counter","It is unscheduled and available on any store shelf","It is a controlled substance under the CDSA"], a:1,
-     r:"Levonorgestrel emergency contraception is NAPRA Schedule II — no prescription required, but it must be accessed through pharmacist consultation rather than self-selected off the shelf.", m:null},
+     r:"Levonorgestrel emergency contraception is NAPRA Schedule II — no prescription required, but it must be accessed through pharmacist consultation rather than self-selected off the shelf.", m:null, why:["Levonorgestrel emergency contraception does not require a prescription under NAPRA scheduling.", "Correct — it is NAPRA Schedule II, meaning no prescription is required, but it must be accessed through consultation with the pharmacist rather than selected directly off an open shelf.", "Schedule II products are not simply placed on open shelves — they require pharmacist involvement, distinguishing them from unscheduled products.", "Emergency contraception is not a CDSA-controlled substance; CDSA governs narcotics and controlled drugs, a different regulatory category."]},
     {t:"womens", q:"A breastfeeding mother is prescribed codeine for postpartum pain. What is the safety concern?",
      o:["Codeine is completely safe in all breastfeeding mothers","If the mother is a CYP2D6 ultra-rapid metabolizer, codeine is converted to morphine more rapidly, risking dangerously high breast-milk morphine and infant respiratory depression","Codeine has no effect on breast milk","Only the infant's own metabolism matters, not the mother's"], a:1,
-     r:"This mirrors the pediatric CYP2D6 concern, but here it's the mother's rapid conversion of codeine to morphine that can raise breast-milk levels dangerously — codeine is generally avoided in breastfeeding.", m:null},
+     r:"This mirrors the pediatric CYP2D6 concern, but here it's the mother's rapid conversion of codeine to morphine that can raise breast-milk levels dangerously — codeine is generally avoided in breastfeeding.", m:null, why:["Codeine is not considered completely safe in breastfeeding — there's a recognized, sometimes serious risk pathway.", "Correct — if the mother is a CYP2D6 ultra-rapid metabolizer, she converts codeine to morphine unusually fast, which can raise breast-milk morphine to levels that cause dangerous infant respiratory depression.", "Codeine and its morphine metabolite do pass into breast milk — this option incorrectly denies that transfer.", "This mirrors the pediatric concern but here it's specifically the mother's metabolism that determines breast-milk morphine exposure, not the infant's own metabolism."]},
 
     {t:"regs", q:"A physician calls wanting to verbally order oxycodone 5 mg for a discharging patient. What must the pharmacist do?",
      o:["Accept and dispense the verbal order as with any other prescription","Verbal orders are not permitted for narcotics (except defined emergency circumstances); a written/faxed prescription meeting CDSA requirements is required","Refuse to fill any opioid prescription","Ask the patient to obtain it themselves"], a:1,
-     r:"Under the CDSA, verbal orders for narcotics are generally not permitted; a proper written or faxed prescription meeting CDSA requirements is required.", m:null},
+     r:"Under the CDSA, verbal orders for narcotics are generally not permitted; a proper written or faxed prescription meeting CDSA requirements is required.", m:null, why:["Verbal orders are not treated the same for narcotics as for most other prescriptions under the CDSA.", "Correct — verbal orders for narcotics are not permitted except in narrowly defined emergency circumstances; a written or faxed prescription meeting CDSA requirements is needed.", "Refusing to fill any opioid prescription is an overcorrection — the issue here is specifically the verbal-order method, not opioids generally.", "This isn't something the patient can resolve themselves — the prescriber must provide a compliant written/faxed order."]},
     {t:"regs", q:"A community member asks to obtain a naloxone kit without a prescription for a family member at risk of opioid overdose. What applies under NAPRA scheduling in most provinces?",
      o:["Naloxone requires a prescription in all cases","Naloxone is Schedule II — it can be provided without a prescription, often through take-home naloxone programs, with pharmacist counselling","Naloxone is unscheduled and requires no professional involvement","Naloxone can only be administered by paramedics"], a:1,
-     r:"Naloxone was moved to Schedule II specifically to improve access for overdose prevention — available without a prescription and often free through take-home naloxone programs.", m:null},
+     r:"Naloxone was moved to Schedule II specifically to improve access for overdose prevention — available without a prescription and often free through take-home naloxone programs.", m:null, why:["Naloxone does not require a prescription under NAPRA scheduling — this was a deliberate access-improving change.", "Correct — naloxone is Schedule II, meaning it can be provided without a prescription, often through take-home naloxone programs, with pharmacist counselling on use.", "Schedule II still involves the pharmacist in providing the product and counselling — it isn't a fully unscheduled, no-involvement product.", "Naloxone is specifically distributed for lay/caregiver administration in overdose situations, not restricted to paramedics."]},
     {t:"regs", q:"A pharmacist identifies a pattern suggesting a patient has a disease reportable to public health. Can this be disclosed without the patient's consent?",
      o:["No, patient consent is always required with no exceptions","Yes — reportable diseases to public health authorities are a recognized exception to the consent requirement under privacy legislation","Only the physician can make this report, never the pharmacist","This information can only be shared with insurance companies"], a:1,
-     r:"Privacy legislation permits disclosure without explicit consent in defined circumstances, including reportable diseases to public health, medical emergencies, court orders, and suspected child abuse.", m:null},
+     r:"Privacy legislation permits disclosure without explicit consent in defined circumstances, including reportable diseases to public health, medical emergencies, court orders, and suspected child abuse.", m:null, why:["Privacy legislation includes defined exceptions to the consent requirement, so 'always required, no exceptions' is incorrect.", "Correct — reportable diseases to public health authorities are a recognized exception allowing disclosure without explicit patient consent, alongside exceptions like medical emergencies and court orders.", "Pharmacists, like other health professionals, can participate in mandatory public health reporting — it isn't physician-exclusive.", "Public health reporting exists to protect community health, not to serve insurance purposes — this option describes an unrelated (and inappropriate) disclosure recipient."]},
     {t:"regs", q:"In provinces where pharmacists have expanded prescribing authority, which of the following remains outside their scope everywhere in Canada?",
      o:["Adapting an existing prescription's dose","Prescribing narcotics or other controlled substances under the CDSA","Renewing a stable chronic medication","Prescribing for an authorized minor ailment"], a:1,
-     r:"Even in provinces with broad pharmacist prescribing authority, pharmacists cannot prescribe narcotics or other CDSA-controlled substances — this remains outside scope nationwide.", m:null},
+     r:"Even in provinces with broad pharmacist prescribing authority, pharmacists cannot prescribe narcotics or other CDSA-controlled substances — this remains outside scope nationwide.", m:null, why:["Dose adaptation of an existing prescription is within expanded pharmacist scope in many provinces — it isn't the universal exclusion being asked about.", "Correct — even where pharmacists have broad expanded prescribing authority, prescribing narcotics or other CDSA-controlled substances remains outside scope everywhere in Canada.", "Renewing a stable chronic medication is a commonly granted expanded-scope activity, not a universal exclusion.", "Minor ailment prescribing is one of the more widely expanded pharmacist authorities across provinces, not something excluded everywhere."]},
     {t:"regs", q:"A patient asks why their fish oil supplement has an 'NPN' instead of a 'DIN' on the label. What does this indicate?",
      o:["NPN indicates it is a counterfeit product","NPN (Natural Product Number) indicates regulation as a Natural Health Product, while a DIN is assigned to conventional marketed drugs","NPN means the product has not been reviewed by Health Canada at all","NPN and DIN are interchangeable terms"], a:1,
-     r:"Natural Health Products are regulated under a separate framework from conventional drugs and are assigned an NPN rather than a DIN, though both require Health Canada authorization to be sold legally.", m:null},
+     r:"Natural Health Products are regulated under a separate framework from conventional drugs and are assigned an NPN rather than a DIN, though both require Health Canada authorization to be sold legally.", m:null, why:["An NPN doesn't indicate a counterfeit product — it's a legitimate Health Canada authorization number for a different product category.", "Correct — Natural Health Products are regulated under a separate framework and assigned an NPN, while conventional marketed drugs receive a DIN, though both require Health Canada authorization.", "NPN products are reviewed by Health Canada, just under the Natural Health Products framework rather than the drug framework — this option incorrectly implies no review occurs.", "NPN and DIN indicate different regulatory pathways and are not interchangeable terms."]},
 
     {t:"pk", q:"A drug has a half-life of 8 hours. Approximately how long will it take to reach steady-state plasma concentration with regular dosing?",
      o:["8 hours","16 hours","32–40 hours (4–5 half-lives)","80 hours"], a:2,
-     r:"Steady state is reached after approximately 4–5 half-lives of regular dosing, regardless of dose or interval. For an 8-hour half-life, that's roughly 32–40 hours.", m:null},
+     r:"Steady state is reached after approximately 4–5 half-lives of regular dosing, regardless of dose or interval. For an 8-hour half-life, that's roughly 32–40 hours.", m:null, why:["One half-life alone gets a drug only partway there — steady state requires several half-lives of consistent dosing, not just one.", "Two half-lives (16h) is still well short of the 4–5 half-lives generally needed to consider a drug at steady state.", "Correct — steady state is reached after approximately 4–5 half-lives of regular dosing regardless of dose or interval; for an 8-hour half-life that's roughly 32–40 hours.", "80 hours (10 half-lives) is well beyond what's needed — steady state for practical purposes is reached at 4–5 half-lives, not 10."]},
     {t:"pk", q:"Nitroglycerin for acute angina is given sublingually rather than orally. Why?",
      o:["Sublingual administration avoids extensive first-pass hepatic metabolism, allowing much faster and more reliable systemic levels","Sublingual tablets taste better","Oral nitroglycerin works just as fast","Sublingual administration increases first-pass metabolism"], a:0,
      r:"Nitroglycerin undergoes extensive first-pass hepatic metabolism when swallowed, giving negligible oral bioavailability. Sublingual (or IV/transdermal) routes bypass this for rapid, reliable absorption.",
-     m:"“My Nice Puppy Loves” (high first-pass drugs) = Morphine, Nitroglycerin, Propranolol, Lidocaine."},
+     m:"“My Nice Puppy Loves” (high first-pass drugs) = Morphine, Nitroglycerin, Propranolol, Lidocaine.", why:["Correct — nitroglycerin undergoes extensive first-pass hepatic metabolism when swallowed, giving it negligible oral bioavailability; the sublingual route bypasses this for rapid, reliable systemic levels needed in acute angina.", "Taste isn't the clinical rationale for route selection — pharmacokinetics is.", "Oral nitroglycerin does not work as fast — its bioavailability by that route is essentially negligible due to first-pass metabolism.", "This has the mechanism backwards — the sublingual route avoids (not increases) first-pass metabolism, which is exactly why it's used."]},
     {t:"pk", q:"A CYP2C19 poor metabolizer is prescribed clopidogrel after coronary stent placement. What is the clinical concern?",
      o:["Increased bleeding risk from excess active drug","Reduced conversion of clopidogrel (a prodrug) to its active metabolite, causing diminished antiplatelet effect and higher stent thrombosis risk","No clinical significance","Clopidogrel does not require metabolic activation"], a:1,
-     r:"Clopidogrel requires CYP2C19-mediated activation. Poor metabolizers generate less active drug, resulting in inadequate platelet inhibition and higher cardiovascular event risk — an alternative agent may be considered.", m:null},
+     r:"Clopidogrel requires CYP2C19-mediated activation. Poor metabolizers generate less active drug, resulting in inadequate platelet inhibition and higher cardiovascular event risk — an alternative agent may be considered.", m:null, why:["A poor metabolizer generates less active drug, not excess — this describes the opposite direction of the actual risk.", "Correct — clopidogrel is a prodrug requiring CYP2C19 activation; poor metabolizers produce less active metabolite, resulting in inadequate platelet inhibition and higher stent thrombosis risk.", "This is a clinically significant, actionable pharmacogenomic finding — it's not something to disregard.", "Clopidogrel does require metabolic activation to become pharmacologically active — this option denies a defining feature of the drug."]},
     {t:"pk", q:"A drug has a very large volume of distribution (Vd = 500 L in a 70 kg patient). What does this suggest?",
      o:["The drug stays almost entirely within the blood/plasma compartment","The drug distributes extensively into tissues outside the vascular compartment (Vd this large has no direct physiologic 'space')","The drug is highly water-soluble and stays intravascular","The drug cannot be dialyzed regardless of other properties"], a:1,
-     r:"A Vd far exceeding total body water (~42 L) indicates extensive tissue distribution/binding (e.g., digoxin, chloroquine) rather than staying in the blood — relevant to loading dose calculations and dialyzability.", m:null},
+     r:"A Vd far exceeding total body water (~42 L) indicates extensive tissue distribution/binding (e.g., digoxin, chloroquine) rather than staying in the blood — relevant to loading dose calculations and dialyzability.", m:null, why:["A Vd this large (far exceeding actual body volume) indicates the opposite — the drug is leaving the blood compartment for tissues, not staying in it.", "Correct — a Vd of 500 L in a 70 kg patient, far exceeding total body water (~42 L), reflects extensive tissue distribution/binding rather than a real physiologic 'space,' relevant to loading-dose calculations.", "High water solubility staying intravascular would produce a small, not large, Vd close to plasma or extracellular volume.", "Dialyzability depends on multiple factors (protein binding, molecular size) in addition to Vd — a large Vd alone doesn't universally rule out dialysis, making this an overly absolute statement."]},
     {t:"pk", q:"A drug has a target plasma concentration of 20 mg/L and a Vd of 50 L. Assuming 100% bioavailability (IV), what loading dose is required?",
      o:["250 mg","500 mg","1000 mg","2000 mg"], a:2,
-     r:"Loading dose = Target Cp × Vd = 20 mg/L × 50 L = 1000 mg.", m:null},
+     r:"Loading dose = Target Cp × Vd = 20 mg/L × 50 L = 1000 mg.", m:null, why:["This is a quarter of the correct value — check the formula: Target Cp × Vd, not divided.", "This is half of the correct value for the given target concentration and volume of distribution.", "Correct — Loading dose = Target Cp × Vd = 20 mg/L × 50 L = 1000 mg.", "This is double the correct value — recalculate using Target Cp × Vd directly."]},
 
     {t:"inter", q:"A patient stable on warfarin is started on amiodarone for atrial fibrillation. What adjustment is typically needed?",
      o:["No adjustment needed","Warfarin dose typically reduced by ~30–50% due to CYP2C9 inhibition and protein-binding displacement, with closer INR monitoring","Warfarin dose should be doubled","Amiodarone should never be combined with warfarin"], a:1,
-     r:"Amiodarone potently inhibits CYP2C9 metabolism of warfarin and displaces it from plasma proteins. This interaction is significant and long-lasting (amiodarone has a very long half-life), requiring an empiric dose reduction with vigilant INR monitoring.", m:null},
+     r:"Amiodarone potently inhibits CYP2C9 metabolism of warfarin and displaces it from plasma proteins. This interaction is significant and long-lasting (amiodarone has a very long half-life), requiring an empiric dose reduction with vigilant INR monitoring.", m:null, why:["This interaction is significant enough that unchanged dosing risks over-anticoagulation and bleeding — 'no adjustment' is unsafe.", "Correct — amiodarone inhibits CYP2C9 metabolism of warfarin and displaces it from plasma proteins; because amiodarone has a very long half-life, this effect is prolonged, so an empiric dose reduction of about 30–50% with vigilant INR monitoring is standard.", "Doubling the warfarin dose in the presence of a potentiating interaction would risk dangerous over-anticoagulation.", "These drugs are commonly combined in practice — the interaction is managed with dose adjustment and monitoring, not by avoiding the combination entirely."]},
     {t:"inter", q:"A patient stopped phenelzine (an MAOI) 10 days ago and now wants to start sertraline. What is the concern?",
      o:["No washout period is needed between MAOIs and SSRIs","A washout period (typically ≥14 days after stopping an MAOI) is required before starting an SSRI to avoid life-threatening serotonin syndrome","The two drugs are actually synergistic and recommended together","Only a 24-hour washout is needed"], a:1,
-     r:"Combining MAOIs with SSRIs carries a high risk of severe/fatal serotonin syndrome. A washout of at least 14 days after stopping an MAOI (5 weeks after fluoxetine) is required before starting the other class.", m:null},
+     r:"Combining MAOIs with SSRIs carries a high risk of severe/fatal serotonin syndrome. A washout of at least 14 days after stopping an MAOI (5 weeks after fluoxetine) is required before starting the other class.", m:null, why:["Skipping the washout risks life-threatening serotonin syndrome — a washout period is specifically required for this drug class transition.", "Correct — a washout of at least 14 days after stopping an MAOI (5 weeks after fluoxetine specifically) is required before starting an SSRI, to avoid potentially fatal serotonin syndrome.", "MAOIs and SSRIs are dangerous in combination, not synergistic or recommended together.", "24 hours is far too short — the required washout for this combination is measured in weeks, not a single day."]},
     {t:"inter", q:"A patient on citalopram 40 mg daily is prescribed azithromycin. What is the pharmacist's concern?",
      o:["No interaction of concern","Both drugs independently prolong the QT interval; the combination raises torsades de pointes risk, especially with other risk factors","Azithromycin will decrease citalopram levels","This combination improves antidepressant efficacy"], a:1,
-     r:"Citalopram and azithromycin are both associated with dose-dependent QT prolongation; combining QT-prolonging drugs has an additive risk of torsades de pointes.", m:null},
+     r:"Citalopram and azithromycin are both associated with dose-dependent QT prolongation; combining QT-prolonging drugs has an additive risk of torsades de pointes.", m:null, why:["Both drugs independently carry QT-prolongation risk, so 'no concern' understates a real, additive safety issue.", "Correct — citalopram and azithromycin are each independently associated with dose-dependent QT prolongation, and combining QT-prolonging drugs has an additive risk of torsades de pointes, especially with other risk factors present.", "This describes a pharmacokinetic interaction that isn't the primary concern here — the issue is an additive pharmacodynamic (QT) effect, not a level change.", "This combination is a safety concern, not a therapeutic benefit — there's no efficacy synergy being described."]},
     {t:"inter", q:"A patient taking simvastatin asks if it's safe to drink grapefruit juice regularly. What should the pharmacist advise?",
      o:["Grapefruit juice has no effect on statins","Grapefruit juice inhibits intestinal CYP3A4, raising exposure to CYP3A4-dependent statins and myopathy/rhabdomyolysis risk; advise avoiding or limiting it","Grapefruit juice only affects IV medications","Grapefruit juice will decrease simvastatin levels"], a:1,
-     r:"Grapefruit juice inhibits CYP3A4 specifically in the gut wall, reducing first-pass metabolism and increasing oral bioavailability of substrates like simvastatin/lovastatin.", m:null},
+     r:"Grapefruit juice inhibits CYP3A4 specifically in the gut wall, reducing first-pass metabolism and increasing oral bioavailability of substrates like simvastatin/lovastatin.", m:null, why:["Grapefruit juice does have a well-documented pharmacokinetic effect on CYP3A4-dependent statins — this option denies a real interaction.", "Correct — grapefruit juice inhibits intestinal CYP3A4, increasing oral bioavailability of CYP3A4-dependent statins like simvastatin and raising myopathy/rhabdomyolysis risk; patients should avoid or limit it.", "This is a first-pass (oral bioavailability) interaction specific to orally absorbed drugs — it's not relevant to IV medications at all.", "Grapefruit juice increases, not decreases, levels of CYP3A4-dependent oral drugs by inhibiting their gut-wall metabolism."]},
     {t:"inter", q:"A patient taking a combined oral contraceptive starts self-treating mild depression with St. John's Wort. What is the concern?",
      o:["No interaction exists","St. John's Wort is a potent CYP3A4 inducer that can significantly reduce contraceptive hormone levels, raising the risk of contraceptive failure","St. John's Wort will make the contraceptive more effective","St. John's Wort only interacts with prescription antidepressants"], a:1,
-     r:"St. John's Wort strongly induces CYP3A4 (and P-glycoprotein), lowering plasma levels of many drugs including combined hormonal contraceptives, cyclosporine, and warfarin.", m:null}
+     r:"St. John's Wort strongly induces CYP3A4 (and P-glycoprotein), lowering plasma levels of many drugs including combined hormonal contraceptives, cyclosporine, and warfarin.", m:null, why:["St. John's Wort has a well-documented, clinically important interaction with combined hormonal contraceptives — this option denies a real risk.", "Correct — St. John's Wort strongly induces CYP3A4 (and P-glycoprotein), lowering plasma levels of combined hormonal contraceptives and raising the risk of contraceptive failure and breakthrough bleeding.", "Induction lowers contraceptive hormone levels, which reduces (not improves) effectiveness.", "St. John's Wort's induction effect is broad, affecting many CYP3A4 substrates including hormonal contraceptives and other drugs, not just prescription antidepressants."]}
   ];
   // Additional generated questions (docs/data/mcq-data.js), deduped and merged with the hand-written seed set above.
   var MCQ = MCQ_SEED.concat(window.MCQ_GENERATED || []);
@@ -1468,9 +1500,23 @@
   var mcqQueue = [];
   var mcqCurrent = null;
   var mcqAnswered = false;
+  var MCQ_CASES = window.MCQ_CASES || [];
+  var mcqCaseMode = false;
+  var mcqCaseQueue = [];
+  var mcqCaseCurrent = null;
+  var mcqCaseQIdx = 0;
   var osceCurrent = null;
   var osceRevealed = false;
   var osceStrategyOpen = false;
+  var osceRatings = {comm:null, outcome:null, perf:null, misinfo:null, risk:null};
+  var osceRxAnswers = {};
+  var osceRxRevealed = false;
+  var OSCE_FORMAT_LABELS = {
+    "patient": "Interactive — Simulated Patient",
+    "hp": "Interactive — Simulated Health Professional",
+    "screen-rx": "Non-Interactive — Screening New Prescriptions",
+    "check-meds": "Non-Interactive — Checking Prepared Medications"
+  };
   var timerSecs = 300, timerRunning = false, timerHandle = null;
   var drugFilter = "all";
   var drugSearch = "";
@@ -1535,10 +1581,44 @@
     mcqQueue = shuffle(pool);
   }
   function nextQuestion(){
+    if (mcqCaseMode){ nextCaseQuestion(); return; }
     if (!mcqQueue.length) buildQueue();
     mcqCurrent = mcqQueue.shift();
     mcqAnswered = false;
     render();
+  }
+  function buildCaseQueue(){ mcqCaseQueue = shuffle(MCQ_CASES); }
+  function startCaseMode(){
+    mcqCaseMode = true;
+    buildCaseQueue();
+    nextCase();
+  }
+  function exitCaseMode(){
+    mcqCaseMode = false;
+    mcqCaseCurrent = null;
+    mcqCurrent = null;
+    mcqAnswered = false;
+    render();
+  }
+  function nextCase(){
+    if (!mcqCaseQueue.length) buildCaseQueue();
+    if (!mcqCaseQueue.length){ exitCaseMode(); return; }
+    mcqCaseCurrent = mcqCaseQueue.shift();
+    mcqCaseQIdx = 0;
+    mcqCurrent = mcqCaseCurrent.questions[0];
+    mcqAnswered = false;
+    render();
+    window.scrollTo(0,0);
+  }
+  function nextCaseQuestion(){
+    if (mcqCaseQIdx + 1 < mcqCaseCurrent.questions.length){
+      mcqCaseQIdx++;
+      mcqCurrent = mcqCaseCurrent.questions[mcqCaseQIdx];
+      mcqAnswered = false;
+      render();
+    } else {
+      nextCase();
+    }
   }
   function answerMcq(optionIdx){
     if (mcqAnswered || !mcqCurrent) return;
@@ -1554,14 +1634,24 @@
   function openStation(id){
     for (var i=0;i<OSCE.length;i++){ if (OSCE[i].id===id){ osceCurrent = OSCE[i]; break; } }
     osceRevealed = false;
+    osceRatings = {comm:null, outcome:null, perf:null, misinfo:null, risk:null};
+    osceRxAnswers = {};
+    osceRxRevealed = false;
     stopTimer();
-    timerSecs = (osceCurrent.tl||5)*60;
+    timerSecs = (osceCurrent.tl||7)*60;
     render();
   }
   function closeStation(){
     osceCurrent = null; osceRevealed = false; stopTimer();
     render();
   }
+  function setOsceRating(key, val){
+    if (/^\d+$/.test(val)) val = parseInt(val, 10);
+    osceRatings[key] = (osceRatings[key]===val) ? null : val;
+    render();
+  }
+  function revealRxAnswers(){ osceRxRevealed = true; render(); }
+  function setRxAnswer(idx, val){ osceRxAnswers[idx] = val; }
   function startTimer(){
     if (timerRunning) return;
     timerRunning = true;
@@ -1579,7 +1669,7 @@
   }
   function resetTimer(){
     stopTimer();
-    timerSecs = ((osceCurrent && osceCurrent.tl) || 5)*60;
+    timerSecs = ((osceCurrent && osceCurrent.tl) || 7)*60;
     render();
   }
   function updateTimerDisplay(){
@@ -1597,7 +1687,7 @@
   }
   function saveOsceAttempt(){
     var score = computeOsceScore();
-    state.osceAttempts.push({ts:Date.now(), id:osceCurrent.id, title:osceCurrent.ti, score:score});
+    state.osceAttempts.push({ts:Date.now(), id:osceCurrent.id, title:osceCurrent.ti, score:score, ratings:{comm:osceRatings.comm, outcome:osceRatings.outcome, perf:osceRatings.perf, misinfo:osceRatings.misinfo, risk:osceRatings.risk}});
     saveState();
     toast("Station saved — self-score " + score + "%");
     render();
@@ -1742,7 +1832,9 @@
     var body;
     if (!mcqCurrent){
       body = '<div class="panel"><p style="color:var(--text-muted);">Pick a topic (or keep “All topics”) and start practicing. Questions are shuffled and won’t repeat until the set is exhausted.</p>'+
-        '<div class="btn-row"><button class="btn btn-primary" id="startMcq">Start practicing</button></div></div>';
+        '<div class="btn-row"><button class="btn btn-primary" id="startMcq">Start practicing</button>'+
+        (MCQ_CASES.length ? '<button class="btn" id="startCases">🗂 Case-based scenarios ('+MCQ_CASES.length+' cases, official exam format)</button>' : '')+
+        '</div></div>';
     } else {
       var letters = ["A","B","C","D"];
       var optsHtml = mcqCurrent.o.map(function(opt, i){
@@ -1770,13 +1862,18 @@
           '<div class="btn-row"><button class="btn btn-primary" id="nextQ">Next question</button></div>';
       }
 
-      body = '<div class="panel">'+
+      var caseStemHtml = "";
+      if (mcqCaseMode && mcqCaseCurrent){
+        caseStemHtml = '<div class="scenario-box" style="margin-bottom:0; border-radius:10px 10px 0 0;"><b>Case scenario'+(mcqCaseCurrent.domain && JURIS_DOMAIN_LABELS[mcqCaseCurrent.domain] ? ' — '+esc(JURIS_DOMAIN_LABELS[mcqCaseCurrent.domain]) : '')+':</b> '+highlightAbbrev(esc(mcqCaseCurrent.stem))+'</div>';
+      }
+
+      body = caseStemHtml + '<div class="panel"'+(caseStemHtml?' style="border-top-left-radius:0; border-top-right-radius:0;"':'')+'>'+
         '<div class="q-meta"><span class="badge badge-accent">'+esc(topicLabel(mcqCurrent.t))+'</span>'+
         (mcqCurrent.domain && JURIS_DOMAIN_LABELS[mcqCurrent.domain] ? '<span class="badge">'+esc(JURIS_DOMAIN_LABELS[mcqCurrent.domain])+'</span>' : '')+
         (mcqCurrent.d==="hard" ? '<span class="badge badge-gold">Hard</span>' : '')+
         (mcqCurrent.trap ? '<span class="trap-flag">⚠ Exam trap</span>' : '')+
         listenBtnHtml("mcq","Listen")+
-        '<span class="qcount">'+(mcqQueue.length)+' left in this set</span></div>'+
+        '<span class="qcount">'+(mcqCaseMode ? ("Case question "+(mcqCaseQIdx+1)+" of "+mcqCaseCurrent.questions.length) : (mcqQueue.length+' left in this set'))+'</span></div>'+
         '<div class="q-stem">'+highlightAbbrev(esc(mcqCurrent.q))+'</div>'+
         '<div class="options">'+optsHtml+'</div>'+
         fb+
@@ -1788,22 +1885,35 @@
       return '<option value="'+d+'"'+(mcqDifficulty===d?' selected':'')+'>'+lbl+'</option>';
     }).join("");
 
-    document.getElementById("main").innerHTML =
-      '<div class="pagehead"><h1>MCQ practice</h1><p>Clinical vignette-style questions modeled on PEBC MCQ patterns — pick a topic, answer, and read the rationale.</p></div>'+
-      '<div class="panel" style="margin-bottom:16px;">'+
+    var filterPanel = mcqCaseMode ?
+      '<div class="panel" style="margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">'+
+        '<div><b>Case-based practice</b> <span style="color:var(--text-muted); font-size:0.85rem;">— official exam format: one shared scenario, several linked questions</span></div>'+
+        '<button class="btn btn-ghost btn-sm" id="exitCases">Exit case mode</button>'+
+      '</div>'
+      : '<div class="panel" style="margin-bottom:16px;">'+
         '<div class="field-row"><label for="topicSelect" style="font-size:0.85rem; color:var(--text-muted);">Topic</label>'+
         '<select class="select" id="topicSelect">'+options+'</select>'+
         '<label for="diffSelect" style="font-size:0.85rem; color:var(--text-muted);">Difficulty</label>'+
         '<select class="select" id="diffSelect">'+diffOptions+'</select></div>'+
-      '</div>'+
+      '</div>';
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead"><h1>MCQ practice</h1><p>Clinical vignette-style questions modeled on PEBC MCQ patterns — pick a topic, answer, and read the rationale.</p></div>'+
+      filterPanel+
       body;
 
-    document.getElementById("topicSelect").addEventListener("change", function(e){
+    var exitCasesBtn = document.getElementById("exitCases");
+    if (exitCasesBtn) exitCasesBtn.addEventListener("click", exitCaseMode);
+    var startCasesBtn = document.getElementById("startCases");
+    if (startCasesBtn) startCasesBtn.addEventListener("click", startCaseMode);
+    var topicSelectEl = document.getElementById("topicSelect");
+    if (topicSelectEl) topicSelectEl.addEventListener("change", function(e){
       mcqFilter = e.target.value;
       mcqQueue = []; mcqCurrent = null; mcqAnswered = false;
       render();
     });
-    document.getElementById("diffSelect").addEventListener("change", function(e){
+    var diffSelectEl = document.getElementById("diffSelect");
+    if (diffSelectEl) diffSelectEl.addEventListener("change", function(e){
       mcqDifficulty = e.target.value;
       mcqQueue = []; mcqCurrent = null; mcqAnswered = false;
       render();
@@ -1819,7 +1929,9 @@
     }
     if (mcqCurrent){
       var letters2 = ["A","B","C","D"];
-      var mcqBlocks = [mcqCurrent.q];
+      var mcqBlocks = [];
+      if (mcqCaseMode && mcqCaseCurrent) mcqBlocks.push("Case scenario: "+mcqCaseCurrent.stem);
+      mcqBlocks.push(mcqCurrent.q);
       mcqCurrent.o.forEach(function(opt,i){ mcqBlocks.push("Option "+letters2[i]+": "+opt+"."); });
       if (mcqAnswered){
         var isRight = mcqCurrent._chosen===mcqCurrent.a;
@@ -1861,16 +1973,18 @@
       var cards = OSCE.map(function(st){
         var last = attemptsById[st.id];
         var typeInfo = strategyFor(st.type);
+        var fmt = st.format || "patient";
         return '<button class="station-card" data-id="'+st.id+'">'+
           '<div class="st-title">'+esc(st.ti)+'</div>'+
           '<div class="st-blurb">'+esc(st.ta)+'</div>'+
           '<div class="st-foot"><span class="badge">'+st.tl+' min</span>'+
+          '<span class="format-badge '+fmt+'">'+esc((OSCE_FORMAT_LABELS[fmt]||fmt).replace("Interactive — ","").replace("Non-Interactive — ",""))+'</span>'+
           (typeInfo ? '<span class="badge badge-accent">'+esc(typeInfo.label)+'</span>' : '')+
           (last ? '<span class="badge badge-gold">last: '+last.score+'%</span>' : '')+
           '</div></button>';
       }).join("");
       document.getElementById("main").innerHTML =
-        '<div class="pagehead"><h1>OSCE stations</h1><p>You are always the pharmacist. Read the scenario, plan your response, then reveal the examiner checklist to self-score.</p>'+
+        '<div class="pagehead"><h1>OSCE stations</h1><p>Modeled on the official PEBC Qualifying Examination – Part II (OSCE) station format: interactive stations with a simulated patient or health professional, and non-interactive stations where you screen or check written work.</p>'+
         '<div class="btn-row" style="margin-top:10px;"><button class="btn" id="openStrategy">📋 OSCE answering strategies</button></div></div>'+
         '<div class="station-grid">'+cards+'</div>';
       document.getElementById("openStrategy").addEventListener("click", function(){ osceStrategyOpen=true; render(); window.scrollTo(0,0); });
@@ -1881,8 +1995,74 @@
     }
 
     var st = osceCurrent;
+    var fmt = st.format || "patient";
+    if (fmt === "screen-rx" || fmt === "check-meds") renderOsceNonInteractive(st, fmt);
+    else renderOsceInteractive(st, fmt);
+  }
+
+  function osceHeaderHtml(st, fmt){
+    var objHtml = (st.objectives && st.objectives.length) ?
+      '<div class="panel"><h2 style="font-size:0.95rem;">Objectives</h2><ul style="margin:8px 0 0; padding-left:18px; font-size:0.88rem; line-height:1.6;">'+
+      st.objectives.map(function(o){ return '<li>'+highlightAbbrev(esc(o))+'</li>'; }).join("")+'</ul></div>' : '';
+    var compHtml = (st.competencies && st.competencies.length) ?
+      '<div class="panel"><h2 style="font-size:0.95rem;">Competencies tested</h2>'+
+      st.competencies.map(function(c){
+        return '<div class="competency-card"><span class="code">'+esc(c.code)+'</span>'+esc(c.label)+
+          (c.elements && c.elements.length ? '<ul>'+c.elements.map(function(e){ return '<li>'+highlightAbbrev(esc(e))+'</li>'; }).join("")+'</ul>' : '')+
+        '</div>';
+      }).join("")+'</div>' : '';
+    return '<div class="pagehead">'+
+        '<button class="btn btn-ghost btn-sm" id="backStations" style="margin-bottom:10px;">&larr; All stations</button>'+
+        '<h1>'+esc(st.ti)+'</h1>'+
+        '<div class="osce-meta-row"><span class="format-badge '+fmt+'">'+esc(OSCE_FORMAT_LABELS[fmt]||fmt)+'</span>'+listenBtnHtml("osce","Listen to station")+'</div>'+
+      '</div>' + objHtml + compHtml;
+  }
+
+  function renderOsceInteractive(st, fmt){
     var mm = Math.floor(timerSecs/60), ss = timerSecs%60;
     var clockStr = (mm<10?"0":"")+mm+":"+(ss<10?"0":"")+ss;
+
+    var participantHtml = "";
+    if (osceRevealed && st.participant){
+      var p = st.participant;
+      participantHtml = '<div class="participant-panel"><h3>'+esc(p.role||"Simulated Participant")+(p.name?" — "+esc(p.name):"")+
+        (p.age?' ('+esc(String(p.age))+(p.gender?", "+esc(p.gender):"")+')':'')+'</h3>'+
+        (p.behaviour ? '<p style="font-size:0.85rem; margin-bottom:8px;"><b>Behaviour:</b> '+highlightAbbrev(esc(p.behaviour))+'</p>' : '')+
+        (p.profile && p.profile.length ? '<ul style="margin:0 0 8px; padding-left:18px; font-size:0.85rem;">'+p.profile.map(function(x){ return '<li>'+highlightAbbrev(esc(x))+'</li>'; }).join("")+'</ul>' : "")+
+        (p.otherInfo && p.otherInfo.length ? '<div style="font-size:0.76rem; text-transform:uppercase; color:var(--info); font-weight:700; margin:8px 0 4px;">Reveals if asked</div><ul style="margin:0; padding-left:18px; font-size:0.85rem;">'+p.otherInfo.map(function(x){ return '<li>'+highlightAbbrev(esc(x))+'</li>'; }).join("")+'</ul>' : "")+
+        (p.openingLine ? '<div class="participant-line">"'+esc(p.openingLine)+'"</div>' : "")+
+        (p.responses && p.responses.length ? p.responses.map(function(r){
+          return '<div class="response-cue">'+esc(r.cue)+'</div><div class="participant-line">"'+esc(r.line)+'"</div>';
+        }).join("") : "")+
+        (p.closingLine ? '<div class="response-cue">Closing line</div><div class="participant-line">"'+esc(p.closingLine)+'"</div>' : "")+
+      '</div>';
+    }
+
+    var assessorHtml = "";
+    if (osceRevealed && st.assessor){
+      var a = st.assessor;
+      var tierDef = [["solved","Problem Solved",a.solved],["marginal","Solved / Marginal",a.marginal],["uncertain","Uncertain",a.uncertain],["unsolved","Unsolved",a.unsolved]];
+      assessorHtml = '<div class="panel"><h2>Assessor information</h2><div class="assessor-tiers">'+
+        tierDef.map(function(t){
+          if (!t[2] || !t[2].length) return "";
+          return '<div class="assessor-tier '+t[0]+'"><h4>'+esc(t[1])+'</h4><ul>'+t[2].map(function(x){ return '<li>'+highlightAbbrev(esc(x))+'</li>'; }).join("")+'</ul></div>';
+        }).join("")+'</div></div>';
+    }
+
+    var ratingsHtml = osceRevealed ? (function(){
+      function pillRow(label, key, opts){
+        return '<div class="rating-row"><span class="rating-label">'+esc(label)+'</span>'+
+          opts.map(function(o){ return '<button type="button" class="rating-pill" data-key="'+key+'" data-val="'+o.v+'" data-active="'+(osceRatings[key]===o.v?1:0)+'">'+esc(o.l)+'</button>'; }).join("")+
+        '</div>';
+      }
+      return '<div class="panel"><h2>Official-style ratings <span style="color:var(--text-muted); font-weight:400; font-size:0.78rem;">— self-assess honestly</span></h2>'+
+        pillRow("Communications", "comm", [{v:1,l:"1 Unacceptable"},{v:2,l:"2 Unacc./Marginal"},{v:3,l:"3 Acc./Marginal"},{v:4,l:"4 Acceptable"}])+
+        pillRow("Outcome", "outcome", [{v:1,l:"1 Unsolved"},{v:2,l:"2 Uncertain"},{v:3,l:"3 Solved/Marginal"},{v:4,l:"4 Problem Solved"}])+
+        pillRow("Performance", "perf", [{v:1,l:"1 Unacceptable"},{v:2,l:"2 Unacc./Marginal"},{v:3,l:"3 Acc./Marginal"},{v:4,l:"4 Acceptable"}])+
+        pillRow("Misinformation", "misinfo", [{v:"no",l:"No"},{v:"yes",l:"Yes"}])+
+        pillRow("Risk to patient", "risk", [{v:"no",l:"No"},{v:"yes",l:"Yes"}])+
+      '</div>';
+    })() : "";
 
     var checklistHtml = osceRevealed ?
       '<div class="panel">'+
@@ -1895,27 +2075,24 @@
           '<div class="score-ring" id="scoreRing" style="--pct:0;"><div class="inner tnum" id="scoreVal">0%</div></div>'+
           '<div style="font-size:0.85rem; color:var(--text-muted);">Check items above to update your self-score, then save the attempt.</div>'+
         '</div>'+
+        (st.printedMaterials && st.printedMaterials.length ? '<div class="footnote"><b>Printed materials in this station:</b> '+st.printedMaterials.map(esc).join(", ")+'</div>' : "")+
         '<div class="btn-row"><button class="btn btn-primary" id="saveOsce">Save attempt</button></div>'+
         (st.mn ? '<div class="footnote">'+highlightAbbrev(esc(st.mn))+'</div>' : '')+
       '</div>'
-      : '<div class="panel"><div class="btn-row"><button class="btn btn-primary" id="revealBtn">Reveal examiner checklist</button></div></div>';
+      : '<div class="panel"><div class="btn-row"><button class="btn btn-primary" id="revealBtn">Reveal simulated response, assessor info &amp; checklist</button></div></div>';
 
     document.getElementById("main").innerHTML =
-      '<div class="pagehead">'+
-        '<button class="btn btn-ghost btn-sm" id="backStations" style="margin-bottom:10px;">&larr; All stations</button>'+
-        '<h1>'+esc(st.ti)+'</h1>'+
-        '<div style="margin-top:6px;">'+listenBtnHtml("osce","Listen to station")+'</div>'+
-      '</div>'+
+      osceHeaderHtml(st, fmt) +
       '<div class="panel">'+
-        '<div class="task-box">'+highlightAbbrev(esc(st.ta))+'</div>'+
+        '<div class="task-box">'+highlightAbbrev(esc(st.instructions||st.ta))+'</div>'+
         '<div class="scenario-box">'+highlightAbbrev(esc(st.sc))+'</div>'+
         '<div class="timer-box"><span class="clock tnum" id="clockDisplay">'+clockStr+'</span>'+
           '<button class="btn btn-sm" id="timerToggle">'+(timerRunning?"Pause":"Start")+'</button>'+
           '<button class="btn btn-ghost btn-sm" id="timerReset">Reset</button></div>'+
-        '<textarea class="notes" id="osceNotes" placeholder="Jot your talking points / plan here before revealing the checklist (not saved between sessions)."></textarea>'+
+        '<textarea class="notes" id="osceNotes" placeholder="Jot your talking points / plan here before revealing (not saved between sessions)."></textarea>'+
       '</div>'+
       (stationStrategyHtml(st))+
-      checklistHtml;
+      participantHtml + assessorHtml + checklistHtml + ratingsHtml;
 
     document.getElementById("backStations").addEventListener("click", closeStation);
     document.getElementById("timerToggle").addEventListener("click", function(){
@@ -1927,6 +2104,9 @@
     if (revealBtn) revealBtn.addEventListener("click", revealChecklist);
     var saveBtn = document.getElementById("saveOsce");
     if (saveBtn) saveBtn.addEventListener("click", saveOsceAttempt);
+    Array.prototype.forEach.call(document.querySelectorAll(".rating-pill"), function(btn){
+      btn.addEventListener("click", function(){ setOsceRating(btn.getAttribute("data-key"), btn.getAttribute("data-val")); });
+    });
 
     if (osceRevealed){
       var boxes = document.querySelectorAll(".check-item input");
@@ -1942,12 +2122,66 @@
       boxes.forEach(function(b){ b.addEventListener("change", updateRing); });
     }
 
-    var osceBlocks = ["Your task: "+st.ta, "Scenario: "+st.sc];
+    var osceBlocks = ["Your instructions: "+(st.instructions||st.ta), "Scenario: "+st.sc];
     if (osceRevealed){
+      if (st.participant && st.participant.openingLine) osceBlocks.push("Opening line: "+st.participant.openingLine);
       osceBlocks.push(narratorLine(NARRATOR_BREAKDOWN));
       osceBlocks.push("Here's what the examiner is checking for.");
       st.cl.forEach(function(item){ osceBlocks.push(item); });
       if (st.mn) osceBlocks.push("Strategy note: "+st.mn);
+    }
+    wireListenBtns({osce:{title:"OSCE — "+st.ti, blocks:osceBlocks}});
+  }
+
+  function renderOsceNonInteractive(st, fmt){
+    var mm = Math.floor(timerSecs/60), ss = timerSecs%60;
+    var clockStr = (mm<10?"0":"")+mm+":"+(ss<10?"0":"")+ss;
+    var items = st.items || [];
+
+    var itemsHtml = items.map(function(it, i){
+      var answered = osceRxRevealed;
+      return '<div class="rx-item-card">'+
+        '<div class="rx-label">'+esc(it.label||("Item "+(i+1)))+'</div>'+
+        (it.rx ? '<div class="rx-detail"><b>Written prescription:</b><br>'+esc(it.rx)+'</div>' : "")+
+        (it.prepared ? '<div class="rx-detail"><b>Prepared / dispensed:</b><br>'+esc(it.prepared)+'</div>' : "")+
+        (answered ? "" : '<textarea class="notes" style="min-height:60px;" data-rx-idx="'+i+'" placeholder="No problem(s)/correction(s) required — or specify exactly what is wrong…"></textarea>')+
+        (answered ? '<div class="rx-answer"><b>'+(it.hasProblem ? (fmt==="check-meds"?"Correction required:":"Problem:") : (fmt==="check-meds"?"No correction required.":"No problem."))+'</b> '+(it.hasProblem ? highlightAbbrev(esc(it.detail)) : "")+'</div>' : "")+
+      '</div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      osceHeaderHtml(st, fmt) +
+      '<div class="panel">'+
+        '<div class="task-box">'+highlightAbbrev(esc(st.instructions||st.ta))+'</div>'+
+        (st.sc ? '<div class="scenario-box">'+highlightAbbrev(esc(st.sc))+'</div>' : "")+
+        '<div class="timer-box"><span class="clock tnum" id="clockDisplay">'+clockStr+'</span>'+
+          '<button class="btn btn-sm" id="timerToggle">'+(timerRunning?"Pause":"Start")+'</button>'+
+          '<button class="btn btn-ghost btn-sm" id="timerReset">Reset</button></div>'+
+      '</div>'+
+      (stationStrategyHtml(st))+
+      '<div class="panel"><h2>'+(fmt==="screen-rx" ? "Written prescriptions" : "Prepared medications")+'</h2>'+itemsHtml+
+        (osceRxRevealed ? "" : '<div class="btn-row"><button class="btn btn-primary" id="revealRxBtn">Reveal answers</button></div>')+
+        (st.printedMaterials && st.printedMaterials.length ? '<div class="footnote"><b>Printed materials in this station:</b> '+st.printedMaterials.map(esc).join(", ")+'</div>' : "")+
+        (osceRxRevealed && st.mn ? '<div class="footnote">'+highlightAbbrev(esc(st.mn))+'</div>' : "")+
+      '</div>';
+
+    document.getElementById("backStations").addEventListener("click", closeStation);
+    document.getElementById("timerToggle").addEventListener("click", function(){
+      if (timerRunning) stopTimer(); else startTimer();
+      render();
+    });
+    document.getElementById("timerReset").addEventListener("click", resetTimer);
+    var revealRxBtn = document.getElementById("revealRxBtn");
+    if (revealRxBtn) revealRxBtn.addEventListener("click", revealRxAnswers);
+    Array.prototype.forEach.call(document.querySelectorAll("[data-rx-idx]"), function(ta){
+      ta.addEventListener("input", function(){ setRxAnswer(ta.getAttribute("data-rx-idx"), ta.value); });
+    });
+
+    var osceBlocks = ["Your instructions: "+(st.instructions||st.ta)];
+    items.forEach(function(it,i){ osceBlocks.push((it.label||("Item "+(i+1)))+": "+(it.rx||"")); });
+    if (osceRxRevealed){
+      osceBlocks.push(narratorLine(NARRATOR_BREAKDOWN));
+      items.forEach(function(it,i){ osceBlocks.push((it.label||("Item "+(i+1)))+" — "+(it.hasProblem ? "Problem: "+it.detail : "No problem.")); });
     }
     wireListenBtns({osce:{title:"OSCE — "+st.ti, blocks:osceBlocks}});
   }
@@ -2306,7 +2540,7 @@
         '<p>Most Canadian provinces require passing a jurisprudence exam — pharmacy law, ethics, and standards of practice — alongside the national PEBC exams. Federal law (Food and Drugs Act, CDSA) is the same everywhere; provincial college rules vary, so pair this with your own college\'s materials.</p>'+
         '</div>'+
         '<div class="panel" style="margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">'+
-          '<div><div style="font-weight:700;">Practice Q&amp;A</div><div style="color:var(--text-muted); font-size:0.88rem;">'+jurisCount+' scenario-based questions across all 6 domains below, with full right/wrong explanations.</div></div>'+
+          '<div><div style="font-weight:700;">Practice Q&amp;A</div><div style="color:var(--text-muted); font-size:0.88rem;">'+jurisCount+' scenario-based questions across the domains below, with full right/wrong explanations.</div></div>'+
           '<button class="btn btn-primary" id="startJurisPractice">Start jurisprudence practice</button>'+
         '</div>'+
         (cards ? '<div class="station-grid">'+cards+'</div>' : '<div class="panel"><p class="empty">Jurisprudence study guides are being generated — check back soon.</p></div>')+
@@ -2328,6 +2562,19 @@
         '</ul></div>';
     }).join("");
 
+    var linksHtml = "";
+    if (jt.officialLinks && jt.officialLinks.length){
+      linksHtml = '<div class="panel"><h2>Official resource links</h2>'+
+        (jt.officialSource ? '<p style="color:var(--text-muted); font-size:0.82rem; margin-bottom:10px;">Source: '+esc(jt.officialSource)+'</p>' : '')+
+        jt.officialLinks.map(function(cat){
+          return '<div style="margin-bottom:12px;"><div style="font-size:0.76rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--accent); font-weight:700; margin-bottom:4px;">'+esc(cat.category)+'</div>'+
+            '<ul style="margin:0; padding-left:18px; font-size:0.9rem; line-height:1.6;">'+
+            cat.items.map(function(it){ return '<li><a href="'+esc(it.href)+'" target="_blank" rel="noopener noreferrer">'+esc(it.text)+'</a></li>'; }).join("")+
+            '</ul></div>';
+        }).join("")+
+      '</div>';
+    }
+
     document.getElementById("main").innerHTML =
       '<div class="pagehead">'+
         '<button class="btn btn-ghost btn-sm" id="backJuris" style="margin-bottom:10px;">&larr; All jurisprudence topics</button>'+
@@ -2335,6 +2582,7 @@
         '<div style="margin-top:6px;">'+listenBtnHtml("juris:"+jt.key,"Listen to this topic")+'</div>'+
       '</div>'+
       sectionsHtml+
+      linksHtml+
       '<p class="footnote">Educational exam-prep content, not legal advice — provincial specifics vary by regulatory college.</p>';
 
     document.getElementById("backJuris").addEventListener("click", closeJurisTopic);
@@ -2552,9 +2800,24 @@
     });
 
     var tutorBlocks = [script.hook];
-    script.sections.forEach(function(sec){
+    var letters4 = ["A","B","C","D"];
+    script.sections.forEach(function(sec, i){
       tutorBlocks.push(sec.heading+".");
       sec.beats.forEach(function(b){ tutorBlocks.push(b); });
+      var qs = tutorQuizState[i];
+      if (qs && qs.answered){
+        var qq = qs.question;
+        tutorBlocks.push("Quick check: "+qq.q);
+        qq.o.forEach(function(opt,oi){ tutorBlocks.push("Option "+letters4[oi]+": "+opt+"."); });
+        var wasRight = qs.chosen===qq.a;
+        tutorBlocks.push(narratorLine(wasRight ? NARRATOR_RIGHT : NARRATOR_WRONG));
+        tutorBlocks.push(wasRight ? "You answered correctly." : "The correct answer is option "+letters4[qq.a]+".");
+        tutorBlocks.push(qq.r);
+        if (qq.why){
+          tutorBlocks.push(narratorLine(NARRATOR_BREAKDOWN));
+          qq.why.forEach(function(w,oi){ if (w) tutorBlocks.push("Option "+letters4[oi]+": "+w); });
+        }
+      }
     });
     tutorBlocks.push(script.recap);
     var tKey = "tutor:"+tutorCurrent.kind+":"+tutorCurrent.key;
