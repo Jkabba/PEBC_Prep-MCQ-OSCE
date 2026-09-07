@@ -274,6 +274,11 @@
   .option[data-state="incorrect"]{ background:var(--danger-soft); border-color:var(--danger); }
   .option[data-state="incorrect"] .letter{ background:var(--danger); color:#fff; }
   .option[disabled]{ cursor:default; }
+  .option-wrap{ display:flex; flex-direction:column; gap:4px; }
+  .opt-why{ font-size:0.83rem; line-height:1.5; padding:8px 14px 8px 46px; border-radius:0 0 10px 10px; margin-top:-10px; }
+  .opt-why-correct{ background:var(--success-soft); color:var(--text); }
+  .opt-why-wrong{ background:var(--surface-2); color:var(--text-muted); }
+  .trap-flag{ display:inline-flex; align-items:center; gap:4px; font-size:0.72rem; font-weight:700; color:var(--gold); background:var(--gold-soft); border-radius:6px; padding:3px 8px; }
 
   .feedback{
     margin-top:18px; padding:16px; border-radius:10px;
@@ -466,6 +471,46 @@
   .pop-card .pop-label{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--info); font-weight:700; margin-bottom:4px; }
   .pop-card.warn{ border-color:var(--danger); }
   .pop-card.warn .pop-label{ color:var(--danger); }
+
+  /* ---- Audio Tutor ---- */
+  .listen-btn{ font-size:0.78rem; border:1px solid var(--accent); color:var(--accent); background:transparent; border-radius:20px; padding:5px 12px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; }
+  .listen-btn:hover{ background:var(--accent-soft); }
+  .listen-btn[data-playing="1"]{ background:var(--accent); color:var(--accent-contrast); }
+  .audio-bar{ position:fixed; left:0; right:0; bottom:0; z-index:60; background:var(--bg-elevated); border-top:1px solid var(--border); box-shadow:0 -6px 20px rgba(0,0,0,0.18); transform:translateY(100%); transition:transform 0.2s ease; }
+  .audio-bar.active{ transform:translateY(0); }
+  .audio-bar-inner{ max-width:1040px; margin:0 auto; padding:10px 16px; display:flex; align-items:center; gap:12px; }
+  .audio-cap{ flex:1; min-width:0; }
+  .audio-cap .audio-title{ font-size:0.68rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--accent); font-weight:700; }
+  .audio-cap .audio-line{ font-size:0.92rem; line-height:1.4; color:var(--text); overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .audio-controls{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .audio-btn{ border:1px solid var(--border); background:var(--surface-2); border-radius:8px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; color:var(--text); flex-shrink:0; }
+  .audio-btn:hover{ background:var(--border); }
+  .audio-select{ font-size:0.76rem; padding:5px 6px; border-radius:6px; border:1px solid var(--border); background:var(--surface-2); color:var(--text); max-width:120px; }
+  .audio-progress{ height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .audio-progress-fill{ height:100%; background:var(--accent); }
+  @media (max-width: 640px){
+    .audio-select.audio-voice{ display:none; }
+    .audio-cap .audio-title{ display:none; }
+  }
+
+  /* ---- Tutor ---- */
+  .tutor-cat-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+  .tutor-cat-card{ border:1px solid var(--border); border-radius:14px; padding:18px; background:var(--bg-elevated); text-align:left; cursor:pointer; display:flex; flex-direction:column; gap:6px; }
+  .tutor-cat-card:hover{ background:var(--surface-2); }
+  .tutor-cat-card .icon{ font-size:1.6rem; }
+  .tutor-cat-card h3{ font-size:1.02rem; }
+  .tutor-cat-card p{ font-size:0.84rem; color:var(--text-muted); margin:0; }
+  .tutor-conv{ max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:14px; }
+  .tutor-bubble{ background:var(--bg-elevated); border:1px solid var(--border); border-radius:16px; border-top-left-radius:4px; padding:14px 18px; font-size:0.95rem; line-height:1.6; }
+  .tutor-bubble.hook{ background:var(--accent-soft); border-color:var(--accent); font-weight:600; }
+  .tutor-bubble.recap{ background:var(--gold-soft); border-color:var(--gold); }
+  .tutor-section-head{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--accent); font-weight:700; margin:6px 0 2px 4px; }
+  .quiz-card{ border:2px dashed var(--info); border-radius:14px; padding:16px 18px; background:var(--info-soft); }
+  .quiz-card .quiz-badge{ font-size:0.7rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--info); font-weight:700; margin-bottom:8px; }
+  .quiz-card .quiz-stem{ font-size:0.92rem; margin-bottom:10px; }
+  .quiz-card .options{ gap:8px; }
+  .quiz-card .option{ padding:9px 12px; font-size:0.88rem; background:var(--bg-elevated); }
+  .tutor-formula-box{ font-family:var(--font-mono); font-size:0.92rem; background:var(--surface-2); border-radius:8px; padding:10px 14px; margin:6px 0; overflow-x:auto; white-space:pre-wrap; }
 </style>
 
 </head>
@@ -484,11 +529,16 @@
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<div class="audio-bar" id="audioBar"></div>
 
 <script src="data/mcq-data.js"></script>
 <script src="data/drug-data.js"></script>
 <script src="data/study-data.js"></script>
 <script src="data/class-data.js"></script>
+<script src="data/osce-data.js"></script>
+<script src="data/juris-data.js"></script>
+<script src="data/tutor-data.js"></script>
+<script src="data/calc-formulas.js"></script>
 <script>
 (function(){
   "use strict";
@@ -513,8 +563,20 @@
     {key:"derm",   label:"Dermatology, Eye & ENT"},
     {key:"otc",    label:"OTC & Natural Health Products"},
     {key:"ethics", label:"Ethics & Professional Practice"},
-    {key:"calc",   label:"Calculations & Compounding"}
+    {key:"calc",   label:"Calculations & Compounding"},
+    {key:"mgmt",   label:"Pharmacy Management & Distribution"},
+    {key:"nutr",   label:"Nutrition & Vitamins"},
+    {key:"ebm",    label:"Evidence-Based Practice & Research"},
+    {key:"juris",  label:"Jurisprudence"}
   ];
+  var JURIS_DOMAIN_LABELS = {
+    "federal-law":"Federal Drug Law & Controlled Substances",
+    "ethics":"Professional Ethics & Standards of Practice",
+    "canadian-system":"Canadian Healthcare System & Scope of Practice",
+    "privacy-error":"Privacy, Documentation & Error Management",
+    "maid":"Medical Assistance in Dying (MAiD)",
+    "emergency-public-health":"Emergency Preparedness & Public Health"
+  };
   function topicLabel(key){
     for (var i=0;i<TOPICS.length;i++){ if (TOPICS[i].key===key) return TOPICS[i].label; }
     return key;
@@ -686,12 +748,114 @@
     {a:"Dx", m:"Diagnosis"},
     {a:"Hx", m:"History"},
     {a:"Sx", m:"Symptoms"},
-    {a:"NHP", m:"Natural health product"}
+    {a:"NHP", m:"Natural health product"},
+    {a:"ABW", m:"Actual body weight"},
+    {a:"ADE", m:"Adverse drug event"},
+    {a:"ADHD", m:"Attention-deficit/hyperactivity disorder"},
+    {a:"ADR", m:"Adverse drug reaction"},
+    {a:"AOM", m:"Acute otitis media"},
+    {a:"ASA", m:"Acetylsalicylic acid (aspirin)"},
+    {a:"ASCVD", m:"Atherosclerotic cardiovascular disease"},
+    {a:"AUC", m:"Area under the (concentration-time) curve"},
+    {a:"AV", m:"Atrioventricular (e.g., AV node/block)"},
+    {a:"BBB", m:"Blood-brain barrier"},
+    {a:"BMD", m:"Bone mineral density"},
+    {a:"BMI", m:"Body mass index"},
+    {a:"BPH", m:"Benign prostatic hyperplasia"},
+    {a:"BPO", m:"Benzoyl peroxide"},
+    {a:"BUD", m:"Beyond-use date"},
+    {a:"CIHR", m:"Canadian Institutes of Health Research"},
+    {a:"CK", m:"Creatine kinase (muscle enzyme, monitored with statins)"},
+    {a:"CMIRPS", m:"Canadian Medication Incident Reporting and Prevention System"},
+    {a:"CNS", m:"Central nervous system"},
+    {a:"COX", m:"Cyclooxygenase (enzyme targeted by NSAIDs/ASA)"},
+    {a:"CPOE", m:"Computerized prescriber order entry"},
+    {a:"CSF", m:"Cerebrospinal fluid"},
+    {a:"CV", m:"Cardiovascular"},
+    {a:"CVD", m:"Cardiovascular disease"},
+    {a:"CYP2C9", m:"Cytochrome P450 2C9 (metabolizes warfarin, phenytoin, NSAIDs)"},
+    {a:"CYP2D6", m:"Cytochrome P450 2D6 (metabolizes many antidepressants, codeine, tamoxifen)"},
+    {a:"CYP3A4", m:"Cytochrome P450 3A4 (metabolizes ~50% of all drugs; common interaction hub)"},
+    {a:"CYP450", m:"Cytochrome P450 (the liver's main drug-metabolizing enzyme system)"},
+    {a:"DAPT", m:"Dual antiplatelet therapy"},
+    {a:"DKA", m:"Diabetic ketoacidosis"},
+    {a:"DPD", m:"Dihydropyrimidine dehydrogenase (enzyme that breaks down fluorouracil/capecitabine)"},
+    {a:"ECG", m:"Electrocardiogram"},
+    {a:"ENT", m:"Ear, nose, and throat"},
+    {a:"ER", m:"Extended-release (dosage form) — context-dependent, can also mean emergency room"},
+    {a:"ESA", m:"Erythropoiesis-stimulating agent"},
+    {a:"FEV1", m:"Forced expiratory volume in 1 second (spirometry measure)"},
+    {a:"G6PD", m:"Glucose-6-phosphate dehydrogenase (deficiency causes hemolysis with certain drugs)"},
+    {a:"GFR", m:"Glomerular filtration rate"},
+    {a:"GU", m:"Genitourinary"},
+    {a:"HCTZ", m:"Hydrochlorothiazide"},
+    {a:"HF", m:"Heart failure"},
+    {a:"HLA", m:"Human leukocyte antigen (genetic marker for some drug hypersensitivity reactions)"},
+    {a:"HPA", m:"Hypothalamic-pituitary-adrenal (axis)"},
+    {a:"HPV", m:"Human papillomavirus"},
+    {a:"HTN", m:"Hypertension"},
+    {a:"IBW", m:"Ideal body weight"},
+    {a:"ICU", m:"Intensive care unit"},
+    {a:"IPV", m:"Inactivated poliovirus vaccine"},
+    {a:"IR", m:"Immediate-release (dosage form)"},
+    {a:"KDIGO", m:"Kidney Disease: Improving Global Outcomes (CKD guideline body)"},
+    {a:"LDL", m:"Low-density lipoprotein ('bad' cholesterol)"},
+    {a:"LNG", m:"Levonorgestrel"},
+    {a:"MART", m:"Maintenance and reliever therapy (single asthma inhaler used both ways)"},
+    {a:"MBD", m:"Mineral and bone disorder (as in CKD-MBD)"},
+    {a:"MDD", m:"Major depressive disorder"},
+    {a:"MDI", m:"Metered-dose inhaler"},
+    {a:"MIC", m:"Minimum inhibitory concentration"},
+    {a:"MMR", m:"Measles, mumps, and rubella (vaccine)"},
+    {a:"MSK", m:"Musculoskeletal"},
+    {a:"MW", m:"Molecular weight"},
+    {a:"NAC", m:"N-acetylcysteine (acetaminophen overdose antidote)"},
+    {a:"NDMA", m:"N-nitrosodimethylamine (a nitrosamine contaminant behind several drug recalls)"},
+    {a:"NRT", m:"Nicotine replacement therapy"},
+    {a:"NYHA", m:"New York Heart Association (heart failure functional class I-IV)"},
+    {a:"OCP", m:"Oral contraceptive pill"},
+    {a:"OCS", m:"Oral corticosteroid"},
+    {a:"ORS", m:"Oral rehydration solution"},
+    {a:"PCN", m:"Penicillin"},
+    {a:"PCV", m:"Pneumococcal conjugate vaccine"},
+    {a:"PEG", m:"Polyethylene glycol"},
+    {a:"PHAC", m:"Public Health Agency of Canada"},
+    {a:"PIPEDA", m:"Personal Information Protection and Electronic Documents Act (federal privacy law)"},
+    {a:"PK", m:"Pharmacokinetics"},
+    {a:"PMPRB", m:"Patented Medicine Prices Review Board"},
+    {a:"PPE", m:"Personal protective equipment"},
+    {a:"PTH", m:"Parathyroid hormone"},
+    {a:"PTU", m:"Propylthiouracil"},
+    {a:"QD", m:"Once daily (Latin quaque die — avoid in handwriting, easily confused with QID)"},
+    {a:"QT", m:"QT interval (ECG measure; prolongation risks torsades de pointes)"},
+    {a:"RCA", m:"Root cause analysis"},
+    {a:"RSV", m:"Respiratory syncytial virus"},
+    {a:"SJS", m:"Stevens-Johnson syndrome"},
+    {a:"SMX", m:"Sulfamethoxazole"},
+    {a:"SOAP", m:"Subjective, Objective, Assessment, Plan (clinical documentation format)"},
+    {a:"STOPP", m:"Screening Tool of Older Persons' potentially inappropriate Prescriptions"},
+    {a:"SU", m:"Sulfonylurea"},
+    {a:"SZC", m:"Sodium zirconium cyclosilicate"},
+    {a:"TEN", m:"Toxic epidermal necrolysis"},
+    {a:"TMP", m:"Trimethoprim"},
+    {a:"TSAT", m:"Transferrin saturation"},
+    {a:"TZD", m:"Thiazolidinedione"},
+    {a:"UC", m:"Ulcerative colitis"},
+    {a:"WHO", m:"World Health Organization"},
+    {a:"WWHAM", m:"OTC assessment mnemonic — Who, What, How long, Action taken, Medications"}
   ];
   var GLOSSARY_MAP = {};
   GLOSSARY.forEach(function(g){ GLOSSARY_MAP[g.a.toUpperCase()] = g.m; });
-  var GLOSSARY_REGEX = new RegExp("\\b(" + GLOSSARY.slice().sort(function(a,b){ return b.a.length-a.a.length; })
-    .map(function(g){ return g.a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).join("|") + ")\\b", "gi");
+  RX_ABBREV.forEach(function(cat){
+    cat.items.forEach(function(it){
+      it.a.split("/").forEach(function(variant){
+        var key = variant.trim().toUpperCase();
+        if (key && !GLOSSARY_MAP[key]) GLOSSARY_MAP[key] = it.m;
+      });
+    });
+  });
+  var GLOSSARY_REGEX = new RegExp("\\b(" + Object.keys(GLOSSARY_MAP).slice().sort(function(a,b){ return b.length-a.length; })
+    .map(function(k){ return k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).join("|") + ")\\b", "gi");
   function highlightAbbrev(escapedText){
     return escapedText.replace(GLOSSARY_REGEX, function(match){
       if (match===match.toLowerCase()) return match; // skip all-lowercase matches (e.g. "cap") to avoid colliding with real words
@@ -1004,58 +1168,21 @@
   var DRUGS = window.DRUG_DATA || [];
 
   /* ---------------- OSCE stations ---------------- */
-  var OSCE = [
-    {id:"o1", ti:"New Prescription: Metformin", tl:5,
-     sc:"Mr. David Chen, 55, is picking up his first prescription for metformin 500 mg PO BID, newly diagnosed with type 2 diabetes. He tells the technician he's worried about “the sugar pill making him gain weight.”",
-     ta:"Counsel Mr. Chen on his new metformin prescription.",
-     cl:["Introduces self and confirms patient identity (name + DOB)","Asks what the physician told him about the medication and diagnosis","Screens for allergies, other medications (incl. OTC/herbals), and renal/liver history","Explains action in plain language (helps the body use its own insulin; does not typically cause weight gain)","Explains instructions — take with food to reduce GI upset; may be titrated over time","Covers expected side effects (transient GI upset) and rare serious risk (lactic acidosis) without alarming him","Advises holding metformin around IV contrast dye studies or surgery","Gives red flags (severe vomiting, unusual muscle pain, difficulty breathing) and monitoring plan (A1C q3 months)","Checks understanding, invites questions, closes with follow-up"],
-     mn:"Framework: SAILS — Store, Action, Instructions, Life effects, Seek help."},
-    {id:"o2", ti:"New Prescription: Warfarin", tl:5,
-     sc:"Mrs. Eleanor Vasquez, 70, is starting warfarin 5 mg daily for newly diagnosed atrial fibrillation. She takes ibuprofen occasionally for arthritis and eats a diet rich in leafy greens.",
-     ta:"Counsel Mrs. Vasquez on her new warfarin therapy.",
-     cl:["Introduction, identity confirmation, privacy check","Asks about diet, other medications (flags OTC ibuprofen), alcohol use, allergies","Explains action in plain language (prevents clot formation)","Explains INR monitoring purpose, frequency, and target range","Counsels on CONSISTENT (not avoided) vitamin K intake","Advises against regular NSAID use; recommends acetaminophen and discussion with prescriber","Reviews bleeding signs to watch for (bruising, blood in urine/stool, severe headache)","Advises informing all prescribers/dentists about warfarin use before any new drug or procedure","Closes, checks understanding, offers follow-up"],
-     mn:"Memory anchor: “CHAMPS” raise INR — Cipro, azoles, Metronidazole, Phenytoin, Sulfonamides."},
-    {id:"o3", ti:"OTC Triage: Chronic Cough", tl:5,
-     sc:"A 61-year-old man asks for a “strong cough syrup.” The cough is dry, not productive, and has lasted about 6 weeks. He takes ramipril for hypertension.",
-     ta:"Assess and counsel this patient using an appropriate framework.",
-     cl:["Introduces self, clarifies who the medication is for","WWWHAM-style assessment: onset/duration, character, associated symptoms, what's been tried, medications/history","Identifies ramipril as the likely cause of the chronic dry cough","Recognizes red flag: cough >3–4 weeks warrants medical assessment","Avoids simply recommending a cough suppressant without addressing the cause","Recommends follow-up with prescriber to discuss switching to an ARB","Explains the rationale in plain language — common, not dangerous, but worth addressing","Checks understanding and offers appropriate referral"],
-     mn:"Exam trap: ACE-inhibitor cough is a classic OSCE setup — always ask about medications."},
-    {id:"o4", ti:"Adverse Drug Reaction: Statin Myopathy", tl:5,
-     sc:"Mrs. Okafor, 66, calls the pharmacy reporting new muscle aches in both thighs and dark-coloured urine since starting atorvastatin 40 mg three weeks ago.",
-     ta:"Respond to this call appropriately.",
-     cl:["Introduces self, confirms patient identity","Gathers details: onset, severity, bilaterality, dark urine, fever/weakness","Recognizes possible statin-induced myopathy/rhabdomyolysis (dark urine is a serious red flag)","Advises stopping the statin immediately and seeking prompt (same-day) medical assessment","Explains the need for urgent CK and renal function testing","Does not minimize symptoms or suggest 'wait and see'","Documents the call and communicates with the prescriber","Reassures the patient and outlines next steps and alternative options once safe","Provides safety-netting: when to go to the ER"],
-     mn:"Symptom pattern: muscle pain + dark urine = STOP statin + check CK now."},
-    {id:"o5", ti:"Non-Adherence: Antihypertensive", tl:5,
-     sc:"Mr. Singh, 58, admits he stopped taking his amlodipine two months ago because “I don't want to be on pills for the rest of my life,” and he feels fine.",
-     ta:"Have this conversation with Mr. Singh using a patient-centred approach.",
-     cl:["Builds rapport with a non-judgmental tone","Explores his reasons and beliefs without confrontation","Acknowledges his feelings rather than lecturing","Explains the asymptomatic nature of hypertension and long-term risks in plain language","Uses motivational interviewing — explores what matters to him personally","Explores practical barriers (cost, side effects, forgetfulness) alongside beliefs","Offers to problem-solve together (alternative agent, dosing aid, follow-up BP check)","Avoids ultimatums; respects autonomy while being clear about risk","Closes with one concrete, actionable next step"],
-     mn:"Framework: explore → acknowledge → inform → collaborate → follow up."},
-    {id:"o6", ti:"Prescriber Call: Renal Dosing (SBAR)", tl:5,
-     sc:"A new prescription arrives for metformin 1000 mg BID for Mrs. Ahmed, 74, whose chart shows an eGFR of 25 mL/min/1.73m² from last week's labs.",
-     ta:"Call the prescriber's office to discuss this prescription using a structured framework.",
-     cl:["Introduces self and pharmacy clearly","Situation: states reason for the call up front","Background: patient age, relevant history, recent labs","Assessment: metformin inappropriate at this eGFR — lactic acidosis risk","Recommendation: hold metformin, consider alternative, or confirm awareness of recent labs","States the concern clearly and concisely, not vaguely","Is respectful and collaborative, not confrontational","Proposes a concrete next step or alternative agent","Confirms the plan and who will follow up with the patient, then documents the call"],
-     mn:"Framework: SBAR — Situation, Background, Assessment, Recommendation."},
-    {id:"o7", ti:"New Prescription: Inhaler Technique", tl:5,
-     sc:"Ms. Petrov, 24, is newly diagnosed with asthma and picking up her first salbutamol pMDI plus a low-dose ICS-formoterol inhaler.",
-     ta:"Counsel Ms. Petrov on both inhalers, including technique.",
-     cl:["Introduction and identity confirmation","Asks what she was told about her diagnosis and each medication's purpose","Distinguishes reliever vs. maintenance/anti-inflammatory purpose clearly","Demonstrates/explains pMDI technique: shake, exhale fully away from device, actuate at start of slow deep breath, hold ~10 seconds","Mentions spacer use, especially for the ICS-containing inhaler","Advises rinsing mouth after the ICS inhaler to prevent oral thrush","Explains signs of poor control and when to seek urgent care","Checks technique understanding by asking her to explain or demonstrate it back","Closes with a follow-up plan (e.g., asthma action plan)"],
-     mn:"Technique cue: shake → exhale → actuate + slow inhale → hold 10 sec."},
-    {id:"o8", ti:"Narcotic Refusal: Lost Prescription", tl:5,
-     sc:"A regular patient calls saying he lost his oxycodone prescription, filled 3 days ago, and asks for an early refill “just this once.”",
-     ta:"Handle this call appropriately, balancing empathy with regulatory requirements.",
-     cl:["Introduces self and listens with an empathetic, non-accusatory tone","Clearly explains narcotic prescriptions cannot be refilled/replaced without a new prescription (CDSA), regardless of the reason","Explains the regulatory reasoning in plain, respectful language rather than a blunt refusal","Sensitively assesses for safety concerns (withdrawal, pain crisis) without being accusatory","Offers to contact the prescriber's office on the patient's behalf","Avoids judgment even where diversion is a possible concern","Documents the interaction thoroughly","Discusses safe storage of controlled substances going forward if relevant","Closes with clear next steps for the patient"],
-     mn:"For NARCS: no verbal orders, no transfers, no refills — everything needs paper."},
-    {id:"o9", ti:"New Prescription: Levothyroxine", tl:5,
-     sc:"Mrs. Thompson, 45, is picking up her first prescription for levothyroxine 75 mcg daily for newly diagnosed hypothyroidism. She takes a daily calcium supplement.",
-     ta:"Counsel Mrs. Thompson on her new levothyroxine.",
-     cl:["Introduction and identity confirmation","Asks what she understands about her diagnosis and the medication","Explains action in plain language (replaces a hormone her thyroid isn't making enough of)","Critical instruction: empty stomach, 30–60 minutes before breakfast, same time daily","Identifies the calcium supplement as interacting — separate by ≥4 hours","Explains effects are gradual and dose may be adjusted based on follow-up labs","Explains monitoring plan (TSH rechecked ~6–8 weeks after starting/dose change)","Reviews signs of over-/under-replacement to report","Checks understanding, invites questions, closes with follow-up"],
-     mn:"Separate levothyroxine from calcium/iron by ≥4 hours — chelation cuts absorption."},
-    {id:"o10", ti:"New Prescription: Apixaban with Renal Check", tl:5,
-     sc:"Mr. Ibrahim, 78, is starting apixaban 5 mg BID for newly diagnosed atrial fibrillation. Recent labs: SCr 110 µmol/L, weight 58 kg.",
-     ta:"Counsel Mr. Ibrahim on his new anticoagulant, including confirming dose appropriateness.",
-     cl:["Introduction and identity confirmation","Reviews apixaban dose-reduction criteria (age ≥80, weight ≤60 kg, SCr ≥133 µmol/L — reduce if ≥2 of 3 met) and correctly applies them to this patient","Explains action in plain language (prevents stroke-causing clots, no routine blood test needed unlike warfarin)","Explains twice-daily dosing and what to do for a missed dose","Reviews bleeding precautions and signs to report","Advises informing all healthcare providers, including dentists, before procedures","Cautions against combining with NSAIDs or other bleeding-risk agents without medical advice","Notes renal function should still be reassessed periodically","Checks understanding, closes with a follow-up plan"],
-     mn:"Apixaban reduced dose needs ≥2 of: age ≥80, weight ≤60 kg, SCr ≥133 µmol/L."}
-  ];
+  var OSCE = window.OSCE_STATIONS || [];
+  var OSCE_STRATEGY = window.OSCE_STRATEGY || [];
+  function strategyFor(type){
+    for (var i=0;i<OSCE_STRATEGY.length;i++){ if (OSCE_STRATEGY[i].id===type) return OSCE_STRATEGY[i]; }
+    return null;
+  }
+  function stationStrategyHtml(st){
+    var s = strategyFor(st.type);
+    if (!s) return "";
+    return '<div class="panel" style="background:var(--surface-2);">'+
+      '<h2 style="font-size:0.95rem;">Answering strategy — '+esc(s.label)+' <span style="color:var(--text-muted); font-weight:400; font-size:0.78rem;">('+esc(s.framework)+')</span></h2>'+
+      '<ul style="margin:8px 0 0; padding-left:18px; font-size:0.86rem; line-height:1.55;">'+
+      s.steps.map(function(step){ return '<li>'+highlightAbbrev(esc(step))+'</li>'; }).join("")+
+      '</ul></div>';
+  }
 
   /* ---------------- State ---------------- */
   var STORE_KEY = "pebcPrepState_v1";
@@ -1121,6 +1248,26 @@
     window.speechSynthesis.getVoices();
     window.speechSynthesis.addEventListener("voiceschanged", function(){ window.speechSynthesis.getVoices(); });
   }
+  function pickVoice(preferNarrator){
+    if (!("speechSynthesis" in window)) return null;
+    var voices = window.speechSynthesis.getVoices();
+    var enVoices = voices.filter(function(x){ return /^en/i.test(x.lang); });
+    var quality = /Google|Natural|Enhanced|Premium|Neural|Siri/i;
+    if (preferNarrator){
+      var narrator = /Daniel|Arthur|Aaron|Guy|David|Male|Tom\b|Fred|Alex\b|Nathan|Oliver|Ryan|Matthew|Eric|Brian/i;
+      var narratorPick =
+        enVoices.find(function(x){ return quality.test(x.name) && narrator.test(x.name); }) ||
+        enVoices.find(function(x){ return narrator.test(x.name); });
+      if (narratorPick) return narratorPick;
+    }
+    return (
+      enVoices.find(function(x){ return /^en-CA/i.test(x.lang) && quality.test(x.name); }) ||
+      enVoices.find(function(x){ return quality.test(x.name); }) ||
+      enVoices.find(function(x){ return /^en-CA/i.test(x.lang); }) ||
+      enVoices.find(function(x){ return /^en-US/i.test(x.lang); }) ||
+      enVoices[0] || voices[0] || null
+    );
+  }
   function speakDrugName(name, btnEl){
     if (!name || !("speechSynthesis" in window)) return;
     try{
@@ -1129,15 +1276,7 @@
       var u = new SpeechSynthesisUtterance(name);
       u.rate = 0.95;
       u.pitch = 1;
-      var voices = window.speechSynthesis.getVoices();
-      var enVoices = voices.filter(function(x){ return /^en/i.test(x.lang); });
-      var quality = /Google|Natural|Enhanced|Premium|Neural|Siri/i;
-      var v =
-        enVoices.find(function(x){ return /^en-CA/i.test(x.lang) && quality.test(x.name); }) ||
-        enVoices.find(function(x){ return quality.test(x.name); }) ||
-        enVoices.find(function(x){ return /^en-CA/i.test(x.lang); }) ||
-        enVoices.find(function(x){ return /^en-US/i.test(x.lang); }) ||
-        enVoices[0];
+      var v = pickVoice();
       if (v) u.voice = v;
       if (btnEl){
         btnEl.setAttribute("data-playing","true");
@@ -1151,6 +1290,177 @@
     }catch(e){}
   }
 
+  /* ---------------- Audio Tutor ---------------- */
+  var AudioTutor = (function(){
+    var PREF_KEY = "pebcAudioPrefs_v1";
+    var prefs = {rate:0.95, voiceURI:null};
+    try{
+      var raw = localStorage.getItem(PREF_KEY);
+      if (raw){ var parsed = JSON.parse(raw); if (parsed) prefs = parsed; }
+    }catch(e){}
+    function savePrefs(){ try{ localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); }catch(e){} }
+
+    var sentences = [];
+    var idx = -1;
+    var curKey = "";
+    var title = "";
+    var st = "stopped"; // stopped | playing | paused
+
+    function splitSentences(text){
+      text = String(text||"").replace(/\s+/g," ").trim();
+      if (!text) return [];
+      var parts = text.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g) || [text];
+      return parts.map(function(s){ return s.trim(); }).filter(Boolean);
+    }
+    function buildFromBlocks(blocks){
+      var all = [];
+      (blocks||[]).forEach(function(b){ splitSentences(b).forEach(function(s){ all.push(s); }); });
+      return all;
+    }
+    function speakCurrent(){
+      if (!("speechSynthesis" in window)) return;
+      if (idx<0 || idx>=sentences.length){ st="stopped"; renderBar(); return; }
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(sentences[idx]);
+      u.rate = prefs.rate || 0.95;
+      u.pitch = 0.9;
+      var voices = window.speechSynthesis.getVoices();
+      var v = (prefs.voiceURI && voices.find(function(x){ return x.voiceURI===prefs.voiceURI; })) || pickVoice(true);
+      if (v) u.voice = v;
+      u.onend = function(){
+        if (st!=="playing") return;
+        idx++;
+        if (idx<sentences.length) speakCurrent(); else { st="stopped"; renderBar(); }
+      };
+      u.onerror = function(){ st="stopped"; renderBar(); };
+      window.speechSynthesis.speak(u);
+    }
+    function play(key, blockTitle, blocks){
+      if (key!==undefined){
+        curKey = key;
+        title = blockTitle;
+        sentences = buildFromBlocks(blocks);
+        idx = sentences.length ? 0 : -1;
+      }
+      if (!sentences.length) return;
+      if (idx<0) idx = 0;
+      st = "playing";
+      speakCurrent();
+      renderBar();
+    }
+    function toggle(key, blockTitle, blocks){
+      var same = (key===curKey) && sentences.length;
+      if (same && st==="playing"){ pause(); return; }
+      if (same && st==="paused"){ resume(); return; }
+      play(key, blockTitle, blocks);
+    }
+    function pause(){
+      if (st!=="playing") return;
+      try{ window.speechSynthesis.pause(); }catch(e){}
+      st = "paused"; renderBar();
+    }
+    function resume(){
+      if (st!=="paused") return;
+      try{ window.speechSynthesis.resume(); }catch(e){}
+      st = "playing"; renderBar();
+    }
+    function stop(){
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+      st = "stopped"; idx = -1; sentences = []; title = ""; curKey = "";
+      renderBar();
+    }
+    function step(delta){
+      if (!sentences.length) return;
+      var ni = idx + delta;
+      if (ni<0 || ni>=sentences.length) return;
+      idx = ni;
+      if (st!=="stopped"){ st="playing"; speakCurrent(); }
+      renderBar();
+    }
+    function setRate(r){ prefs.rate = r; savePrefs(); if (st==="playing") speakCurrent(); renderBar(); }
+    function setVoiceURI(uri){ prefs.voiceURI = uri; savePrefs(); if (st==="playing") speakCurrent(); renderBar(); }
+    function isPlayingFor(key){ return st!=="stopped" && curKey===key; }
+    function isPaused(){ return st==="paused"; }
+
+    function renderBar(){
+      var bar = document.getElementById("audioBar");
+      if (!bar) return;
+      if (st==="stopped" || !sentences.length){ bar.classList.remove("active"); bar.innerHTML=""; return; }
+      bar.classList.add("active");
+      var voices = ("speechSynthesis" in window) ? window.speechSynthesis.getVoices().filter(function(x){ return /^en/i.test(x.lang); }) : [];
+      var fallback = pickVoice();
+      var voiceOptions = voices.map(function(v){
+        var sel = prefs.voiceURI ? (prefs.voiceURI===v.voiceURI) : (fallback && fallback.voiceURI===v.voiceURI);
+        return '<option value="'+esc(v.voiceURI)+'"'+(sel?' selected':'')+'>'+esc(v.name)+'</option>';
+      }).join("");
+      var rateOptions = [0.75,0.95,1.25,1.5,1.75].map(function(r){
+        return '<option value="'+r+'"'+((prefs.rate||0.95)===r?' selected':'')+'>'+(r===0.95?"1x (narrator)":r+"x")+'</option>';
+      }).join("");
+      var pct = sentences.length ? Math.round(((idx+1)/sentences.length)*100) : 0;
+      bar.innerHTML =
+        '<div class="audio-progress"><div class="audio-progress-fill" style="width:'+pct+'%"></div></div>'+
+        '<div class="audio-bar-inner">'+
+          '<div class="audio-cap"><div class="audio-title">🎧 Audio tutor — '+esc(title)+'</div>'+
+          '<div class="audio-line">'+esc(sentences[Math.max(idx,0)]||"")+'</div></div>'+
+          '<div class="audio-controls">'+
+            '<button class="audio-btn" id="audioPrev" title="Previous sentence" '+(idx<=0?'disabled':'')+'>⏮</button>'+
+            '<button class="audio-btn" id="audioToggle" title="'+(st==="playing"?"Pause":"Play")+'">'+(st==="playing"?"⏸":"▶")+'</button>'+
+            '<button class="audio-btn" id="audioNext" title="Next sentence" '+(idx>=sentences.length-1?'disabled':'')+'>⏭</button>'+
+            '<select class="audio-select" id="audioRate" aria-label="Playback speed">'+rateOptions+'</select>'+
+            '<select class="audio-select audio-voice" id="audioVoice" aria-label="Voice">'+voiceOptions+'</select>'+
+            '<button class="audio-btn" id="audioStop" title="Stop">✕</button>'+
+          '</div>'+
+        '</div>';
+      document.getElementById("audioPrev").addEventListener("click", function(){ step(-1); });
+      document.getElementById("audioNext").addEventListener("click", function(){ step(1); });
+      document.getElementById("audioStop").addEventListener("click", stop);
+      document.getElementById("audioToggle").addEventListener("click", function(){
+        if (st==="playing") pause(); else if (st==="paused") resume(); else play();
+      });
+      document.getElementById("audioRate").addEventListener("change", function(e){ setRate(parseFloat(e.target.value)); });
+      document.getElementById("audioVoice").addEventListener("change", function(e){ setVoiceURI(e.target.value); });
+    }
+
+    return {toggle:toggle, stop:stop, isPlayingFor:isPlayingFor, isPaused:isPaused, renderBar:renderBar};
+  })();
+
+  var NARRATOR_RIGHT = [
+    "Nice — and here's the beautiful part.",
+    "You've got it. Now, here's why that's the answer.",
+    "Correct. Let's talk about why, because it matters."
+  ];
+  var NARRATOR_WRONG = [
+    "Not quite — but this is exactly the kind of thing worth understanding deeply.",
+    "Close, but here's where it goes sideways.",
+    "Here's the twist you didn't see coming."
+  ];
+  var NARRATOR_BREAKDOWN = [
+    "Now let's break down every option, one at a time.",
+    "Here's the interesting part — why each choice does or doesn't hold up.",
+    "Let's walk through the reasoning behind every single option."
+  ];
+  function narratorLine(pool){ return pool[Math.floor(Math.random()*pool.length)]; }
+
+  function listenBtnHtml(key, label){
+    var isOn = AudioTutor.isPlayingFor(key);
+    var paused = isOn && AudioTutor.isPaused();
+    return '<button type="button" class="listen-btn" data-audio-key="'+esc(key)+'" data-playing="'+(isOn && !paused?1:0)+'">'+
+      (isOn && !paused ? '⏸ Listening…' : (paused ? '▶ Resume' : '🔊 '+esc(label||"Listen"))) +
+    '</button>';
+  }
+  function wireListenBtns(sources){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-audio-key]"), function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        var key = btn.getAttribute("data-audio-key");
+        var src = sources[key];
+        if (!src) return;
+        AudioTutor.toggle(key, src.title, src.blocks);
+        render();
+      });
+    });
+  }
+
   /* ---------------- Router / view state ---------------- */
   var view = "dashboard";
   var mcqFilter = "all";
@@ -1160,6 +1470,7 @@
   var mcqAnswered = false;
   var osceCurrent = null;
   var osceRevealed = false;
+  var osceStrategyOpen = false;
   var timerSecs = 300, timerRunning = false, timerHandle = null;
   var drugFilter = "all";
   var drugSearch = "";
@@ -1168,14 +1479,32 @@
   var studyCurrent = null;
   var refSection = null;
   var krollOpen = null;
+  var calcSubView = "problems";
+  var calcFormulaOpen = null;
+  var calcFormulaCategory = "all";
   var abbrevSearch = "";
   var CLASSES = window.CLASS_DATA || [];
   var classCurrent = null;
   var classFilter = "all";
   var classSearch = "";
+  var JURIS_TOPICS = (window.JURIS_DATA && window.JURIS_DATA.topics) || [];
+  var jurisTopicCurrent = null;
+  var TUTOR_SCRIPTS = (window.TUTOR_DATA && window.TUTOR_DATA.scripts) || [];
+  var CALC_FORMULAS = window.CALC_FORMULAS || [];
+  var TUTOR_CATEGORIES = [
+    {key:"clinical", label:"Clinical Topics", icon:"🩺", desc:"Every disease-state topic in the study guides, taught as a conversation."},
+    {key:"juris", label:"Jurisprudence", icon:"⚖️", desc:"Federal law, ethics, scope of practice, privacy, MAiD, and emergency preparedness."},
+    {key:"classes", label:"Drug Classes", icon:"💊", desc:"Any of the 55+ drug classes — mechanism, members, and special populations."},
+    {key:"calc", label:"Calculations", icon:"🧮", desc:"Every core formula — what it means, how to apply it, and where people slip up."}
+  ];
+  var tutorCategory = null;
+  var tutorCurrent = null; // {kind, key}
+  var tutorSearch = "";
+  var tutorQuizState = {};
 
   var VIEWS = [
     {key:"dashboard", label:"Dashboard"},
+    {key:"tutor", label:"Tutor"},
     {key:"mcq", label:"MCQ Practice"},
     {key:"osce", label:"OSCE Stations"},
     {key:"study", label:"Study Guides"},
@@ -1183,6 +1512,7 @@
     {key:"classes", label:"Drug Classes"},
     {key:"schedules", label:"Drug Schedules"},
     {key:"calc", label:"Calculations"},
+    {key:"juris", label:"Jurisprudence"},
     {key:"ref", label:"Quick Reference"},
     {key:"history", label:"History"}
   ];
@@ -1421,8 +1751,12 @@
           if (i===mcqCurrent.a) state_ = "correct";
           else if (i===mcqCurrent._chosen) state_ = "incorrect";
         }
-        return '<button class="option" data-i="'+i+'" '+(mcqAnswered?'disabled':'')+(state_?' data-state="'+state_+'"':'')+'>'+
-          '<span class="letter">'+letters[i]+'</span><span>'+esc(opt)+'</span></button>';
+        var whyHtml = "";
+        if (mcqAnswered && mcqCurrent.why && mcqCurrent.why[i]){
+          whyHtml = '<div class="opt-why '+(i===mcqCurrent.a?'opt-why-correct':'opt-why-wrong')+'">'+highlightAbbrev(esc(mcqCurrent.why[i]))+'</div>';
+        }
+        return '<div class="option-wrap"><button class="option" data-i="'+i+'" '+(mcqAnswered?'disabled':'')+(state_?' data-state="'+state_+'"':'')+'>'+
+          '<span class="letter">'+letters[i]+'</span><span>'+highlightAbbrev(esc(opt))+'</span></button>'+whyHtml+'</div>';
       }).join("");
 
       var fb = "";
@@ -1430,17 +1764,20 @@
         var isCorrect = mcqCurrent._chosen === mcqCurrent.a;
         fb = '<div class="feedback '+(isCorrect?'correct':'incorrect')+'">'+
           '<div class="verdict">'+(isCorrect?"Correct":"Not quite")+'</div>'+
-          '<div class="rationale">'+esc(mcqCurrent.r)+'</div>'+
-          (mcqCurrent.m ? '<div class="mnemonic">'+esc(mcqCurrent.m)+'</div>' : '')+
+          '<div class="rationale">'+highlightAbbrev(esc(mcqCurrent.r))+'</div>'+
+          (mcqCurrent.m ? '<div class="mnemonic">'+highlightAbbrev(esc(mcqCurrent.m))+'</div>' : '')+
           '</div>'+
           '<div class="btn-row"><button class="btn btn-primary" id="nextQ">Next question</button></div>';
       }
 
       body = '<div class="panel">'+
         '<div class="q-meta"><span class="badge badge-accent">'+esc(topicLabel(mcqCurrent.t))+'</span>'+
+        (mcqCurrent.domain && JURIS_DOMAIN_LABELS[mcqCurrent.domain] ? '<span class="badge">'+esc(JURIS_DOMAIN_LABELS[mcqCurrent.domain])+'</span>' : '')+
         (mcqCurrent.d==="hard" ? '<span class="badge badge-gold">Hard</span>' : '')+
+        (mcqCurrent.trap ? '<span class="trap-flag">⚠ Exam trap</span>' : '')+
+        listenBtnHtml("mcq","Listen")+
         '<span class="qcount">'+(mcqQueue.length)+' left in this set</span></div>'+
-        '<div class="q-stem">'+esc(mcqCurrent.q)+'</div>'+
+        '<div class="q-stem">'+highlightAbbrev(esc(mcqCurrent.q))+'</div>'+
         '<div class="options">'+optsHtml+'</div>'+
         fb+
         '</div>';
@@ -1480,25 +1817,63 @@
         btn.addEventListener("click", function(){ answerMcq(parseInt(btn.getAttribute("data-i"),10)); });
       });
     }
+    if (mcqCurrent){
+      var letters2 = ["A","B","C","D"];
+      var mcqBlocks = [mcqCurrent.q];
+      mcqCurrent.o.forEach(function(opt,i){ mcqBlocks.push("Option "+letters2[i]+": "+opt+"."); });
+      if (mcqAnswered){
+        var isRight = mcqCurrent._chosen===mcqCurrent.a;
+        mcqBlocks.push(narratorLine(isRight ? NARRATOR_RIGHT : NARRATOR_WRONG));
+        mcqBlocks.push(isRight ? "You answered correctly." : "The correct answer is option "+letters2[mcqCurrent.a]+".");
+        mcqBlocks.push(mcqCurrent.r);
+        if (mcqCurrent.why){
+          mcqBlocks.push(narratorLine(NARRATOR_BREAKDOWN));
+          mcqCurrent.why.forEach(function(w,i){ if (w) mcqBlocks.push("Option "+letters2[i]+": "+w); });
+        }
+        if (mcqCurrent.m) mcqBlocks.push("Memory anchor: "+mcqCurrent.m);
+      }
+      wireListenBtns({mcq:{title:"MCQ question", blocks:mcqBlocks}});
+    }
   }
 
   /* ---------------- Render: OSCE ---------------- */
   function renderOsce(){
+    if (osceStrategyOpen){
+      var stratHtml = OSCE_STRATEGY.map(function(s){
+        return '<div class="panel"><h2>'+esc(s.label)+' <span style="color:var(--text-muted); font-weight:400; font-size:0.8rem;">— framework: '+esc(s.framework)+'</span></h2>'+
+          '<ul class="drug-section-list" style="margin:10px 0 0; padding-left:18px; font-size:0.9rem; line-height:1.6;">'+
+          s.steps.map(function(st){ return '<li>'+highlightAbbrev(esc(st))+'</li>'; }).join("")+'</ul>'+
+          '<div style="margin-top:12px; padding-top:12px; border-top:1px dashed var(--border);">'+
+          '<div style="font-size:0.76rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--danger); font-weight:700; margin-bottom:6px;">Common pitfalls</div>'+
+          '<ul style="margin:0; padding-left:18px; font-size:0.88rem; line-height:1.6; color:var(--text-muted);">'+
+          s.pitfalls.map(function(p){ return '<li>'+highlightAbbrev(esc(p))+'</li>'; }).join("")+'</ul></div></div>';
+      }).join("");
+      document.getElementById("main").innerHTML =
+        '<div class="pagehead"><button class="btn btn-ghost btn-sm" id="backStrategy" style="margin-bottom:10px;">&larr; All stations</button>'+
+        '<h1>OSCE answering strategies</h1><p>A framework for every station type — read this once, then recognize which one applies as soon as you read a station\'s task line.</p></div>'+
+        stratHtml;
+      document.getElementById("backStrategy").addEventListener("click", function(){ osceStrategyOpen=false; render(); window.scrollTo(0,0); });
+      return;
+    }
     if (!osceCurrent){
       var attemptsById = {};
       state.osceAttempts.forEach(function(a){ attemptsById[a.id] = a; });
       var cards = OSCE.map(function(st){
         var last = attemptsById[st.id];
+        var typeInfo = strategyFor(st.type);
         return '<button class="station-card" data-id="'+st.id+'">'+
           '<div class="st-title">'+esc(st.ti)+'</div>'+
           '<div class="st-blurb">'+esc(st.ta)+'</div>'+
           '<div class="st-foot"><span class="badge">'+st.tl+' min</span>'+
+          (typeInfo ? '<span class="badge badge-accent">'+esc(typeInfo.label)+'</span>' : '')+
           (last ? '<span class="badge badge-gold">last: '+last.score+'%</span>' : '')+
           '</div></button>';
       }).join("");
       document.getElementById("main").innerHTML =
-        '<div class="pagehead"><h1>OSCE stations</h1><p>You are always the pharmacist. Read the scenario, plan your response, then reveal the examiner checklist to self-score.</p></div>'+
+        '<div class="pagehead"><h1>OSCE stations</h1><p>You are always the pharmacist. Read the scenario, plan your response, then reveal the examiner checklist to self-score.</p>'+
+        '<div class="btn-row" style="margin-top:10px;"><button class="btn" id="openStrategy">📋 OSCE answering strategies</button></div></div>'+
         '<div class="station-grid">'+cards+'</div>';
+      document.getElementById("openStrategy").addEventListener("click", function(){ osceStrategyOpen=true; render(); window.scrollTo(0,0); });
       Array.prototype.forEach.call(document.querySelectorAll(".station-card"), function(btn){
         btn.addEventListener("click", function(){ openStation(btn.getAttribute("data-id")); });
       });
@@ -1514,14 +1889,14 @@
         '<h2>Examiner checklist</h2>'+
         '<p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px;">Check off what you actually covered, honestly — this is for your own calibration.</p>'+
         '<div class="checklist">'+st.cl.map(function(item,i){
-          return '<label class="check-item"><input type="checkbox" data-idx="'+i+'"><span>'+esc(item)+'</span></label>';
+          return '<label class="check-item"><input type="checkbox" data-idx="'+i+'"><span>'+highlightAbbrev(esc(item))+'</span></label>';
         }).join("")+'</div>'+
         '<div class="score-ring-wrap">'+
           '<div class="score-ring" id="scoreRing" style="--pct:0;"><div class="inner tnum" id="scoreVal">0%</div></div>'+
           '<div style="font-size:0.85rem; color:var(--text-muted);">Check items above to update your self-score, then save the attempt.</div>'+
         '</div>'+
         '<div class="btn-row"><button class="btn btn-primary" id="saveOsce">Save attempt</button></div>'+
-        (st.mn ? '<div class="footnote">'+esc(st.mn)+'</div>' : '')+
+        (st.mn ? '<div class="footnote">'+highlightAbbrev(esc(st.mn))+'</div>' : '')+
       '</div>'
       : '<div class="panel"><div class="btn-row"><button class="btn btn-primary" id="revealBtn">Reveal examiner checklist</button></div></div>';
 
@@ -1529,15 +1904,17 @@
       '<div class="pagehead">'+
         '<button class="btn btn-ghost btn-sm" id="backStations" style="margin-bottom:10px;">&larr; All stations</button>'+
         '<h1>'+esc(st.ti)+'</h1>'+
+        '<div style="margin-top:6px;">'+listenBtnHtml("osce","Listen to station")+'</div>'+
       '</div>'+
       '<div class="panel">'+
-        '<div class="task-box">'+esc(st.ta)+'</div>'+
-        '<div class="scenario-box">'+esc(st.sc)+'</div>'+
+        '<div class="task-box">'+highlightAbbrev(esc(st.ta))+'</div>'+
+        '<div class="scenario-box">'+highlightAbbrev(esc(st.sc))+'</div>'+
         '<div class="timer-box"><span class="clock tnum" id="clockDisplay">'+clockStr+'</span>'+
           '<button class="btn btn-sm" id="timerToggle">'+(timerRunning?"Pause":"Start")+'</button>'+
           '<button class="btn btn-ghost btn-sm" id="timerReset">Reset</button></div>'+
         '<textarea class="notes" id="osceNotes" placeholder="Jot your talking points / plan here before revealing the checklist (not saved between sessions)."></textarea>'+
       '</div>'+
+      (stationStrategyHtml(st))+
       checklistHtml;
 
     document.getElementById("backStations").addEventListener("click", closeStation);
@@ -1564,6 +1941,15 @@
       };
       boxes.forEach(function(b){ b.addEventListener("change", updateRing); });
     }
+
+    var osceBlocks = ["Your task: "+st.ta, "Scenario: "+st.sc];
+    if (osceRevealed){
+      osceBlocks.push(narratorLine(NARRATOR_BREAKDOWN));
+      osceBlocks.push("Here's what the examiner is checking for.");
+      st.cl.forEach(function(item){ osceBlocks.push(item); });
+      if (st.mn) osceBlocks.push("Strategy note: "+st.mn);
+    }
+    wireListenBtns({osce:{title:"OSCE — "+st.ti, blocks:osceBlocks}});
   }
 
   /* ---------------- Render: Study Guides ---------------- */
@@ -1604,16 +1990,21 @@
         '<button class="btn btn-ghost btn-sm" id="backStudy" style="margin-bottom:10px;">&larr; All topics</button>'+
         '<h1>'+esc(guide.title)+'</h1>'+
         '<p>Underlined terms are abbreviations — tap one for the full meaning.</p>'+
+        '<div style="margin-top:6px;">'+listenBtnHtml("study:"+studyCurrent,"Listen to this guide")+'</div>'+
       '</div>'+
       sectionsHtml+
       '<p class="footnote">High-yield review content — pairs well with MCQ Practice on the same topic to test recall right after reading. Full abbreviation list under Quick Reference → Abbreviations.</p>';
 
     document.getElementById("backStudy").addEventListener("click", closeStudyGuide);
-    Array.prototype.forEach.call(document.querySelectorAll(".abbr-term"), function(el){
-      var show = function(e){ e.stopPropagation(); toast(el.textContent + " — " + el.getAttribute("data-full")); };
-      el.addEventListener("click", show);
-      el.addEventListener("keydown", function(e){ if (e.key==="Enter" || e.key===" "){ e.preventDefault(); show(e); } });
+    var studyBlocks = [];
+    guide.sections.forEach(function(sec){
+      studyBlocks.push(sec.heading+".");
+      sec.bullets.forEach(function(b){ studyBlocks.push(b); });
     });
+    var studyKey = "study:"+studyCurrent;
+    var srcMap = {};
+    srcMap[studyKey] = {title:guide.title, blocks:studyBlocks};
+    wireListenBtns(srcMap);
   }
 
   /* ---------------- Render: Quick Reference ---------------- */
@@ -1668,26 +2059,127 @@
 
   /* ---------------- Render: Pharmaceutical calculations ---------------- */
   function renderCalculations(){
-    var items = DRUGS.filter(function(d){ return d.topic==="calc"; }).sort(function(a,b){ return a.generic.localeCompare(b.generic); });
-    var cardsHtml = items.map(function(d){
-      return '<div class="calc-card">'+
-        '<h3>'+esc(d.generic)+'</h3>'+
-        '<div class="calc-formula">'+esc(d.moa)+'</div>'+
-        '<h4>Worked example &amp; exam must-knows</h4><ul>'+(d.examPoints||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
-        '<h4>How to apply it</h4><ul>'+(d.counselling||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
-        '<h4>Common mistakes</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+    var tabsHtml = '<div class="btn-row" style="margin-top:0;">'+
+      '<button class="btn '+(calcSubView==="problems"?"btn-primary":"")+'" id="calcTabProblems">Worked Problems</button>'+
+      '<button class="btn '+(calcSubView==="formulas"?"btn-primary":"")+'" id="calcTabFormulas">Formula Reference</button>'+
+      '<button class="btn btn-primary" id="goCalcMcq" style="margin-left:auto;">Practice calculation MCQs</button>'+
       '</div>';
-    }).join("");
+
+    var body;
+    if (calcSubView==="formulas"){
+      body = renderFormulaReference();
+    } else {
+      var items = DRUGS.filter(function(d){ return d.topic==="calc"; }).sort(function(a,b){ return a.generic.localeCompare(b.generic); });
+      var cardsHtml = items.map(function(d){
+        return '<div class="calc-card">'+
+          '<h3>'+esc(d.generic)+'</h3>'+
+          '<div class="calc-formula">'+esc(d.moa)+'</div>'+
+          '<h4>Worked example &amp; exam must-knows</h4><ul>'+(d.examPoints||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+          '<h4>How to apply it</h4><ul>'+(d.counselling||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+          '<h4>Common mistakes</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul>'+
+        '</div>';
+      }).join("");
+      body = cardsHtml || '<div class="panel"><p class="empty">Calculation content is still being generated — check back soon.</p></div>';
+    }
 
     document.getElementById("main").innerHTML =
       '<div class="pagehead"><h1>Pharmaceutical calculations</h1><p>Every core calculation tested on PEBC — the formula, a worked example, and the mistakes people actually make.</p></div>'+
-      '<div class="panel"><div class="btn-row" style="margin-top:0;"><button class="btn btn-primary" id="goCalcMcq">Practice calculation MCQs</button></div></div>'+
-      (cardsHtml || '<div class="panel"><p class="empty">Calculation content is still being generated — check back soon.</p></div>')+
+      '<div class="panel">'+tabsHtml+'</div>'+
+      body+
       '<p class="footnote">Reference only — verify against your compounding/calculation course materials and current NAPRA/USP standards.</p>';
 
     document.getElementById("goCalcMcq").addEventListener("click", function(){
       mcqFilter = "calc"; mcqQueue = []; mcqCurrent = null; mcqAnswered = false; setView("mcq");
     });
+    document.getElementById("calcTabProblems").addEventListener("click", function(){ calcSubView="problems"; render(); });
+    document.getElementById("calcTabFormulas").addEventListener("click", function(){ calcSubView="formulas"; render(); });
+
+    if (calcSubView==="formulas") wireFormulaReference();
+  }
+
+  function renderFormulaReference(){
+    var cats = [];
+    var seen = {};
+    CALC_FORMULAS.forEach(function(f){ if (!seen[f.category]){ seen[f.category]=true; cats.push(f.category); } });
+    var catOptions = '<option value="all">All categories</option>' + cats.map(function(c){
+      return '<option value="'+esc(c)+'"'+(calcFormulaCategory===c?' selected':'')+'>'+esc(c)+'</option>';
+    }).join("");
+
+    var list = CALC_FORMULAS.filter(function(f){ return calcFormulaCategory==="all" || f.category===calcFormulaCategory; });
+
+    if (!CALC_FORMULAS.length){
+      return '<div class="panel"><p class="empty">Formula reference content is still being generated — check back soon.</p></div>';
+    }
+
+    var listHtml = '<div class="panel" style="margin-bottom:16px;"><div class="field-row">'+
+      '<select class="select" id="calcFormulaCatSelect">'+catOptions+'</select></div></div>';
+
+    var cardsHtml = list.map(function(f){
+      var open = calcFormulaOpen===f.key;
+      var examples = getFormulaExamples(f);
+      var examplesHtml = examples.map(function(ex, i){
+        return '<div style="margin-bottom:'+(i<examples.length-1?'14px':'0')+';'+(i>0?' padding-top:12px; border-top:1px dashed var(--border);':'')+'">'+
+          '<div style="font-size:0.76rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); font-weight:700; margin-bottom:4px;">Example '+(i+1)+'</div>'+
+          '<p><b>Problem:</b> '+highlightAbbrev(esc(ex.problem))+'</p><p><b>Solution:</b> '+highlightAbbrev(esc(ex.solution))+'</p>'+
+        '</div>';
+      }).join("");
+      var body = open ? (
+        '<div class="drug-card-body">'+
+          '<div style="margin-bottom:10px;">'+listenBtnHtml("calcformula:"+f.key,"Listen to this formula")+
+            ' <button class="btn btn-sm" data-tutor-key="'+esc(f.key)+'" style="margin-left:8px;">🎓 Teach me this in Tutor</button></div>'+
+          '<div class="tutor-formula-box">'+esc(f.formula)+'</div>'+
+          '<div class="drug-section"><h4>What each part means</h4><ul>'+(f.variables||[]).map(function(v){ return '<li><b>'+esc(v.sym)+':</b> '+highlightAbbrev(esc(v.meaning))+'</li>'; }).join("")+'</ul></div>'+
+          '<div class="drug-section"><h4>Why it works</h4><p>'+highlightAbbrev(esc(f.explain))+'</p></div>'+
+          '<div class="drug-section"><h4>How to apply it</h4><ul>'+(f.steps||[]).map(function(s){ return '<li>'+highlightAbbrev(esc(s))+'</li>'; }).join("")+'</ul></div>'+
+          '<div class="drug-section"><h4>Worked examples</h4>'+examplesHtml+'</div>'+
+          '<div class="drug-section"><h4>Where people go wrong</h4><ul>'+(f.pitfalls||[]).map(function(p){ return '<li>'+highlightAbbrev(esc(p))+'</li>'; }).join("")+'</ul></div>'+
+        '</div>'
+      ) : '';
+      return '<div class="drug-card">'+
+        '<div class="drug-card-head" data-key="'+esc(f.key)+'" role="button" tabindex="0">'+
+          '<span><span class="drug-name">'+esc(f.name)+'</span><div class="drug-brand">'+esc(f.category)+'</div></span>'+
+          '<span class="badge badge-accent">'+esc(f.category)+'</span>'+
+        '</div>'+body+
+      '</div>';
+    }).join("");
+
+    return listHtml + '<div class="drug-list">'+cardsHtml+'</div>';
+  }
+
+  function wireFormulaReference(){
+    var catSel = document.getElementById("calcFormulaCatSelect");
+    if (catSel) catSel.addEventListener("change", function(e){ calcFormulaCategory = e.target.value; render(); });
+    Array.prototype.forEach.call(document.querySelectorAll("#main .drug-card-head"), function(el){
+      var toggle = function(){
+        var key = el.getAttribute("data-key");
+        calcFormulaOpen = (calcFormulaOpen===key) ? null : key;
+        render();
+      };
+      el.addEventListener("click", toggle);
+      el.addEventListener("keydown", function(e){ if (e.key==="Enter" || e.key===" "){ e.preventDefault(); toggle(); } });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-tutor-key]"), function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        openTutorCategory("calc");
+        openTutorTopic("calc", btn.getAttribute("data-tutor-key"));
+      });
+    });
+    if (calcFormulaOpen){
+      var f = CALC_FORMULAS.filter(function(x){ return x.key===calcFormulaOpen; })[0];
+      if (f){
+        var exampleBlocks = [];
+        getFormulaExamples(f).forEach(function(ex, i){
+          exampleBlocks.push("Example "+(i+1)+".", ex.problem, ex.solution);
+        });
+        var blocks = [f.formula, f.explain, "How to apply it."].concat(f.steps||[])
+          .concat(["Worked examples."]).concat(exampleBlocks)
+          .concat(["Where people go wrong."]).concat(f.pitfalls||[]);
+        var srcMap = {};
+        srcMap["calcformula:"+f.key] = {title:f.name, blocks:blocks};
+        wireListenBtns(srcMap);
+      }
+    }
   }
 
   /* ---------------- Render: Drug Classes ---------------- */
@@ -1754,13 +2246,13 @@
     var generalHtml = '<div class="panel"><h2>General characteristics <span style="color:var(--text-muted); font-weight:400; font-size:0.8rem;">— true for the whole class</span></h2><ul>'+
       c.general.map(function(g){
         var parts = g.split(/:(.+)/);
-        return parts.length>1 ? '<li><b>'+esc(parts[0])+':</b>'+esc(parts[1])+'</li>' : '<li>'+esc(g)+'</li>';
+        return parts.length>1 ? '<li><b>'+esc(parts[0])+':</b>'+highlightAbbrev(esc(parts[1]))+'</li>' : '<li>'+highlightAbbrev(esc(g))+'</li>';
       }).join("")+'</ul></div>';
 
     var diagramHtml = c.diagramSvg ? '<div class="panel"><h2>Mechanism diagram</h2><div class="diagram-wrap">'+c.diagramSvg+'</div>'+(c.diagramNote?'<p class="footnote">'+esc(c.diagramNote)+'</p>':'')+'</div>' : '';
 
     var memberRows = c.members.map(function(m){
-      return '<tr><td class="drugname">'+esc(m.name)+'</td><td>'+esc(m.a)+'</td><td>'+esc(m.b)+'</td><td>'+esc(m.c)+'</td></tr>';
+      return '<tr><td class="drugname">'+esc(m.name)+'</td><td>'+highlightAbbrev(esc(m.a))+'</td><td>'+highlightAbbrev(esc(m.b))+'</td><td>'+highlightAbbrev(esc(m.c))+'</td></tr>';
     }).join("");
     var memberHtml = '<div class="panel"><h2>Specific characteristics <span style="color:var(--text-muted); font-weight:400; font-size:0.8rem;">— how the '+c.members.length+' members differ</span></h2>'+
       '<div style="overflow-x:auto;"><table class="member-table"><thead><tr><th>Drug</th><th>'+esc(c.memberCols[0])+'</th><th>'+esc(c.memberCols[1])+'</th><th>'+esc(c.memberCols[2])+'</th></tr></thead>'+
@@ -1768,18 +2260,307 @@
 
     var popHtml = '<div class="panel"><h2>Use in special populations</h2>'+
       c.specialPopulations.map(function(p){
-        return '<div class="pop-card'+(p.warn?' warn':'')+'"><div class="pop-label">'+esc(p.label)+'</div>'+esc(p.text)+'</div>';
+        return '<div class="pop-card'+(p.warn?' warn':'')+'"><div class="pop-label">'+esc(p.label)+'</div>'+highlightAbbrev(esc(p.text))+'</div>';
       }).join("")+'</div>';
 
     document.getElementById("main").innerHTML =
       '<div class="pagehead"><button class="btn btn-ghost btn-sm" id="backClasses" style="margin-bottom:10px;">&larr; All classes</button>'+
         '<div class="class-name"><h1>'+esc(c.name)+'</h1><span class="pron">/'+esc(c.pronunciation)+'/</span><span class="badge badge-accent">'+esc(topicLabel(c.topic))+'</span></div>'+
         '<p>'+esc(c.blurb)+'</p>'+
+        '<div style="margin-top:6px;">'+listenBtnHtml("class:"+c.key,"Listen to this class")+'</div>'+
       '</div>'+
       generalHtml+diagramHtml+memberHtml+popHtml+
       '<p class="footnote">Educational reference content — not a substitute for the full product monograph.</p>';
 
     document.getElementById("backClasses").addEventListener("click", closeClass);
+    var classBlocks = ["Blurb: "+c.blurb, "General characteristics."];
+    c.general.forEach(function(g){ classBlocks.push(g); });
+    classBlocks.push("Use in special populations.");
+    c.specialPopulations.forEach(function(p){ classBlocks.push(p.label+": "+p.text); });
+    var classKey = "class:"+c.key;
+    var classSrcMap = {};
+    classSrcMap[classKey] = {title:c.name, blocks:classBlocks};
+    wireListenBtns(classSrcMap);
+  }
+
+  /* ---------------- Render: Jurisprudence ---------------- */
+  function openJurisTopic(key){ jurisTopicCurrent = key; render(); window.scrollTo(0,0); }
+  function closeJurisTopic(){ jurisTopicCurrent = null; render(); }
+  function startJurisPractice(){
+    mcqFilter = "juris"; mcqDifficulty = "all";
+    mcqQueue = []; mcqCurrent = null; mcqAnswered = false;
+    setView("mcq");
+  }
+  function renderJuris(){
+    var jurisCount = MCQ.filter(function(q){ return q.t==="juris"; }).length;
+    if (!jurisTopicCurrent){
+      var cards = JURIS_TOPICS.map(function(t){
+        return '<button class="station-card" data-key="'+esc(t.key)+'">'+
+          '<div class="st-title">'+esc(t.title)+'</div>'+
+          '<div class="st-blurb">'+esc(t.blurb||"")+'</div>'+
+          '<div class="st-foot"><span class="badge">'+t.sections.length+' sections</span></div>'+
+        '</button>';
+      }).join("");
+      document.getElementById("main").innerHTML =
+        '<div class="pagehead"><h1>Jurisprudence exam prep</h1>'+
+        '<p>Most Canadian provinces require passing a jurisprudence exam — pharmacy law, ethics, and standards of practice — alongside the national PEBC exams. Federal law (Food and Drugs Act, CDSA) is the same everywhere; provincial college rules vary, so pair this with your own college\'s materials.</p>'+
+        '</div>'+
+        '<div class="panel" style="margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">'+
+          '<div><div style="font-weight:700;">Practice Q&amp;A</div><div style="color:var(--text-muted); font-size:0.88rem;">'+jurisCount+' scenario-based questions across all 6 domains below, with full right/wrong explanations.</div></div>'+
+          '<button class="btn btn-primary" id="startJurisPractice">Start jurisprudence practice</button>'+
+        '</div>'+
+        (cards ? '<div class="station-grid">'+cards+'</div>' : '<div class="panel"><p class="empty">Jurisprudence study guides are being generated — check back soon.</p></div>')+
+        '<p class="footnote">Educational exam-prep content, not legal advice — always confirm province-specific requirements with your regulatory college.</p>';
+      document.getElementById("startJurisPractice").addEventListener("click", startJurisPractice);
+      Array.prototype.forEach.call(document.querySelectorAll(".station-card"), function(btn){
+        btn.addEventListener("click", function(){ openJurisTopic(btn.getAttribute("data-key")); });
+      });
+      return;
+    }
+
+    var jt = JURIS_TOPICS.filter(function(t){ return t.key===jurisTopicCurrent; })[0];
+    if (!jt){ jurisTopicCurrent = null; renderJuris(); return; }
+
+    var sectionsHtml = jt.sections.map(function(sec){
+      return '<div class="panel"><h2>'+esc(sec.heading)+'</h2>'+
+        '<ul class="drug-section-list" style="margin:10px 0 0; padding-left:18px; font-size:0.92rem; line-height:1.7;">'+
+        sec.bullets.map(function(b){ return '<li>'+highlightAbbrev(esc(b))+'</li>'; }).join("")+
+        '</ul></div>';
+    }).join("");
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead">'+
+        '<button class="btn btn-ghost btn-sm" id="backJuris" style="margin-bottom:10px;">&larr; All jurisprudence topics</button>'+
+        '<h1>'+esc(jt.title)+'</h1><p>'+esc(jt.blurb||"")+'</p>'+
+        '<div style="margin-top:6px;">'+listenBtnHtml("juris:"+jt.key,"Listen to this topic")+'</div>'+
+      '</div>'+
+      sectionsHtml+
+      '<p class="footnote">Educational exam-prep content, not legal advice — provincial specifics vary by regulatory college.</p>';
+
+    document.getElementById("backJuris").addEventListener("click", closeJurisTopic);
+    var jurisBlocks = [];
+    jt.sections.forEach(function(sec){
+      jurisBlocks.push(sec.heading+".");
+      sec.bullets.forEach(function(b){ jurisBlocks.push(b); });
+    });
+    var jurisKey = "juris:"+jt.key;
+    var jurisSrcMap = {};
+    jurisSrcMap[jurisKey] = {title:jt.title, blocks:jurisBlocks};
+    wireListenBtns(jurisSrcMap);
+  }
+
+  /* ---------------- Tutor ---------------- */
+  function buildClassTutorScript(c){
+    var generalBeats = (c.general||[]).slice();
+    var memberBeats = (c.members||[]).map(function(m){
+      return m.name+" — "+c.memberCols[0]+": "+m.a+". "+c.memberCols[1]+": "+m.b+". "+c.memberCols[2]+": "+m.c+".";
+    });
+    var popBeats = (c.specialPopulations||[]).map(function(p){ return p.label+": "+p.text; });
+    return {
+      key: c.key, kind: "classes", title: c.name,
+      hook: c.blurb+" Let's go mechanism to bedside on this one.",
+      sections: [
+        {heading:"What's true for the whole class", beats: generalBeats, checkTopic: c.topic},
+        {heading:"How the members actually differ", beats: memberBeats, checkTopic: null},
+        {heading:"Special populations to watch for", beats: popBeats, checkTopic: null}
+      ].filter(function(s){ return s.beats.length; }),
+      recap: "That's "+c.name+" — one shared mechanism, several personalities. Learn the class rule first, then learn exactly which member breaks it."
+    };
+  }
+  function getFormulaExamples(f){
+    if (f.examples && f.examples.length) return f.examples;
+    if (f.example) return [f.example];
+    return [];
+  }
+  function buildCalcTutorScript(f){
+    var exampleBeats = [];
+    getFormulaExamples(f).forEach(function(ex, i){
+      exampleBeats.push("Example "+(i+1)+": "+ex.problem, ex.solution);
+    });
+    return {
+      key: f.key, kind: "calc", title: f.name,
+      hook: "Let's master "+f.name+". "+f.explain,
+      sections: [
+        {heading:"The formula", beats:[f.formula], checkTopic:null},
+        {heading:"How to apply it, step by step", beats:f.steps||[], checkTopic:null},
+        {heading:"Worked examples", beats:exampleBeats, checkTopic:"calc"},
+        {heading:"Where people go wrong", beats:f.pitfalls||[], checkTopic:null}
+      ],
+      recap: "Master this pattern — extract the numbers, set up the formula with units, solve, then sanity-check the answer — and this calculation type becomes automatic on exam day."
+    };
+  }
+  function getTutorScript(kind, key){
+    if (kind==="clinical" || kind==="juris"){
+      return TUTOR_SCRIPTS.filter(function(s){ return s.kind===kind && s.key===key; })[0] || null;
+    }
+    if (kind==="classes"){
+      var c = CLASSES.filter(function(x){ return x.key===key; })[0];
+      return c ? buildClassTutorScript(c) : null;
+    }
+    if (kind==="calc"){
+      var f = CALC_FORMULAS.filter(function(x){ return x.key===key; })[0];
+      return f ? buildCalcTutorScript(f) : null;
+    }
+    return null;
+  }
+  function pickRandomMcq(checkTopic, domain){
+    var pool = MCQ.filter(function(q){
+      if (q.t !== checkTopic) return false;
+      if (domain && q.domain !== domain) return false;
+      return true;
+    });
+    if (!pool.length) return null;
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+  function openTutorCategory(cat){ view = "tutor"; tutorCategory = cat; tutorSearch = ""; render(); window.scrollTo(0,0); }
+  function backTutorCategory(){ tutorCategory = null; tutorCurrent = null; tutorSearch = ""; render(); window.scrollTo(0,0); }
+  function openTutorTopic(kind, key){
+    view = "tutor";
+    tutorCurrent = {kind:kind, key:key};
+    tutorQuizState = {};
+    var script = getTutorScript(kind, key);
+    if (script){
+      script.sections.forEach(function(sec, i){
+        if (sec.checkTopic){
+          var domain = (script.kind==="juris") ? script.domain : null;
+          var q = pickRandomMcq(sec.checkTopic, domain);
+          if (q) tutorQuizState[i] = {question:q, chosen:null, answered:false};
+        }
+      });
+    }
+    render();
+    window.scrollTo(0,0);
+  }
+  function closeTutorTopic(){ tutorCurrent = null; tutorQuizState = {}; render(); window.scrollTo(0,0); }
+  function answerTutorQuiz(sectionIdx, optionIdx){
+    var qs = tutorQuizState[sectionIdx];
+    if (!qs || qs.answered) return;
+    qs.chosen = optionIdx; qs.answered = true;
+    render();
+  }
+
+  function renderTutor(){
+    if (!tutorCurrent){
+      if (!tutorCategory){
+        var catCards = TUTOR_CATEGORIES.map(function(c){
+          return '<button class="tutor-cat-card" data-cat="'+c.key+'">'+
+            '<span class="icon">'+c.icon+'</span><h3>'+esc(c.label)+'</h3><p>'+esc(c.desc)+'</p></button>';
+        }).join("");
+        document.getElementById("main").innerHTML =
+          '<div class="pagehead"><h1>Tutor</h1><p>Pick any topic in the app and have it explained to you — conversational, practical, and built to actually make sense.</p></div>'+
+          '<div class="tutor-cat-grid">'+catCards+'</div>';
+        Array.prototype.forEach.call(document.querySelectorAll(".tutor-cat-card"), function(btn){
+          btn.addEventListener("click", function(){ openTutorCategory(btn.getAttribute("data-cat")); });
+        });
+        return;
+      }
+
+      var catInfo = TUTOR_CATEGORIES.filter(function(c){ return c.key===tutorCategory; })[0];
+      var list = [];
+      if (tutorCategory==="clinical"){
+        list = TUTOR_SCRIPTS.filter(function(s){ return s.kind==="clinical"; }).map(function(s){
+          return {kind:"clinical", key:s.key, title:s.title, blurb:s.hook};
+        });
+      } else if (tutorCategory==="juris"){
+        list = TUTOR_SCRIPTS.filter(function(s){ return s.kind==="juris"; }).map(function(s){
+          return {kind:"juris", key:s.key, title:s.title, blurb:s.hook};
+        });
+      } else if (tutorCategory==="classes"){
+        list = CLASSES.map(function(c){ return {kind:"classes", key:c.key, title:c.name, blurb:c.blurb}; });
+      } else if (tutorCategory==="calc"){
+        list = CALC_FORMULAS.map(function(f){ return {kind:"calc", key:f.key, title:f.name, blurb:f.category}; });
+      }
+      var tq = tutorSearch.trim().toLowerCase();
+      if (tq) list = list.filter(function(x){ return (x.title+" "+(x.blurb||"")).toLowerCase().indexOf(tq)!==-1; });
+      list.sort(function(a,b){ return a.title.localeCompare(b.title); });
+
+      var searchHtml = (tutorCategory==="classes" || tutorCategory==="calc") ?
+        '<div class="panel" style="margin-bottom:16px;"><input type="text" class="textinput" id="tutorSearch" placeholder="Search '+esc(catInfo.label.toLowerCase())+'…" value="'+esc(tutorSearch)+'"></div>' : '';
+
+      var cardsHtml = list.map(function(x){
+        return '<button class="station-card" data-kind="'+x.kind+'" data-key="'+esc(x.key)+'">'+
+          '<div class="st-title">'+esc(x.title)+'</div>'+
+          '<div class="st-blurb">'+esc((x.blurb||"").slice(0,140))+'</div>'+
+        '</button>';
+      }).join("");
+
+      document.getElementById("main").innerHTML =
+        '<div class="pagehead"><button class="btn btn-ghost btn-sm" id="backTutorCat" style="margin-bottom:10px;">&larr; All tutor topics</button>'+
+          '<h1>'+esc(catInfo.label)+'</h1><p>'+esc(catInfo.desc)+'</p></div>'+
+        searchHtml+
+        (cardsHtml ? '<div class="station-grid">'+cardsHtml+'</div>' : '<div class="panel"><p class="empty">This tutor content is still being generated — check back soon.</p></div>');
+
+      document.getElementById("backTutorCat").addEventListener("click", backTutorCategory);
+      var searchEl = document.getElementById("tutorSearch");
+      if (searchEl){
+        searchEl.addEventListener("input", function(e){
+          tutorSearch = e.target.value;
+          var caret = e.target.selectionStart;
+          render();
+          var el = document.getElementById("tutorSearch");
+          if (el){ el.focus(); el.setSelectionRange(caret, caret); }
+        });
+      }
+      Array.prototype.forEach.call(document.querySelectorAll(".station-card"), function(btn){
+        btn.addEventListener("click", function(){ openTutorTopic(btn.getAttribute("data-kind"), btn.getAttribute("data-key")); });
+      });
+      return;
+    }
+
+    var script = getTutorScript(tutorCurrent.kind, tutorCurrent.key);
+    if (!script){ tutorCurrent = null; renderTutor(); return; }
+
+    var letters3 = ["A","B","C","D"];
+    var bubblesHtml = '<div class="tutor-bubble hook">'+highlightAbbrev(esc(script.hook))+'</div>';
+    script.sections.forEach(function(sec, i){
+      bubblesHtml += '<div class="tutor-section-head">'+esc(sec.heading)+'</div>';
+      sec.beats.forEach(function(b){
+        bubblesHtml += '<div class="tutor-bubble">'+highlightAbbrev(esc(b))+'</div>';
+      });
+      var qs = tutorQuizState[i];
+      if (qs){
+        var qq = qs.question;
+        var optsHtml = qq.o.map(function(opt, oi){
+          var state_ = "";
+          if (qs.answered){
+            if (oi===qq.a) state_ = "correct";
+            else if (oi===qs.chosen) state_ = "incorrect";
+          }
+          var whyHtml = (qs.answered && qq.why && qq.why[oi]) ? '<div class="opt-why '+(oi===qq.a?'opt-why-correct':'opt-why-wrong')+'">'+highlightAbbrev(esc(qq.why[oi]))+'</div>' : '';
+          return '<div class="option-wrap"><button class="option quiz-opt" data-section="'+i+'" data-i="'+oi+'" '+(qs.answered?'disabled':'')+(state_?' data-state="'+state_+'"':'')+'>'+
+            '<span class="letter">'+letters3[oi]+'</span><span>'+highlightAbbrev(esc(opt))+'</span></button>'+whyHtml+'</div>';
+        }).join("");
+        bubblesHtml += '<div class="quiz-card"><div class="quiz-badge">🧠 Quick check</div><div class="quiz-stem">'+highlightAbbrev(esc(qq.q))+'</div><div class="options">'+optsHtml+'</div>'+
+          (qs.answered ? '<div class="footnote" style="margin-top:10px;">'+highlightAbbrev(esc(qq.r))+'</div>' : '')+
+          '</div>';
+      }
+    });
+    bubblesHtml += '<div class="tutor-bubble recap">'+highlightAbbrev(esc(script.recap))+'</div>';
+
+    document.getElementById("main").innerHTML =
+      '<div class="pagehead"><button class="btn btn-ghost btn-sm" id="backTutorTopic" style="margin-bottom:10px;">&larr; '+esc((TUTOR_CATEGORIES.filter(function(c){return c.key===tutorCategory;})[0]||{}).label||"All topics")+'</button>'+
+        '<h1>'+esc(script.title)+'</h1>'+
+        '<div style="margin-top:6px;">'+listenBtnHtml("tutor:"+tutorCurrent.kind+":"+tutorCurrent.key, "Listen to this lesson")+'</div>'+
+      '</div>'+
+      '<div class="tutor-conv">'+bubblesHtml+'</div>';
+
+    document.getElementById("backTutorTopic").addEventListener("click", closeTutorTopic);
+    Array.prototype.forEach.call(document.querySelectorAll(".quiz-opt"), function(btn){
+      btn.addEventListener("click", function(){
+        answerTutorQuiz(parseInt(btn.getAttribute("data-section"),10), parseInt(btn.getAttribute("data-i"),10));
+      });
+    });
+
+    var tutorBlocks = [script.hook];
+    script.sections.forEach(function(sec){
+      tutorBlocks.push(sec.heading+".");
+      sec.beats.forEach(function(b){ tutorBlocks.push(b); });
+    });
+    tutorBlocks.push(script.recap);
+    var tKey = "tutor:"+tutorCurrent.kind+":"+tutorCurrent.key;
+    var tSrcMap = {};
+    tSrcMap[tKey] = {title:script.title, blocks:tutorBlocks};
+    wireListenBtns(tSrcMap);
   }
 
   function renderRxAbbrev(){
@@ -1921,12 +2702,13 @@
       var brandStr = (d.brand||[]).length ? (d.brand||[]).join(", ") : "Generic only";
       var body = open ? (
         '<div class="drug-card-body">'+
-          '<div class="drug-section"><h4>Pharmacology</h4><p>'+esc(d.moa)+'</p></div>'+
-          '<div class="drug-section"><h4>Main indication</h4><p>'+esc(d.indication)+'</p></div>'+
-          '<div class="drug-section"><h4>Typical adult dosage</h4><p>'+esc(d.dosage)+'</p></div>'+
-          '<div class="drug-section"><h4>Exam must-knows</h4><ul>'+(d.examPoints||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
-          '<div class="drug-section"><h4>Counselling the patient</h4><ul>'+(d.counselling||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
-          '<div class="drug-section"><h4>Main side effects</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul></div>'+
+          '<div style="margin-bottom:10px;">'+listenBtnHtml("drug:"+id,"Listen to this drug")+'</div>'+
+          '<div class="drug-section"><h4>Pharmacology</h4><p>'+highlightAbbrev(esc(d.moa))+'</p></div>'+
+          '<div class="drug-section"><h4>Main indication</h4><p>'+highlightAbbrev(esc(d.indication))+'</p></div>'+
+          '<div class="drug-section"><h4>Typical adult dosage</h4><p>'+highlightAbbrev(esc(d.dosage))+'</p></div>'+
+          '<div class="drug-section"><h4>Exam must-knows</h4><ul>'+(d.examPoints||[]).map(function(x){ return '<li>'+highlightAbbrev(esc(x))+'</li>'; }).join("")+'</ul></div>'+
+          '<div class="drug-section"><h4>Counselling the patient</h4><ul>'+(d.counselling||[]).map(function(x){ return '<li>'+highlightAbbrev(esc(x))+'</li>'; }).join("")+'</ul></div>'+
+          '<div class="drug-section"><h4>Main side effects</h4><ul>'+(d.sideEffects||[]).map(function(x){ return '<li>'+highlightAbbrev(esc(x))+'</li>'; }).join("")+'</ul></div>'+
         '</div>'
       ) : '';
       var speakIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 9 3 15 8 15 13 20 13 4 8 9 3 9"></polygon><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>';
@@ -1981,6 +2763,22 @@
         speakDrugName(btn.getAttribute("data-generic"), btn);
       });
     });
+    if (drugOpenId){
+      var openDrug = list.filter(function(d,i){ return ("drug_"+d.topic+"_"+i)===drugOpenId; })[0];
+      if (openDrug){
+        var drugBlocks = [
+          "Pharmacology: "+openDrug.moa,
+          "Main indication: "+openDrug.indication,
+          "Typical adult dosage: "+openDrug.dosage,
+          "Exam must-knows."
+        ].concat(openDrug.examPoints||[])
+         .concat(["Counselling the patient."]).concat(openDrug.counselling||[])
+         .concat(["Main side effects."]).concat(openDrug.sideEffects||[]);
+        var drugSrcMap = {};
+        drugSrcMap["drug:"+drugOpenId] = {title:openDrug.generic, blocks:drugBlocks};
+        wireListenBtns(drugSrcMap);
+      }
+    }
   }
 
   /* ---------------- Render: History ---------------- */
@@ -2025,9 +2823,36 @@
     else if (view==="schedules") renderDrugSchedules();
     else if (view==="calc") renderCalculations();
     else if (view==="classes") renderDrugClasses();
+    else if (view==="juris") renderJuris();
+    else if (view==="tutor") renderTutor();
     else if (view==="ref") renderReference();
     else if (view==="history") renderHistory();
   }
+
+  /* Delegated abbreviation-tap handler — works for any .abbr-term inserted anywhere in #main, on every render. */
+  (function(){
+    var mainEl = document.getElementById("main");
+    function findAbbr(el){
+      while (el && el !== mainEl){
+        if (el.classList && el.classList.contains("abbr-term")) return el;
+        el = el.parentElement;
+      }
+      return null;
+    }
+    mainEl.addEventListener("click", function(e){
+      var el = findAbbr(e.target);
+      if (!el) return;
+      e.stopPropagation();
+      toast(el.textContent + " — " + el.getAttribute("data-full"));
+    });
+    mainEl.addEventListener("keydown", function(e){
+      if (e.key!=="Enter" && e.key!==" ") return;
+      var el = findAbbr(e.target);
+      if (!el) return;
+      e.preventDefault(); e.stopPropagation();
+      toast(el.textContent + " — " + el.getAttribute("data-full"));
+    });
+  })();
 
   render();
 })();
